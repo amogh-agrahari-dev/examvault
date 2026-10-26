@@ -68,11 +68,11 @@ export default function UserProfileModal({ userId, onClose, accessToken, onOpenD
   // Calculate learning level based on reputation and quiz stats
   const calculateLevel = (credits = 0, quizzes = 0) => {
     const points = credits + quizzes * 5;
-    if (points >= 100) return { title: "Master Scholar", level: 5, color: "#8B5CF6", bg: "rgba(139, 92, 246, 0.12)" };
-    if (points >= 50) return { title: "Senior Fellow", level: 4, color: "#3B82F6", bg: "rgba(59, 130, 246, 0.12)" };
-    if (points >= 25) return { title: "Active Scholar", level: 3, color: "#10B981", bg: "rgba(16, 185, 129, 0.12)" };
-    if (points >= 10) return { title: "Apprentice", level: 2, color: "var(--accent)", bg: "rgba(232, 163, 61, 0.12)" };
-    return { title: "Novice", level: 1, color: "var(--muted)", bg: "rgba(156, 163, 175, 0.12)" };
+    if (points >= 100) return { title: "Master Scholar", level: 5, color: "#DDD6FE", bg: "rgba(139, 92, 246, 0.35)", border: "rgba(196, 181, 253, 0.5)" };
+    if (points >= 50) return { title: "Senior Fellow", level: 4, color: "#BAE6FD", bg: "rgba(59, 130, 246, 0.35)", border: "rgba(186, 230, 253, 0.5)" };
+    if (points >= 25) return { title: "Active Scholar", level: 3, color: "#A7F3D0", bg: "rgba(16, 185, 129, 0.35)", border: "rgba(167, 243, 208, 0.5)" };
+    if (points >= 10) return { title: "Apprentice", level: 2, color: "#FDE68A", bg: "rgba(245, 158, 11, 0.35)", border: "rgba(253, 230, 138, 0.5)" };
+    return { title: "Novice", level: 1, color: "#E2E8F0", bg: "rgba(148, 163, 184, 0.3)", border: "rgba(226, 232, 240, 0.4)" };
   };
 
   const levelInfo = calculateLevel(profile?.reputation_credits, profile?.quizzes_taken);
@@ -98,8 +98,8 @@ export default function UserProfileModal({ userId, onClose, accessToken, onOpenD
         >
           <div className="flex items-center gap-2">
             <span 
-              className="px-2.5 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5"
-              style={{ background: levelInfo.bg, color: levelInfo.color, border: `1px solid ${levelInfo.color}40` }}
+              className="px-2.5 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 backdrop-blur-xs"
+              style={{ background: levelInfo.bg, color: levelInfo.color, border: `1px solid ${levelInfo.border}` }}
             >
               <Sparkles size={12} />
               {levelInfo.title} • Lvl {levelInfo.level}
@@ -116,49 +116,47 @@ export default function UserProfileModal({ userId, onClose, accessToken, onOpenD
         </div>
 
         {/* Content Container */}
-        <div className="px-3.5 sm:px-6 pb-5 sm:pb-6 pt-0 relative">
-          {/* Avatar and basic info header */}
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between -mt-12 sm:-mt-14 mb-5 gap-3">
-            <div className="flex items-end gap-3 sm:gap-3.5">
-              <div 
-                className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border-4 flex items-center justify-center text-xl sm:text-2xl font-bold shadow-lg flex-shrink-0"
-                style={{
-                  background: "linear-gradient(135deg, var(--accent) 0%, #F59E0B 100%)",
-                  color: "#FFFFFF",
-                  borderColor: "var(--surface)",
-                }}
-              >
-                {initials}
-              </div>
-              <div className="mb-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h2 className="sa-serif text-xl sm:text-2xl font-bold truncate text-[var(--text)]">
-                    {loading ? "Loading..." : profile?.full_name}
-                  </h2>
-                  <span 
-                    className="text-[11px] uppercase tracking-wider font-bold px-2 py-0.5 rounded"
-                    style={{ background: "var(--surface-subtle)", color: "var(--muted)", border: "1px solid var(--line)" }}
-                  >
-                    {profile?.role || "Student"}
-                  </span>
-                </div>
-                <p className="text-xs flex items-center gap-1 text-[var(--muted)] mt-0.5">
-                  <Calendar size={12} /> Member since {formattedDate}
-                </p>
-              </div>
+        <div className="px-4 sm:px-6 pb-5 sm:pb-6 pt-0 relative">
+          {/* Avatar and credits header row */}
+          <div className="flex items-end justify-between -mt-10 sm:-mt-12 mb-3">
+            <div 
+              className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border-4 flex items-center justify-center text-xl sm:text-2xl font-bold shadow-lg flex-shrink-0"
+              style={{
+                background: "linear-gradient(135deg, var(--accent) 0%, #D97706 100%)",
+                color: "#FFFFFF",
+                borderColor: "var(--surface)",
+              }}
+            >
+              {initials}
             </div>
 
-            <div className="flex items-center gap-2 self-start sm:self-end">
-              <div 
-                className="px-3 py-1.5 rounded-xl border flex items-center gap-2"
-                style={{ background: "rgba(232, 163, 61, 0.12)", borderColor: "rgba(232, 163, 61, 0.3)" }}
-              >
-                <Award size={16} color="var(--accent)" />
-                <span className="text-xs font-bold" style={{ color: "var(--accent)" }}>
-                  {profile?.reputation_credits ?? 0} Credits
-                </span>
-              </div>
+            <div 
+              className="px-3 py-1.5 rounded-xl border flex items-center gap-2 shadow-xs"
+              style={{ background: "var(--accent-soft)", borderColor: "rgba(232, 163, 61, 0.3)" }}
+            >
+              <Award size={16} className="text-[var(--accent)]" />
+              <span className="text-xs font-bold" style={{ color: "var(--accent-ink)" }}>
+                {profile?.reputation_credits ?? 0} Credits
+              </span>
             </div>
+          </div>
+
+          {/* Scholar Details - Always completely on the card surface with perfect contrast */}
+          <div className="mb-5">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h2 className="sa-serif text-xl sm:text-2xl font-bold text-[var(--text)]">
+                {loading ? "Loading..." : profile?.full_name}
+              </h2>
+              <span 
+                className="text-[11px] uppercase tracking-wider font-bold px-2 py-0.5 rounded"
+                style={{ background: "var(--surface-subtle)", color: "var(--muted)", border: "1px solid var(--line)" }}
+              >
+                {profile?.role || "Student"}
+              </span>
+            </div>
+            <p className="text-xs flex items-center gap-1 text-[var(--muted)] mt-1">
+              <Calendar size={12} /> Member since {formattedDate}
+            </p>
           </div>
 
           {loading ? (

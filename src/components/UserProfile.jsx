@@ -69,11 +69,11 @@ export default function UserProfile({ userId, go, accessToken, currentUserId }) 
 
   const calculateLevel = (credits = 0, quizzes = 0) => {
     const points = credits + quizzes * 5;
-    if (points >= 100) return { title: "Master Scholar", level: 5, color: "#8B5CF6", bg: "rgba(139, 92, 246, 0.12)" };
-    if (points >= 50) return { title: "Senior Fellow", level: 4, color: "#3B82F6", bg: "rgba(59, 130, 246, 0.12)" };
-    if (points >= 25) return { title: "Active Scholar", level: 3, color: "#10B981", bg: "rgba(16, 185, 129, 0.12)" };
-    if (points >= 10) return { title: "Apprentice", level: 2, color: "var(--accent)", bg: "rgba(232, 163, 61, 0.12)" };
-    return { title: "Novice", level: 1, color: "var(--muted)", bg: "rgba(156, 163, 175, 0.12)" };
+    if (points >= 100) return { title: "Master Scholar", level: 5, color: "#DDD6FE", bg: "rgba(139, 92, 246, 0.35)", border: "rgba(196, 181, 253, 0.5)" };
+    if (points >= 50) return { title: "Senior Fellow", level: 4, color: "#BAE6FD", bg: "rgba(59, 130, 246, 0.35)", border: "rgba(186, 230, 253, 0.5)" };
+    if (points >= 25) return { title: "Active Scholar", level: 3, color: "#A7F3D0", bg: "rgba(16, 185, 129, 0.35)", border: "rgba(167, 243, 208, 0.5)" };
+    if (points >= 10) return { title: "Apprentice", level: 2, color: "#FDE68A", bg: "rgba(245, 158, 11, 0.35)", border: "rgba(253, 230, 138, 0.5)" };
+    return { title: "Novice", level: 1, color: "#E2E8F0", bg: "rgba(148, 163, 184, 0.3)", border: "rgba(226, 232, 240, 0.4)" };
   };
 
   const levelInfo = calculateLevel(profile?.reputation_credits, profile?.quizzes_taken);
@@ -97,15 +97,15 @@ export default function UserProfile({ userId, go, accessToken, currentUserId }) 
       >
         {/* Banner */}
         <div 
-          className="h-44 sm:h-52 w-full relative p-6 flex justify-between items-start"
+          className="h-36 sm:h-44 w-full relative p-4 sm:p-6 flex justify-between items-start"
           style={{
             background: "linear-gradient(135deg, var(--ink) 0%, #1e293b 60%, #0f172a 100%)",
           }}
         >
           <div className="flex items-center gap-2">
             <span 
-              className="px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-sm"
-              style={{ background: levelInfo.bg, color: levelInfo.color, border: `1px solid ${levelInfo.color}40` }}
+              className="px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-sm backdrop-blur-xs"
+              style={{ background: levelInfo.bg, color: levelInfo.color, border: `1px solid ${levelInfo.border}` }}
             >
               <Sparkles size={14} />
               {levelInfo.title} • Tier {levelInfo.level}
@@ -114,51 +114,52 @@ export default function UserProfile({ userId, go, accessToken, currentUserId }) 
         </div>
 
         {/* Profile Content */}
-        <div className="px-3.5 sm:px-10 pb-6 sm:pb-8 pt-0 relative">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between -mt-14 sm:-mt-20 mb-6 gap-4">
-            <div className="flex flex-col sm:flex-row sm:items-end gap-3.5 sm:gap-5">
-              <div 
-                className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl sm:rounded-3xl border-4 flex items-center justify-center text-2xl sm:text-4xl font-bold shadow-xl flex-shrink-0"
-                style={{
-                  background: "linear-gradient(135deg, var(--accent) 0%, #F59E0B 100%)",
-                  color: "#FFFFFF",
-                  borderColor: "var(--surface)",
-                }}
-              >
-                {initials}
-              </div>
-              <div className="mb-2">
-                <div className="flex items-center gap-2.5 flex-wrap">
-                  <h1 className="sa-serif text-xl sm:text-3xl font-bold text-[var(--text)]">
-                    {loading ? "Loading Scholar..." : profile?.full_name}
-                  </h1>
-                  <span 
-                    className="text-xs uppercase tracking-wider font-bold px-2.5 py-1 rounded-md"
-                    style={{ background: "var(--surface-subtle)", color: "var(--muted)", border: "1px solid var(--line)" }}
-                  >
-                    {profile?.role || "Student"}
-                  </span>
-                </div>
-                <p className="text-xs sm:text-sm flex items-center gap-1.5 text-[var(--muted)] mt-1">
-                  <Calendar size={14} /> Enrolled on {formattedDate}
-                </p>
-              </div>
+        <div className="px-4 sm:px-10 pb-6 sm:pb-8 pt-0 relative">
+          {/* Avatar and Credits row */}
+          <div className="flex items-end justify-between -mt-12 sm:-mt-16 mb-4">
+            <div 
+              className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl sm:rounded-3xl border-4 flex items-center justify-center text-2xl sm:text-3xl font-bold shadow-xl flex-shrink-0"
+              style={{
+                background: "linear-gradient(135deg, var(--accent) 0%, #D97706 100%)",
+                color: "#FFFFFF",
+                borderColor: "var(--surface)",
+              }}
+            >
+              {initials}
             </div>
 
             <div className="flex items-center gap-3">
               <div 
-                className="px-4 py-2 rounded-xl border flex items-center gap-2.5 shadow-sm"
-                style={{ background: "rgba(232, 163, 61, 0.12)", borderColor: "rgba(232, 163, 61, 0.3)" }}
+                className="px-3.5 py-2 rounded-xl border flex items-center gap-2.5 shadow-xs"
+                style={{ background: "var(--accent-soft)", borderColor: "rgba(232, 163, 61, 0.3)" }}
               >
-                <Award size={20} color="var(--accent)" />
+                <Award size={18} className="text-[var(--accent)]" />
                 <div>
-                  <div className="text-sm font-bold" style={{ color: "var(--accent)" }}>
+                  <div className="text-sm font-bold" style={{ color: "var(--accent-ink)" }}>
                     {profile?.reputation_credits ?? 0}
                   </div>
                   <div className="text-[10px] uppercase font-semibold text-[var(--muted)]">Vault Credits</div>
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Scholar Details - Always 100% on card surface */}
+          <div className="mb-6">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <h1 className="sa-serif text-2xl sm:text-3xl font-bold text-[var(--text)]">
+                {loading ? "Loading Scholar..." : profile?.full_name}
+              </h1>
+              <span 
+                className="text-xs uppercase tracking-wider font-bold px-2.5 py-1 rounded-md"
+                style={{ background: "var(--surface-subtle)", color: "var(--muted)", border: "1px solid var(--line)" }}
+              >
+                {profile?.role || "Student"}
+              </span>
+            </div>
+            <p className="text-xs sm:text-sm flex items-center gap-1.5 text-[var(--muted)] mt-1">
+              <Calendar size={14} /> Enrolled on {formattedDate}
+            </p>
           </div>
 
           {loading ? (
