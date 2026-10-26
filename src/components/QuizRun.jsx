@@ -3,7 +3,7 @@ import { Clock, Flag, ArrowLeft, ArrowRight, X } from "lucide-react";
 import { Badge } from "./UI";
 import CodingWorkspace from "./CodingWorkspace";
 import { FormattedText } from "./MathRenderer";
-import { startQuizAttempt, saveQuizAnswer, submitQuizAttempt, getQuiz } from "../services/api";
+import { startQuizAttempt, saveQuizAnswer, submitQuizAttempt, getQuiz, API_BASE_URL } from "../services/api";
 
 function QuizRun({ go, config, onFinish, fullScreenTitle, accessToken, showToast }) {
   const generatedQuiz = config?.generatedQuiz;
@@ -175,7 +175,6 @@ function QuizRun({ go, config, onFinish, fullScreenTitle, accessToken, showToast
                 value={answers[q.id] || ""} 
                 onChange={setAnswer} 
                 onRun={async (code, customInput) => {
-                  const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api/v1";
                   const res = await fetch(`${API_BASE_URL}/quiz/code/run`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}` },

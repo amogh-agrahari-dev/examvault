@@ -38,7 +38,7 @@ import {
 import {
   getNote, updateNote, uploadNoteImage, getNoteImageUrl,
   getAvailableNoteTopics, request, generateAiFlowchart, simulateCode,
-  createSubject, createNoteTopic
+  createSubject, createNoteTopic, API_BASE_URL
 } from "../services/api";
 import { exportNoteToPdf, printNoteDocument } from "../services/pdfExport";
 
@@ -2371,7 +2371,6 @@ int main() {
                 }
                 defaultLanguage={monacoModalData.language}
                 onRun={async (code, customInput) => {
-                  const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api/v1";
                   const res = await fetch(`${API_BASE_URL}/quiz/code/run`, {
                     method: "POST",
                     headers: {

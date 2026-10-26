@@ -6,7 +6,8 @@ import {
   sendDiscussionMessage, 
   verifyDiscussionClaim,
   askAIDiscussion,
-  getDiscussionMembers
+  getDiscussionMembers,
+  API_BASE_URL
 } from "../services/api";
 import { Toast } from "./UI";
 import { useAuth } from "../context/AuthContext";
@@ -75,7 +76,7 @@ export default function DiscussionRoom({ discussion, topic, accessToken, onBack 
       reconnectTimeoutRef.current = null;
     }
 
-    const base = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api/v1";
+    const base = API_BASE_URL;
     const wsProtocol = window.location.protocol === "https:" ? "wss:" : base.startsWith("https") ? "wss:" : "ws:";
     const wsHost = base.replace(/^https?:\/\//, "");
     const wsUrl = `${wsProtocol}//${wsHost}/discussions/${discussion.id}/ws?token=${encodeURIComponent(accessToken)}`;

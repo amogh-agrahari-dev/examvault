@@ -1,4 +1,4 @@
-export const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api/v1";
+export const API_BASE_URL = import.meta.env.VITE_API_URL || "https://examvault-utc3.onrender.com/api/v1";
 
 // Client-side in-memory cache and concurrent in-flight deduplication
 const clientCache = new Map();
