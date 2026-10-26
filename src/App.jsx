@@ -106,6 +106,8 @@ function App() {
     ? "documents"
     : page === "note-editor"
     ? "notes"
+    : page === "chat"
+    ? "group-discussions"
     : page;
 
   let body;
@@ -143,7 +145,7 @@ function App() {
           onOpenProfile={(uid) => setActiveProfileUserId(uid)}
           accessToken={accessToken}
         />
-        <div className={`flex-1 ${page === "group-discussions" || page === "note-editor" ? "overflow-hidden flex flex-col min-h-0" : "overflow-y-auto sa-scroll p-3 sm:p-5 md:p-8 pb-20 md:pb-8"}`}>
+        <div className={`flex-1 ${page === "group-discussions" || page === "note-editor" || page === "chat" ? "overflow-hidden flex flex-col min-h-0" : "overflow-y-auto sa-scroll p-3 sm:p-5 md:p-8 pb-20 md:pb-8"}`}>
           {body}
         </div>
       </div>

@@ -23,7 +23,10 @@ import {
   FileUp,
   BookOpen,
   Search,
-  CheckCircle2
+  CheckCircle2,
+  X,
+  ShieldCheck,
+  Download
 } from "lucide-react";
 import {
   uploadPastPaper,
@@ -103,7 +106,7 @@ export default function PredictedPaperGenerator({
       const data = await request("/subjects", {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
-      setSubjects(data || []);
+      setSubjects(Array.isArray(data) ? data : []);
       if (subjectId && !selectedSubjectId) {
         setSelectedSubjectId(subjectId);
       }
@@ -118,7 +121,7 @@ export default function PredictedPaperGenerator({
       const res = await getPastPapers(accessToken, selectedSubjectId || null);
       setPastPapers(res.past_papers || []);
     } catch (err) {
-      showToast(err.message || "Failed to load past examination papers");
+      console.error("Failed to load past papers", err);
     } finally {
       setLoadingPapers(false);
     }
@@ -350,40 +353,43 @@ export default function PredictedPaperGenerator({
   };
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto pb-12">
+    <div className="sa-fade-in space-y-6 max-w-6xl mx-auto pb-12">
       {/* Top Header & Breadcrumb */}
-      <div className="flex flex-wrap items-center justify-between gap-4 no-print">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 no-print">
         <div>
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex items-center gap-2 mb-1.5">
             <button
               onClick={() => go("subjects")}
-              className="text-xs flex items-center gap-1 font-medium hover:underline"
-              style={{ color: "var(--muted)" }}
+              className="text-xs flex items-center gap-1 font-medium hover:underline text-[var(--muted)] hover:text-[var(--text)] transition-colors"
             >
-              <ArrowLeft size={14} /> Subjects Dashboard
+              <ArrowLeft size={13} />
+              <span>Subjects</span>
             </button>
-            <span style={{ color: "var(--muted)" }}>/</span>
-            <span className="text-xs font-semibold" style={{ color: "var(--accent)" }}>
-              Exam Paper Predictor
+            <span className="text-[var(--muted)]">/</span>
+            <span 
+              className="text-xs font-semibold px-2.5 py-0.5 rounded-md inline-flex items-center gap-1.5"
+              style={{ background: "var(--accent-soft)", color: "var(--accent-ink)" }}
+            >
+              <Sparkles size={13} />
+              AI Examination Blueprint
             </span>
           </div>
-          <h1 className="sa-serif text-2xl md:text-3xl font-bold flex items-center gap-2.5">
-            <Sparkles size={24} className="text-amber-500" />
-            AI Question Paper Predictor
+          <h1 className="sa-serif text-2xl sm:text-3xl font-semibold text-[var(--text)]">
+            Exam Paper Predictor
           </h1>
-          <p className="text-xs md:text-sm mt-1" style={{ color: "var(--muted)" }}>
-            Independent, pattern-grounded exam prediction derived solely from uploaded previous year papers.
+          <p className="text-xs sm:text-sm text-[var(--muted)] mt-1 max-w-2xl leading-relaxed">
+            Independent, pattern-grounded university question paper predictions synthesized strictly from uploaded previous year examination papers.
           </p>
         </div>
 
         {/* Action Controls */}
-        <div className="flex items-center gap-2 flex-wrap w-full sm:w-auto">
+        <div className="flex items-center gap-2 flex-wrap w-full sm:w-auto self-start sm:self-auto">
           {/* Subject Filter Dropdown */}
           <select
             value={selectedSubjectId}
             onChange={(e) => setSelectedSubjectId(e.target.value)}
-            className="sa-input text-xs px-3 py-2 rounded-lg border font-medium cursor-pointer w-full sm:w-auto"
-            style={{ minWidth: 140 }}
+            className="sa-input text-xs px-3 py-2 rounded-xl border font-medium cursor-pointer w-full sm:w-auto"
+            style={{ minWidth: 150 }}
           >
             <option value="">All Subjects</option>
             {subjects.map((s) => (
@@ -399,7 +405,7 @@ export default function PredictedPaperGenerator({
               setIsUploadOpen(true);
               fetchMainDocs();
             }}
-            className="sa-btn-outline flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg shadow-sm"
+            className="sa-btn-outline flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl shadow-xs"
           >
             <FileText size={14} className="text-amber-500" />
             <span>From Documents</span>
@@ -410,51 +416,55 @@ export default function PredictedPaperGenerator({
               setModalMode("upload");
               setIsUploadOpen(true);
             }}
-            className="sa-btn-primary flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-lg shadow-sm"
+            className="sa-btn-primary flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl shadow-xs"
           >
-            <Upload size={14} /> Upload Past Paper
+            <Upload size={14} />
+            <span>Upload Past Paper</span>
           </button>
         </div>
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="flex items-center border-b gap-2 no-print overflow-x-auto whitespace-nowrap sa-scroll flex-nowrap" style={{ borderColor: "var(--line)" }}>
+      {/* Navigation Tabs - Modern Segmented Control Container */}
+      <div 
+        className="flex items-center p-1 rounded-xl border gap-1 bg-[var(--surface-subtle)] overflow-x-auto whitespace-nowrap sa-scroll flex-nowrap no-print"
+        style={{ borderColor: "var(--line)" }}
+      >
         <button
           onClick={() => setActiveTab("papers")}
-          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+          className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all ${
             activeTab === "papers"
-              ? "border-amber-500 font-semibold text-amber-600 dark:text-amber-400"
-              : "border-transparent hover:border-gray-300"
+              ? "bg-[var(--surface)] text-[var(--text)] font-semibold shadow-xs"
+              : "text-[var(--muted)] hover:text-[var(--text)]"
           }`}
-          style={{ color: activeTab === "papers" ? undefined : "var(--muted)" }}
         >
-          <FolderLock size={16} /> Past Papers Archive ({pastPapers.length})
+          <FolderLock size={15} />
+          <span>Past Papers Archive ({pastPapers.length})</span>
         </button>
 
         {currentPrediction && (
           <button
             onClick={() => setActiveTab("viewer")}
-            className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+            className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all ${
               activeTab === "viewer"
-                ? "border-amber-500 font-semibold text-amber-600 dark:text-amber-400"
-                : "border-transparent hover:border-gray-300"
+                ? "bg-[var(--surface)] text-[var(--text)] font-semibold shadow-xs"
+                : "text-[var(--muted)] hover:text-[var(--text)]"
             }`}
-            style={{ color: activeTab === "viewer" ? undefined : "var(--muted)" }}
           >
-            <FileCheck2 size={16} /> Predicted Paper Viewer
+            <FileCheck2 size={15} />
+            <span>Predicted Paper Viewer</span>
           </button>
         )}
 
         <button
           onClick={() => setActiveTab("history")}
-          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+          className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all ${
             activeTab === "history"
-              ? "border-amber-500 font-semibold text-amber-600 dark:text-amber-400"
-              : "border-transparent hover:border-gray-300"
+              ? "bg-[var(--surface)] text-[var(--text)] font-semibold shadow-xs"
+              : "text-[var(--muted)] hover:text-[var(--text)]"
           }`}
-          style={{ color: activeTab === "history" ? undefined : "var(--muted)" }}
         >
-          <Clock size={16} /> Prediction History ({predictedHistory.length})
+          <Clock size={15} />
+          <span>Prediction History ({predictedHistory.length})</span>
         </button>
       </div>
 
@@ -472,20 +482,20 @@ export default function PredictedPaperGenerator({
             }}
           >
             <div
-              className="p-2.5 rounded-lg flex-shrink-0"
+              className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
               style={{ background: "var(--accent-soft)", color: "var(--accent-ink)" }}
             >
-              <FolderLock size={20} />
+              <ShieldCheck size={20} />
             </div>
             <div className="text-xs leading-relaxed space-y-1">
-              <span className="font-semibold text-sm block" style={{ color: "var(--text)" }}>
+              <span className="font-semibold text-sm block text-[var(--text)]">
                 Dedicated Isolated Exam Paper Filebase
               </span>
-              <p style={{ color: "var(--muted)" }}>
+              <p className="text-[var(--muted)]">
                 Past examination papers uploaded here are strictly stored in an isolated archive and are{" "}
-                <strong style={{ color: "var(--text)" }}>never merged with your main study notes</strong>.
+                <strong className="text-[var(--text)] font-semibold">never merged with your main study notes</strong>.
                 When predicting an upcoming paper, the AI examines{" "}
-                <strong style={{ color: "var(--text)" }}>only the uploaded previous paper</strong> and its
+                <strong className="text-[var(--text)] font-semibold">only the uploaded previous paper</strong> and its
                 inherent patterns — without relying on external topics or database notes.
               </p>
             </div>
@@ -493,25 +503,27 @@ export default function PredictedPaperGenerator({
 
           {/* Past Papers List / Grid */}
           {loadingPapers ? (
-            <div className="p-12 text-center text-sm" style={{ color: "var(--muted)" }}>
+            <div className="sa-card p-12 text-center text-sm rounded-xl border" style={{ borderColor: "var(--line)", color: "var(--muted)" }}>
               <RefreshCw size={24} className="animate-spin mx-auto mb-3 text-amber-500" />
-              Loading isolated past papers archive...
+              <span>Loading isolated past papers archive...</span>
             </div>
           ) : pastPapers.length === 0 ? (
             <div
-              className="sa-card p-12 text-center rounded-2xl border-2 border-dashed flex flex-col items-center justify-center"
-              style={{ borderColor: "var(--border-dashed)" }}
+              className="sa-card p-10 sm:p-14 text-center rounded-2xl border-2 border-dashed flex flex-col items-center justify-center"
+              style={{ borderColor: "var(--border-dashed)", background: "var(--surface)" }}
             >
               <div
-                className="w-16 h-16 rounded-full flex items-center justify-center mb-4"
+                className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4"
                 style={{ background: "var(--accent-soft)", color: "var(--accent-ink)" }}
               >
                 <FileUp size={28} />
               </div>
-              <h3 className="sa-serif text-lg font-semibold mb-1">No Past Examination Papers Uploaded</h3>
-              <p className="text-xs max-w-md mb-5" style={{ color: "var(--muted)" }}>
+              <h3 className="sa-serif text-lg font-semibold text-[var(--text)] mb-1">
+                No Past Examination Papers Uploaded
+              </h3>
+              <p className="text-xs sm:text-sm text-[var(--muted)] max-w-md mb-6 leading-relaxed">
                 Upload previous question papers (PDF, scanned images, DOCX) or select an existing document from
-                your main library to predict the upcoming examination paper.
+                your library to predict the upcoming examination paper.
               </p>
               <div className="flex items-center gap-3 flex-wrap justify-center">
                 <button
@@ -519,9 +531,10 @@ export default function PredictedPaperGenerator({
                     setModalMode("upload");
                     setIsUploadOpen(true);
                   }}
-                  className="sa-btn-primary px-5 py-2.5 text-xs font-semibold rounded-lg flex items-center gap-1.5"
+                  className="sa-btn-primary px-5 py-2.5 text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow-xs"
                 >
-                  <Upload size={14} /> Upload Exam Paper
+                  <Upload size={14} />
+                  <span>Upload Exam Paper</span>
                 </button>
                 <button
                   onClick={() => {
@@ -529,20 +542,21 @@ export default function PredictedPaperGenerator({
                     setIsUploadOpen(true);
                     fetchMainDocs();
                   }}
-                  className="sa-btn-outline px-4 py-2.5 text-xs font-semibold rounded-lg flex items-center gap-1.5"
+                  className="sa-btn-outline px-4 py-2.5 text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow-xs"
                 >
-                  <FileText size={14} className="text-amber-500" /> Select From My Documents
+                  <FileText size={14} className="text-amber-500" />
+                  <span>Select From My Documents</span>
                 </button>
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
               {pastPapers.map((paper) => {
                 const subObj = subjects.find((s) => s.id === paper.subject_id);
                 return (
                   <div
                     key={paper.id}
-                    className="sa-card p-5 rounded-xl border flex flex-col justify-between hover:shadow-md transition-all group"
+                    className="sa-card p-5 rounded-2xl border flex flex-col justify-between hover:shadow-md transition-all group"
                     style={{
                       background: "var(--surface)",
                       borderColor: "var(--line)"
@@ -552,7 +566,7 @@ export default function PredictedPaperGenerator({
                       {/* Top Badges */}
                       <div className="flex items-center justify-between gap-2 mb-3">
                         <span
-                          className="px-2 py-0.5 rounded text-[11px] font-semibold tracking-wide"
+                          className="px-2.5 py-0.5 rounded-md text-[11px] font-semibold tracking-wide"
                           style={{
                             background: "var(--accent-soft)",
                             color: "var(--accent-ink)"
@@ -561,38 +575,40 @@ export default function PredictedPaperGenerator({
                           {paper.year ? `Year ${paper.year}` : "Previous Year"}
                         </span>
                         <span
-                          className="px-2 py-0.5 rounded text-[11px] font-medium"
+                          className="px-2.5 py-0.5 rounded-md text-[11px] font-medium"
                           style={{
-                            background: "var(--chip-bg)",
-                            color: "var(--chip-text)"
+                            background: "var(--surface-subtle)",
+                            color: "var(--muted)",
+                            border: "1px solid var(--line)"
                           }}
                         >
-                          {paper.exam_type || "Exam"}
+                          {paper.exam_type || "End-Sem"}
                         </span>
                       </div>
 
                       {/* Paper Title */}
                       <div className="flex items-start gap-2.5 mb-2">
-                        <FileText size={18} className="text-amber-500 flex-shrink-0 mt-0.5" />
-                        <h4 className="font-semibold text-sm line-clamp-2" style={{ color: "var(--text)" }}>
+                        <FileText size={18} className="text-amber-500 shrink-0 mt-0.5" />
+                        <h4 className="font-semibold text-sm text-[var(--text)] line-clamp-2">
                           {paper.filename}
                         </h4>
                       </div>
 
                       {/* Subject Name if linked */}
                       {subObj && (
-                        <div className="text-xs mb-2 font-medium" style={{ color: "var(--muted)" }}>
-                          Subject: <span style={{ color: "var(--text)" }}>{subObj.name}</span>
+                        <div className="text-xs mb-2.5 font-medium text-[var(--muted)]">
+                          Subject: <span className="text-[var(--text)] font-semibold">{subObj.name}</span>
                         </div>
                       )}
 
                       {/* Text Snippet Preview */}
                       {paper.text_preview && (
                         <p
-                          className="text-xs line-clamp-3 p-2.5 rounded-lg mb-4 font-mono leading-relaxed"
+                          className="text-xs line-clamp-3 p-2.5 rounded-xl mb-4 font-mono leading-relaxed"
                           style={{
                             background: "var(--surface-subtle)",
-                            color: "var(--muted)"
+                            color: "var(--muted)",
+                            border: "1px solid var(--line)"
                           }}
                         >
                           {paper.text_preview}
@@ -612,15 +628,16 @@ export default function PredictedPaperGenerator({
                         <span>
                           {paper.file_size ? `${(paper.file_size / 1024).toFixed(0)} KB` : "Document"}
                         </span>
-                        <span>{paper.prediction_count} Predictions</span>
+                        <span className="font-medium text-[var(--text)]">{paper.prediction_count || 0} Predictions</span>
                       </div>
 
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => openPredictModal(paper)}
-                          className="sa-btn-primary flex-1 py-2 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5"
+                          className="sa-btn-primary flex-1 py-2 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 shadow-xs"
                         >
-                          <Sparkles size={13} /> Predict Paper
+                          <Sparkles size={13} />
+                          <span>Predict Paper</span>
                         </button>
                         <button
                           onClick={() => setInspectPaper(paper)}
@@ -632,7 +649,7 @@ export default function PredictedPaperGenerator({
                         <button
                           onClick={(e) => handleDeletePaper(paper.id, e)}
                           title="Delete from archive"
-                          className="sa-btn-outline p-2 rounded-lg hover:border-red-500 hover:text-red-500"
+                          className="sa-btn-outline p-2 rounded-lg hover:border-red-500 hover:text-red-500 transition-colors"
                         >
                           <Trash2 size={14} />
                         </button>
@@ -653,38 +670,39 @@ export default function PredictedPaperGenerator({
         <div className="space-y-6">
           {/* Action Bar */}
           <div
-            className="sa-card p-4 rounded-xl border flex flex-wrap items-center justify-between gap-3 no-print"
+            className="sa-card p-3.5 sm:p-4 rounded-xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 no-print"
             style={{ background: "var(--surface)", borderColor: "var(--line)" }}
           >
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-sm">Exam Actions:</span>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="font-semibold text-xs sm:text-sm text-[var(--text)]">Exam Blueprint:</span>
               <span
-                className="px-2 py-0.5 rounded text-xs font-medium"
-                style={{ background: "var(--chip-bg)", color: "var(--chip-text)" }}
+                className="px-2.5 py-0.5 rounded-md text-xs font-medium"
+                style={{ background: "var(--surface-subtle)", color: "var(--muted)", border: "1px solid var(--line)" }}
               >
                 Target Year: {currentPrediction.target_year || 2025}
               </span>
               <span
-                className="px-2 py-0.5 rounded text-xs font-medium"
+                className="px-2.5 py-0.5 rounded-md text-xs font-semibold"
                 style={{ background: "var(--accent-soft)", color: "var(--accent-ink)" }}
               >
                 Max Marks: {currentPrediction.total_marks || 70}
               </span>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap w-full sm:w-auto">
               <button
                 onClick={handlePrintPaper}
-                className="sa-btn-outline flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg"
+                className="sa-btn-outline flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg"
               >
-                <Printer size={14} /> Print / Save PDF
+                <Printer size={14} />
+                <span>Print / PDF</span>
               </button>
               <button
                 onClick={handleCopyPaper}
-                className="sa-btn-outline flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg"
+                className="sa-btn-outline flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg"
               >
                 {copiedText ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
-                {copiedText ? "Copied" : "Copy Paper"}
+                <span>{copiedText ? "Copied" : "Copy Paper"}</span>
               </button>
               <button
                 onClick={() => {
@@ -698,9 +716,10 @@ export default function PredictedPaperGenerator({
                   a.click();
                   URL.revokeObjectURL(url);
                 }}
-                className="sa-btn-outline flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg"
+                className="sa-btn-outline flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg"
               >
-                Export JSON
+                <Download size={14} />
+                <span>Export JSON</span>
               </button>
             </div>
           </div>
@@ -714,10 +733,11 @@ export default function PredictedPaperGenerator({
                 borderColor: "var(--line)"
               }}
             >
-              <span className="font-semibold text-xs block mb-1 flex items-center gap-1.5" style={{ color: "var(--accent-ink)" }}>
-                <Sparkles size={14} /> Pattern Rationale & Synthesis Scope:
+              <span className="font-semibold text-xs mb-1 flex items-center gap-1.5" style={{ color: "var(--accent-ink)" }}>
+                <Sparkles size={14} />
+                <span>Pattern Rationale & Syllabus Synthesis Scope:</span>
               </span>
-              <p style={{ color: "var(--muted)" }}>{currentPrediction.summary_analysis}</p>
+              <p className="text-[var(--muted)] leading-relaxed mt-1">{currentPrediction.summary_analysis}</p>
             </div>
           )}
 
@@ -732,10 +752,10 @@ export default function PredictedPaperGenerator({
           >
             {/* Official Exam Paper Header */}
             <div className="border-b-2 pb-6 text-center space-y-2" style={{ borderColor: "var(--text)" }}>
-              <div className="uppercase tracking-widest text-xs font-sans font-bold" style={{ color: "var(--muted)" }}>
+              <div className="uppercase tracking-widest text-xs font-sans font-bold text-[var(--muted)]">
                 Examination Board & University Assessment
               </div>
-              <h2 className="text-xl md:text-2xl font-bold uppercase tracking-wide" style={{ color: "var(--text)" }}>
+              <h2 className="text-xl md:text-2xl font-bold uppercase tracking-wide text-[var(--text)]">
                 {currentPrediction.exam_title || `Examination Paper — ${currentPrediction.target_year || 2025}`}
               </h2>
               <div className="text-base md:text-lg font-semibold font-sans uppercase" style={{ color: "var(--accent-ink)" }}>
@@ -744,8 +764,8 @@ export default function PredictedPaperGenerator({
 
               {/* Time & Marks Metadata Row */}
               <div
-                className="flex justify-between items-center text-xs md:text-sm font-sans font-semibold pt-3 px-2 border-t"
-                style={{ borderColor: "var(--line)", color: "var(--text)" }}
+                className="flex justify-between items-center text-xs md:text-sm font-sans font-semibold pt-3 px-2 border-t text-[var(--text)]"
+                style={{ borderColor: "var(--line)" }}
               >
                 <span>[Time Allowed: {Math.floor((currentPrediction.duration_minutes || 180) / 60)} Hours]</span>
                 <span>[Total Sections: {(currentPrediction.sections || []).length}]</span>
@@ -755,10 +775,10 @@ export default function PredictedPaperGenerator({
 
             {/* Instructions to Candidates */}
             <div
-              className="p-4 rounded-lg text-xs md:text-sm font-sans space-y-1.5"
-              style={{ background: "var(--surface-subtle)" }}
+              className="p-4 rounded-xl text-xs md:text-sm font-sans space-y-1.5 border"
+              style={{ background: "var(--surface-subtle)", borderColor: "var(--line)" }}
             >
-              <span className="font-bold tracking-wide uppercase block mb-1">
+              <span className="font-bold tracking-wide uppercase block mb-1 text-[var(--text)]">
                 Instructions to the Candidates:
               </span>
               {(currentPrediction.general_instructions && currentPrediction.general_instructions.length > 0
@@ -771,7 +791,7 @@ export default function PredictedPaperGenerator({
                     "5. Use of non-programmable scientific calculator is permitted."
                   ]
               ).map((inst, idx) => (
-                <div key={idx} className="leading-snug text-xs" style={{ color: "var(--muted)" }}>
+                <div key={idx} className="leading-snug text-xs text-[var(--muted)]">
                   {inst}
                 </div>
               ))}
@@ -783,11 +803,11 @@ export default function PredictedPaperGenerator({
                 <div key={sIdx} className="space-y-6">
                   {/* Section Title Banner */}
                   <div className="border-b pb-2 text-center" style={{ borderColor: "var(--line)" }}>
-                    <h3 className="font-sans font-bold text-base md:text-lg uppercase tracking-wider" style={{ color: "var(--text)" }}>
+                    <h3 className="font-sans font-bold text-base md:text-lg uppercase tracking-wider text-[var(--text)]">
                       {sec.section_name || `SECTION ${sIdx + 1}`}
                     </h3>
                     {sec.description && (
-                      <p className="font-sans text-xs italic" style={{ color: "var(--muted)" }}>
+                      <p className="font-sans text-xs italic text-[var(--muted)] mt-0.5">
                         {sec.description}
                       </p>
                     )}
@@ -803,7 +823,7 @@ export default function PredictedPaperGenerator({
                         <div key={qIdx} className="space-y-6">
                           {/* Main Question */}
                           <div className="space-y-4">
-                            <div className="font-sans font-bold text-sm tracking-wide" style={{ color: "var(--text)" }}>
+                            <div className="font-sans font-bold text-sm tracking-wide text-[var(--text)]">
                               {qGroup.question_number || `Q.${qIdx * 2 + 1}`}
                             </div>
 
@@ -816,16 +836,16 @@ export default function PredictedPaperGenerator({
                                   <div key={subIdx} className="space-y-2">
                                     <div className="flex items-start justify-between gap-4">
                                       <div className="flex items-start gap-2 text-sm md:text-base leading-relaxed flex-1">
-                                        <span className="font-sans font-semibold text-xs mt-0.5" style={{ color: "var(--text)" }}>
+                                        <span className="font-sans font-semibold text-xs mt-0.5 text-[var(--text)]">
                                           [{sub.sub_id || String.fromCharCode(97 + subIdx)}]
                                         </span>
-                                        <div className="flex-1 font-serif">
+                                        <div className="flex-1 font-serif text-[var(--text)]">
                                           <FormattedText text={sub.text} />
                                         </div>
                                       </div>
                                       <span
-                                        className="font-sans font-bold text-xs px-2 py-0.5 rounded flex-shrink-0"
-                                        style={{ background: "var(--chip-bg)", color: "var(--chip-text)" }}
+                                        className="font-sans font-bold text-xs px-2.5 py-0.5 rounded-md shrink-0"
+                                        style={{ background: "var(--surface-subtle)", color: "var(--text)", border: "1px solid var(--line)" }}
                                       >
                                         [{sub.marks || 7}]
                                       </span>
@@ -836,16 +856,16 @@ export default function PredictedPaperGenerator({
                                       <div className="no-print pl-6">
                                         <button
                                           onClick={() => toggleAnswer(subKey)}
-                                          className="text-[11px] font-sans font-semibold flex items-center gap-1 hover:underline"
-                                          style={{ color: "var(--accent)" }}
+                                          className="text-[11px] font-sans font-semibold flex items-center gap-1.5 hover:underline py-1"
+                                          style={{ color: "var(--accent-ink)" }}
                                         >
                                           {isExp ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
-                                          {isExp ? "Hide Model Answer & Marking Scheme" : "View Model Answer & Scheme"}
+                                          <span>{isExp ? "Hide Model Answer & Marking Scheme" : "View Model Answer & Scheme"}</span>
                                         </button>
 
                                         {isExp && (
                                           <div
-                                            className="mt-2 p-3.5 rounded-lg border font-sans text-xs space-y-2.5 sa-fade-in"
+                                            className="mt-2 p-3.5 rounded-xl border font-sans text-xs space-y-2.5 sa-fade-in"
                                             style={{
                                               background: "var(--surface-subtle)",
                                               borderColor: "var(--line)"
@@ -853,11 +873,11 @@ export default function PredictedPaperGenerator({
                                           >
                                             {sub.cognitive_level && (
                                               <div className="flex items-center gap-2">
-                                                <span className="font-semibold text-[11px]" style={{ color: "var(--muted)" }}>
+                                                <span className="font-semibold text-[11px] text-[var(--muted)]">
                                                   Cognitive Domain:
                                                 </span>
                                                 <span
-                                                  className="px-2 py-0.5 rounded text-[10px] font-semibold"
+                                                  className="px-2 py-0.5 rounded-md text-[10px] font-semibold"
                                                   style={{ background: "var(--accent-soft)", color: "var(--accent-ink)" }}
                                                 >
                                                   {sub.cognitive_level}
@@ -870,7 +890,7 @@ export default function PredictedPaperGenerator({
                                                 <span className="font-semibold text-[11px] block text-green-600 dark:text-green-400">
                                                   Model Answer Outline:
                                                 </span>
-                                                <div className="whitespace-pre-wrap leading-relaxed mt-1" style={{ color: "var(--text)" }}>
+                                                <div className="whitespace-pre-wrap leading-relaxed mt-1 text-[var(--text)]">
                                                   <FormattedText text={sub.model_answer} />
                                                 </div>
                                               </div>
@@ -905,7 +925,7 @@ export default function PredictedPaperGenerator({
                                   <div className="w-full border-t" style={{ borderColor: "var(--line)" }} />
                                 </div>
                                 <span
-                                  className="relative px-4 py-1 text-xs font-sans font-bold tracking-widest uppercase rounded border"
+                                  className="relative px-4 py-1 text-xs font-sans font-bold tracking-widest uppercase rounded-md border"
                                   style={{
                                     background: "var(--surface)",
                                     borderColor: "var(--line)",
@@ -916,7 +936,7 @@ export default function PredictedPaperGenerator({
                                 </span>
                               </div>
 
-                              <div className="font-sans font-bold text-sm tracking-wide" style={{ color: "var(--text)" }}>
+                              <div className="font-sans font-bold text-sm tracking-wide text-[var(--text)]">
                                 {qGroup.or_question.question_number || `Q.${qIdx * 2 + 2}`}
                               </div>
 
@@ -929,16 +949,16 @@ export default function PredictedPaperGenerator({
                                     <div key={subIdx} className="space-y-2">
                                       <div className="flex items-start justify-between gap-4">
                                         <div className="flex items-start gap-2 text-sm md:text-base leading-relaxed flex-1">
-                                          <span className="font-sans font-semibold text-xs mt-0.5" style={{ color: "var(--text)" }}>
+                                          <span className="font-sans font-semibold text-xs mt-0.5 text-[var(--text)]">
                                             [{sub.sub_id || String.fromCharCode(97 + subIdx)}]
                                           </span>
-                                          <div className="flex-1 font-serif">
+                                          <div className="flex-1 font-serif text-[var(--text)]">
                                             <FormattedText text={sub.text} />
                                           </div>
                                         </div>
                                         <span
-                                          className="font-sans font-bold text-xs px-2 py-0.5 rounded flex-shrink-0"
-                                          style={{ background: "var(--chip-bg)", color: "var(--chip-text)" }}
+                                          className="font-sans font-bold text-xs px-2.5 py-0.5 rounded-md shrink-0"
+                                          style={{ background: "var(--surface-subtle)", color: "var(--text)", border: "1px solid var(--line)" }}
                                         >
                                           [{sub.marks || 7}]
                                         </span>
@@ -949,16 +969,16 @@ export default function PredictedPaperGenerator({
                                         <div className="no-print pl-6">
                                           <button
                                             onClick={() => toggleAnswer(subKey)}
-                                            className="text-[11px] font-sans font-semibold flex items-center gap-1 hover:underline"
-                                            style={{ color: "var(--accent)" }}
+                                            className="text-[11px] font-sans font-semibold flex items-center gap-1.5 hover:underline py-1"
+                                            style={{ color: "var(--accent-ink)" }}
                                           >
                                             {isExp ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
-                                            {isExp ? "Hide Model Answer & Marking Scheme" : "View Model Answer & Scheme"}
+                                            <span>{isExp ? "Hide Model Answer & Marking Scheme" : "View Model Answer & Scheme"}</span>
                                           </button>
 
                                           {isExp && (
                                             <div
-                                              className="mt-2 p-3.5 rounded-lg border font-sans text-xs space-y-2.5 sa-fade-in"
+                                              className="mt-2 p-3.5 rounded-xl border font-sans text-xs space-y-2.5 sa-fade-in"
                                               style={{
                                                 background: "var(--surface-subtle)",
                                                 borderColor: "var(--line)"
@@ -966,11 +986,11 @@ export default function PredictedPaperGenerator({
                                             >
                                               {sub.cognitive_level && (
                                                 <div className="flex items-center gap-2">
-                                                  <span className="font-semibold text-[11px]" style={{ color: "var(--muted)" }}>
+                                                  <span className="font-semibold text-[11px] text-[var(--muted)]">
                                                     Cognitive Domain:
                                                   </span>
                                                   <span
-                                                    className="px-2 py-0.5 rounded text-[10px] font-semibold"
+                                                    className="px-2 py-0.5 rounded-md text-[10px] font-semibold"
                                                     style={{ background: "var(--accent-soft)", color: "var(--accent-ink)" }}
                                                   >
                                                     {sub.cognitive_level}
@@ -983,7 +1003,7 @@ export default function PredictedPaperGenerator({
                                                   <span className="font-semibold text-[11px] block text-green-600 dark:text-green-400">
                                                     Model Answer Outline:
                                                   </span>
-                                                  <div className="whitespace-pre-wrap leading-relaxed mt-1" style={{ color: "var(--text)" }}>
+                                                  <div className="whitespace-pre-wrap leading-relaxed mt-1 text-[var(--text)]">
                                                     <FormattedText text={sub.model_answer} />
                                                   </div>
                                                 </div>
@@ -1019,7 +1039,7 @@ export default function PredictedPaperGenerator({
             </div>
 
             {/* End of Examination Paper Sign-off */}
-            <div className="text-center pt-8 border-t font-sans text-xs font-semibold tracking-widest uppercase" style={{ borderColor: "var(--text)", color: "var(--muted)" }}>
+            <div className="text-center pt-8 border-t font-sans text-xs font-semibold tracking-widest uppercase text-[var(--muted)]" style={{ borderColor: "var(--text)" }}>
               ✦ ✦ ✦ End of Examination Question Paper ✦ ✦ ✦
             </div>
           </div>
@@ -1032,18 +1052,23 @@ export default function PredictedPaperGenerator({
       {activeTab === "history" && (
         <div className="space-y-4">
           {loadingHistory ? (
-            <div className="p-12 text-center text-sm" style={{ color: "var(--muted)" }}>
+            <div className="sa-card p-12 text-center text-sm rounded-xl border" style={{ borderColor: "var(--line)", color: "var(--muted)" }}>
               <RefreshCw size={24} className="animate-spin mx-auto mb-3 text-amber-500" />
-              Loading prediction archives...
+              <span>Loading prediction archives...</span>
             </div>
           ) : predictedHistory.length === 0 ? (
             <div
               className="sa-card p-12 text-center rounded-2xl border flex flex-col items-center justify-center"
               style={{ background: "var(--surface)", borderColor: "var(--line)" }}
             >
-              <Award size={32} className="text-amber-500 mb-3" />
-              <h3 className="font-semibold text-base mb-1">No Saved Predicted Papers Yet</h3>
-              <p className="text-xs max-w-sm" style={{ color: "var(--muted)" }}>
+              <div 
+                className="w-14 h-14 rounded-2xl flex items-center justify-center mb-3"
+                style={{ background: "var(--accent-soft)", color: "var(--accent-ink)" }}
+              >
+                <Award size={28} />
+              </div>
+              <h3 className="font-semibold text-base mb-1 text-[var(--text)]">No Saved Predicted Papers Yet</h3>
+              <p className="text-xs text-[var(--muted)] max-w-sm leading-relaxed">
                 When you predict an exam paper from an uploaded previous paper, it will be automatically saved here for quick revision.
               </p>
             </div>
@@ -1053,43 +1078,45 @@ export default function PredictedPaperGenerator({
                 <div
                   key={pred.id}
                   onClick={() => handleLoadPredictedPaper(pred.id)}
-                  className="sa-card p-4 rounded-xl border flex items-center justify-between cursor-pointer hover:border-amber-500 transition-colors"
+                  className="sa-card p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer hover:border-[var(--accent)] transition-all group"
                   style={{ background: "var(--surface)", borderColor: "var(--line)" }}
                 >
                   <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-sm" style={{ color: "var(--text)" }}>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-semibold text-sm text-[var(--text)] group-hover:text-[var(--accent)] transition-colors">
                         {pred.title}
                       </span>
                       <span
-                        className="px-2 py-0.5 rounded text-[11px] font-medium"
+                        className="px-2 py-0.5 rounded-md text-[11px] font-semibold"
                         style={{ background: "var(--accent-soft)", color: "var(--accent-ink)" }}
                       >
                         {pred.target_year || 2025}
                       </span>
                     </div>
-                    <div className="text-xs flex items-center gap-3" style={{ color: "var(--muted)" }}>
-                      <span>Course: {pred.subject_name || "General"}</span>
+                    <div className="text-xs flex items-center gap-2.5 flex-wrap text-[var(--muted)]">
+                      <span>Course: <strong className="text-[var(--text)] font-medium">{pred.subject_name || "General"}</strong></span>
                       <span>•</span>
-                      <span>Marks: {pred.total_marks || 70}</span>
+                      <span>{pred.total_marks || 70} Marks</span>
                       <span>•</span>
                       <span>{pred.created_at ? new Date(pred.created_at).toLocaleDateString() : ""}</span>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 self-end sm:self-auto">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleLoadPredictedPaper(pred.id);
                       }}
-                      className="sa-btn-primary px-3 py-1.5 text-xs font-medium rounded-lg flex items-center gap-1"
+                      className="sa-btn-primary px-3.5 py-1.5 text-xs font-semibold rounded-lg flex items-center gap-1.5 shadow-xs"
                     >
-                      <Eye size={13} /> Open Paper
+                      <Eye size={13} />
+                      <span>Open Paper</span>
                     </button>
                     <button
                       onClick={(e) => handleDeletePredicted(pred.id, e)}
-                      className="sa-btn-outline p-1.5 rounded-lg hover:border-red-500 hover:text-red-500"
+                      className="sa-btn-outline p-1.5 rounded-lg hover:border-red-500 hover:text-red-500 transition-colors"
+                      title="Delete saved prediction"
                     >
                       <Trash2 size={13} />
                     </button>
@@ -1107,46 +1134,46 @@ export default function PredictedPaperGenerator({
       {isUploadOpen && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div
-            className="sa-card w-full max-w-lg p-6 rounded-2xl border shadow-2xl space-y-4"
+            className="sa-card w-full max-w-lg max-h-[90vh] overflow-y-auto sa-scroll p-6 rounded-2xl border shadow-2xl space-y-4"
             style={{ background: "var(--surface)", borderColor: "var(--line)" }}
           >
-            <div className="flex items-center justify-between">
+            <div className="flex items-start justify-between pb-3 border-b" style={{ borderColor: "var(--line)" }}>
               <div>
-                <h3 className="sa-serif text-lg font-bold flex items-center gap-2">
+                <h3 className="sa-serif text-lg font-bold flex items-center gap-2 text-[var(--text)]">
                   <FolderLock size={18} className="text-amber-500" />
-                  {modalMode === "documents" ? "Select Resource From My Documents" : "Upload Examination Paper"}
+                  <span>{modalMode === "documents" ? "Select Resource From My Documents" : "Upload Examination Paper"}</span>
                 </h3>
-                <p className="text-xs mt-0.5" style={{ color: "var(--muted)" }}>
+                <p className="text-xs text-[var(--muted)] mt-0.5">
                   {modalMode === "documents"
-                    ? "Select an existing file from your main filebase to predict the question paper."
+                    ? "Select an existing file from your library to synthesize predicted questions."
                     : "Upload a past paper or scanned exam copy into the dedicated exam archive."}
                 </p>
               </div>
               <button
                 onClick={() => setIsUploadOpen(false)}
-                className="text-gray-400 hover:text-gray-600 text-lg font-bold"
+                className="p-1 rounded-lg text-[var(--muted)] hover:text-[var(--text)] hover:bg-[var(--surface-subtle)] transition-colors"
+                aria-label="Close modal"
               >
-                ✕
+                <X size={16} />
               </button>
             </div>
 
             {/* Mode Switcher Tabs */}
             <div
-              className="flex rounded-lg p-1 border gap-1"
-              style={{ background: "var(--input-bg)", borderColor: "var(--line)" }}
+              className="flex rounded-xl p-1 border gap-1"
+              style={{ background: "var(--surface-subtle)", borderColor: "var(--line)" }}
             >
               <button
                 type="button"
                 onClick={() => setModalMode("upload")}
-                className="flex-1 py-1.5 text-xs font-semibold rounded-md flex items-center justify-center gap-1.5 transition-all"
-                style={{
-                  background: modalMode === "upload" ? "var(--surface)" : "transparent",
-                  color: modalMode === "upload" ? "var(--text)" : "var(--muted)",
-                  boxShadow: modalMode === "upload" ? "0 1px 3px rgba(0,0,0,0.1)" : "none"
-                }}
+                className={`flex-1 py-1.5 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-all ${
+                  modalMode === "upload"
+                    ? "bg-[var(--surface)] text-[var(--text)] shadow-xs"
+                    : "text-[var(--muted)] hover:text-[var(--text)]"
+                }`}
               >
                 <Upload size={13} className={modalMode === "upload" ? "text-amber-500" : ""} />
-                Upload Exam File
+                <span>Upload Exam File</span>
               </button>
               <button
                 type="button"
@@ -1154,15 +1181,14 @@ export default function PredictedPaperGenerator({
                   setModalMode("documents");
                   if (mainDocs.length === 0) fetchMainDocs();
                 }}
-                className="flex-1 py-1.5 text-xs font-semibold rounded-md flex items-center justify-center gap-1.5 transition-all"
-                style={{
-                  background: modalMode === "documents" ? "var(--surface)" : "transparent",
-                  color: modalMode === "documents" ? "var(--text)" : "var(--muted)",
-                  boxShadow: modalMode === "documents" ? "0 1px 3px rgba(0,0,0,0.1)" : "none"
-                }}
+                className={`flex-1 py-1.5 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-all ${
+                  modalMode === "documents"
+                    ? "bg-[var(--surface)] text-[var(--text)] shadow-xs"
+                    : "text-[var(--muted)] hover:text-[var(--text)]"
+                }`}
               >
                 <FileText size={13} className={modalMode === "documents" ? "text-amber-500" : ""} />
-                Choose From My Documents ({mainDocs.length})
+                <span>Choose From Documents ({mainDocs.length})</span>
               </button>
             </div>
 
@@ -1173,43 +1199,42 @@ export default function PredictedPaperGenerator({
               <form onSubmit={handleImportDocument} className="space-y-4">
                 {/* Search Filter */}
                 <div
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg border text-xs"
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl border text-xs"
                   style={{ background: "var(--input-bg)", borderColor: "var(--line)" }}
                 >
-                  <Search size={14} style={{ color: "var(--muted)" }} />
+                  <Search size={14} className="text-[var(--muted)] shrink-0" />
                   <input
                     type="text"
                     value={mainDocSearch}
                     onChange={(e) => setMainDocSearch(e.target.value)}
                     placeholder="Search documents by filename..."
-                    className="bg-transparent outline-none w-full text-xs"
-                    style={{ color: "var(--text)" }}
+                    className="bg-transparent outline-none w-full text-xs text-[var(--text)] placeholder-[var(--muted)]"
                   />
                   {mainDocSearch && (
                     <button
                       type="button"
                       onClick={() => setMainDocSearch("")}
-                      className="text-gray-400 hover:text-gray-600 text-xs"
+                      className="text-[var(--muted)] hover:text-[var(--text)]"
                     >
-                      ✕
+                      <X size={13} />
                     </button>
                   )}
                 </div>
 
                 {/* Documents List */}
                 <div
-                  className="max-h-56 overflow-y-auto space-y-2 pr-1 rounded-xl border p-2"
+                  className="max-h-56 overflow-y-auto sa-scroll space-y-2 pr-1 rounded-xl border p-2"
                   style={{ background: "var(--surface-subtle)", borderColor: "var(--line)" }}
                 >
                   {loadingMainDocs ? (
-                    <div className="py-8 text-center text-xs" style={{ color: "var(--muted)" }}>
+                    <div className="py-8 text-center text-xs text-[var(--muted)]">
                       <RefreshCw size={18} className="animate-spin mx-auto mb-2 text-amber-500" />
-                      Loading documents from your main library...
+                      Loading documents from your library...
                     </div>
                   ) : mainDocs.length === 0 ? (
-                    <div className="py-8 text-center text-xs" style={{ color: "var(--muted)" }}>
+                    <div className="py-8 text-center text-xs text-[var(--muted)]">
                       <BookOpen size={20} className="mx-auto mb-2 opacity-40" />
-                      No documents found in your main library.
+                      No documents found in your library.
                     </div>
                   ) : (
                     mainDocs
@@ -1225,8 +1250,8 @@ export default function PredictedPaperGenerator({
                             onClick={() => setSelectedMainDocId(doc.id)}
                             className={`p-3 rounded-xl border cursor-pointer transition-all flex items-center justify-between gap-3 ${
                               isSelected
-                                ? "border-amber-500 shadow-sm ring-1 ring-amber-500/50"
-                                : "hover:border-gray-400"
+                                ? "border-amber-500 shadow-xs ring-1 ring-amber-500/50"
+                                : "hover:border-[var(--accent)]"
                             }`}
                             style={{
                               background: isSelected ? "var(--accent-soft)" : "var(--surface)",
@@ -1235,9 +1260,9 @@ export default function PredictedPaperGenerator({
                           >
                             <div className="flex items-center gap-2.5 min-w-0">
                               <div
-                                className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                                className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
                                 style={{
-                                  background: isSelected ? "var(--accent)" : "var(--chip-bg)",
+                                  background: isSelected ? "var(--accent)" : "var(--surface-subtle)",
                                   color: isSelected ? "#fff" : "var(--accent-ink)"
                                 }}
                               >
@@ -1245,13 +1270,12 @@ export default function PredictedPaperGenerator({
                               </div>
                               <div className="min-w-0">
                                 <span
-                                  className="font-semibold text-xs block truncate"
-                                  style={{ color: "var(--text)" }}
+                                  className="font-semibold text-xs block truncate text-[var(--text)]"
                                   title={doc.filename}
                                 >
                                   {doc.filename}
                                 </span>
-                                <div className="flex items-center gap-2 text-[11px]" style={{ color: "var(--muted)" }}>
+                                <div className="flex items-center gap-2 text-[11px] text-[var(--muted)]">
                                   <span>{((doc.file_size || 0) / 1024 / 1024).toFixed(2)} MB</span>
                                   {subObj && (
                                     <>
@@ -1265,9 +1289,9 @@ export default function PredictedPaperGenerator({
                               </div>
                             </div>
 
-                            <div className="flex-shrink-0">
+                            <div className="shrink-0">
                               {isSelected ? (
-                                <div className="w-5 h-5 rounded-full bg-amber-500 text-white flex items-center justify-center">
+                                <div className="w-5 h-5 rounded-full bg-amber-500 text-white flex items-center justify-center shadow-xs">
                                   <Check size={12} strokeWidth={3} />
                                 </div>
                               ) : (
@@ -1286,7 +1310,7 @@ export default function PredictedPaperGenerator({
                 {/* Target Year & Exam Session */}
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs font-semibold block mb-1" style={{ color: "var(--text)" }}>
+                    <label className="text-xs font-semibold block mb-1 text-[var(--text)]">
                       Target Exam Year
                     </label>
                     <input
@@ -1295,17 +1319,17 @@ export default function PredictedPaperGenerator({
                       max="2030"
                       value={uploadYear}
                       onChange={(e) => setUploadYear(parseInt(e.target.value) || 2026)}
-                      className="sa-input w-full p-2 text-xs rounded-lg border"
+                      className="sa-input w-full p-2 text-xs rounded-xl border font-medium"
                     />
                   </div>
                   <div>
-                    <label className="text-xs font-semibold block mb-1" style={{ color: "var(--text)" }}>
+                    <label className="text-xs font-semibold block mb-1 text-[var(--text)]">
                       Exam Session / Type
                     </label>
                     <select
                       value={uploadExamType}
                       onChange={(e) => setUploadExamType(e.target.value)}
-                      className="sa-input w-full p-2 text-xs rounded-lg border font-medium"
+                      className="sa-input w-full p-2 text-xs rounded-xl border font-medium cursor-pointer"
                     >
                       <option value="End-Sem">End-Sem (Final)</option>
                       <option value="In-Sem">In-Sem (Midterm)</option>
@@ -1316,28 +1340,28 @@ export default function PredictedPaperGenerator({
                 </div>
 
                 {/* Footer Buttons */}
-                <div className="flex items-center justify-end gap-2 pt-2">
+                <div className="flex items-center justify-end gap-2 pt-2 border-t" style={{ borderColor: "var(--line)" }}>
                   <button
                     type="button"
                     onClick={() => setIsUploadOpen(false)}
-                    className="sa-btn-outline px-4 py-2 text-xs font-medium rounded-lg"
+                    className="sa-btn-outline px-4 py-2 text-xs font-medium rounded-xl"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={isImporting || !selectedMainDocId}
-                    className="sa-btn-primary px-5 py-2 text-xs font-semibold rounded-lg flex items-center gap-1.5"
+                    className="sa-btn-primary px-5 py-2 text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow-xs"
                   >
                     {isImporting ? (
                       <>
                         <RefreshCw size={13} className="animate-spin" />
-                        Setting Resource...
+                        <span>Setting Resource...</span>
                       </>
                     ) : (
                       <>
                         <Sparkles size={13} />
-                        Select & Predict Paper
+                        <span>Select & Predict Paper</span>
                       </>
                     )}
                   </button>
@@ -1351,7 +1375,7 @@ export default function PredictedPaperGenerator({
                 {/* File Dropzone */}
                 <div
                   onClick={() => fileInputRef.current?.click()}
-                  className="p-6 border-2 border-dashed rounded-xl text-center cursor-pointer transition-colors flex flex-col items-center justify-center"
+                  className="p-6 border-2 border-dashed rounded-2xl text-center cursor-pointer transition-colors flex flex-col items-center justify-center"
                   style={{
                     borderColor: uploadFile ? "var(--accent)" : "var(--border-dashed)",
                     background: uploadFile ? "var(--accent-soft)" : "var(--surface-subtle)"
@@ -1371,19 +1395,19 @@ export default function PredictedPaperGenerator({
                   <FileUp size={24} className="mb-2 text-amber-500" />
                   {uploadFile ? (
                     <div>
-                      <span className="font-semibold text-xs block text-amber-800 dark:text-amber-200">
+                      <span className="font-semibold text-xs block" style={{ color: "var(--accent-ink)" }}>
                         {uploadFile.name}
                       </span>
-                      <span className="text-[11px]" style={{ color: "var(--muted)" }}>
+                      <span className="text-[11px] text-[var(--muted)]">
                         {(uploadFile.size / 1024 / 1024).toFixed(2)} MB • Ready to archive
                       </span>
                     </div>
                   ) : (
                     <div>
-                      <span className="font-semibold text-xs block" style={{ color: "var(--text)" }}>
+                      <span className="font-semibold text-xs block text-[var(--text)]">
                         Click to choose or drag & drop past paper
                       </span>
-                      <span className="text-[11px]" style={{ color: "var(--muted)" }}>
+                      <span className="text-[11px] text-[var(--muted)]">
                         Supports PDF, DOCX, TXT, or scanned image exam sheets
                       </span>
                     </div>
@@ -1392,13 +1416,13 @@ export default function PredictedPaperGenerator({
 
                 {/* Subject selector */}
                 <div>
-                  <label className="text-xs font-semibold block mb-1" style={{ color: "var(--text)" }}>
+                  <label className="text-xs font-semibold block mb-1 text-[var(--text)]">
                     Link to Subject
                   </label>
                   <select
                     value={selectedSubjectId}
                     onChange={(e) => setSelectedSubjectId(e.target.value)}
-                    className="sa-input w-full p-2 text-xs rounded-lg border font-medium"
+                    className="sa-input w-full p-2.5 text-xs rounded-xl border font-medium cursor-pointer"
                   >
                     <option value="">General / Unassigned Subject</option>
                     {subjects.map((s) => (
@@ -1412,7 +1436,7 @@ export default function PredictedPaperGenerator({
                 {/* Year & Exam Type row */}
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs font-semibold block mb-1" style={{ color: "var(--text)" }}>
+                    <label className="text-xs font-semibold block mb-1 text-[var(--text)]">
                       Paper Year
                     </label>
                     <input
@@ -1421,17 +1445,17 @@ export default function PredictedPaperGenerator({
                       max="2030"
                       value={uploadYear}
                       onChange={(e) => setUploadYear(parseInt(e.target.value) || 2024)}
-                      className="sa-input w-full p-2 text-xs rounded-lg border"
+                      className="sa-input w-full p-2 text-xs rounded-xl border font-medium"
                     />
                   </div>
                   <div>
-                    <label className="text-xs font-semibold block mb-1" style={{ color: "var(--text)" }}>
+                    <label className="text-xs font-semibold block mb-1 text-[var(--text)]">
                       Exam Session / Type
                     </label>
                     <select
                       value={uploadExamType}
                       onChange={(e) => setUploadExamType(e.target.value)}
-                      className="sa-input w-full p-2 text-xs rounded-lg border font-medium"
+                      className="sa-input w-full p-2 text-xs rounded-xl border font-medium cursor-pointer"
                     >
                       <option value="End-Sem">End-Sem (Final)</option>
                       <option value="In-Sem">In-Sem (Midterm)</option>
@@ -1442,26 +1466,29 @@ export default function PredictedPaperGenerator({
                 </div>
 
                 {/* Submit Buttons */}
-                <div className="flex items-center justify-end gap-2 pt-2">
+                <div className="flex items-center justify-end gap-2 pt-2 border-t" style={{ borderColor: "var(--line)" }}>
                   <button
                     type="button"
                     onClick={() => setIsUploadOpen(false)}
-                    className="sa-btn-outline px-4 py-2 text-xs font-medium rounded-lg"
+                    className="sa-btn-outline px-4 py-2 text-xs font-medium rounded-xl"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={isUploading || !uploadFile}
-                    className="sa-btn-primary px-5 py-2 text-xs font-semibold rounded-lg flex items-center gap-1.5"
+                    className="sa-btn-primary px-5 py-2 text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow-xs"
                   >
                     {isUploading ? (
                       <>
                         <RefreshCw size={13} className="animate-spin" />
-                        Archiving Past Paper...
+                        <span>Archiving Past Paper...</span>
                       </>
                     ) : (
-                      "Upload to Exam Archive"
+                      <>
+                        <Upload size={14} />
+                        <span>Upload to Exam Archive</span>
+                      </>
                     )}
                   </button>
                 </div>
@@ -1477,30 +1504,31 @@ export default function PredictedPaperGenerator({
       {predictModalPaper && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div
-            className="sa-card w-full max-w-lg p-6 rounded-2xl border shadow-2xl space-y-5"
+            className="sa-card w-full max-w-lg max-h-[90vh] overflow-y-auto sa-scroll p-6 rounded-2xl border shadow-2xl space-y-5"
             style={{ background: "var(--surface)", borderColor: "var(--line)" }}
           >
-            <div className="flex items-center justify-between">
+            <div className="flex items-start justify-between pb-3 border-b" style={{ borderColor: "var(--line)" }}>
               <div>
-                <h3 className="sa-serif text-lg font-bold flex items-center gap-2">
+                <h3 className="sa-serif text-lg font-bold flex items-center gap-2 text-[var(--text)]">
                   <Sparkles size={18} className="text-amber-500" />
-                  Predict Upcoming Examination Paper
+                  <span>Predict Upcoming Examination Paper</span>
                 </h3>
-                <p className="text-xs mt-0.5" style={{ color: "var(--muted)" }}>
-                  Source: <strong style={{ color: "var(--text)" }}>{predictModalPaper.filename}</strong>
+                <p className="text-xs text-[var(--muted)] mt-0.5">
+                  Source: <strong className="text-[var(--text)] font-semibold">{predictModalPaper.filename}</strong>
                 </p>
               </div>
               <button
                 onClick={() => setPredictModalPaper(null)}
-                className="text-gray-400 hover:text-gray-600 text-lg font-bold"
+                className="p-1 rounded-lg text-[var(--muted)] hover:text-[var(--text)] hover:bg-[var(--surface-subtle)] transition-colors"
+                aria-label="Close modal"
               >
-                ✕
+                <X size={16} />
               </button>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="text-xs font-semibold block mb-1" style={{ color: "var(--text)" }}>
+                <label className="text-xs font-semibold block mb-1 text-[var(--text)]">
                   Subject / Course Name
                 </label>
                 <input
@@ -1510,13 +1538,13 @@ export default function PredictedPaperGenerator({
                   onChange={(e) =>
                     setPredictConfig({ ...predictConfig, subject_name: e.target.value })
                   }
-                  className="sa-input w-full p-2 text-xs rounded-lg border font-medium"
+                  className="sa-input w-full p-2.5 text-xs rounded-xl border font-medium"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-semibold block mb-1" style={{ color: "var(--text)" }}>
+                  <label className="text-xs font-semibold block mb-1 text-[var(--text)]">
                     Target Examination Year
                   </label>
                   <input
@@ -1530,11 +1558,11 @@ export default function PredictedPaperGenerator({
                         target_year: parseInt(e.target.value) || 2025
                       })
                     }
-                    className="sa-input w-full p-2 text-xs rounded-lg border font-medium"
+                    className="sa-input w-full p-2.5 text-xs rounded-xl border font-medium"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold block mb-1" style={{ color: "var(--text)" }}>
+                  <label className="text-xs font-semibold block mb-1 text-[var(--text)]">
                     Total Marks
                   </label>
                   <select
@@ -1545,7 +1573,7 @@ export default function PredictedPaperGenerator({
                         total_marks: parseInt(e.target.value) || 70
                       })
                     }
-                    className="sa-input w-full p-2 text-xs rounded-lg border font-medium"
+                    className="sa-input w-full p-2.5 text-xs rounded-xl border font-medium cursor-pointer"
                   >
                     <option value={50}>50 Marks (Midterm / In-Sem)</option>
                     <option value={70}>70 Marks (University End-Sem)</option>
@@ -1556,7 +1584,7 @@ export default function PredictedPaperGenerator({
               </div>
 
               <div>
-                <label className="text-xs font-semibold block mb-1" style={{ color: "var(--text)" }}>
+                <label className="text-xs font-semibold block mb-1 text-[var(--text)]">
                   Exam Rigor & Focus
                 </label>
                 <select
@@ -1564,7 +1592,7 @@ export default function PredictedPaperGenerator({
                   onChange={(e) =>
                     setPredictConfig({ ...predictConfig, difficulty: e.target.value })
                   }
-                  className="sa-input w-full p-2 text-xs rounded-lg border font-medium"
+                  className="sa-input w-full p-2.5 text-xs rounded-xl border font-medium cursor-pointer"
                 >
                   <option value="medium">Balanced Standard (60% Conceptual, 40% Applied/Derivation)</option>
                   <option value="hard">Rigorous & Analytical (High focus on derivations, architectures & edge cases)</option>
@@ -1573,7 +1601,7 @@ export default function PredictedPaperGenerator({
               </div>
 
               <div
-                className="p-3.5 rounded-lg border text-xs leading-relaxed space-y-1"
+                className="p-3.5 rounded-xl border text-xs leading-relaxed space-y-1"
                 style={{
                   background: "var(--accent-soft)",
                   borderColor: "var(--accent)",
@@ -1587,28 +1615,28 @@ export default function PredictedPaperGenerator({
                 </p>
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-2">
+              <div className="flex items-center justify-end gap-2 pt-2 border-t" style={{ borderColor: "var(--line)" }}>
                 <button
                   type="button"
                   onClick={() => setPredictModalPaper(null)}
-                  className="sa-btn-outline px-4 py-2 text-xs font-medium rounded-lg"
+                  className="sa-btn-outline px-4 py-2 text-xs font-medium rounded-xl"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleGeneratePrediction}
                   disabled={isPredicting}
-                  className="sa-btn-primary px-5 py-2 text-xs font-semibold rounded-lg flex items-center gap-1.5"
+                  className="sa-btn-primary px-5 py-2 text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow-xs"
                 >
                   {isPredicting ? (
                     <>
                       <RefreshCw size={13} className="animate-spin" />
-                      Synthesizing Predicted Paper...
+                      <span>Synthesizing Predicted Paper...</span>
                     </>
                   ) : (
                     <>
                       <Sparkles size={13} />
-                      Generate Predicted Paper
+                      <span>Generate Predicted Paper</span>
                     </>
                   )}
                 </button>
@@ -1624,38 +1652,40 @@ export default function PredictedPaperGenerator({
       {inspectPaper && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div
-            className="sa-card w-full max-w-2xl max-h-[80vh] flex flex-col p-6 rounded-2xl border shadow-2xl"
+            className="sa-card w-full max-w-2xl max-h-[85vh] flex flex-col p-6 rounded-2xl border shadow-2xl"
             style={{ background: "var(--surface)", borderColor: "var(--line)" }}
           >
             <div className="flex items-center justify-between pb-3 border-b" style={{ borderColor: "var(--line)" }}>
               <div>
-                <h3 className="font-bold text-sm">Extracted Past Paper Content</h3>
-                <span className="text-xs" style={{ color: "var(--muted)" }}>
+                <h3 className="sa-serif font-bold text-base text-[var(--text)]">Extracted Past Paper Content</h3>
+                <span className="text-xs text-[var(--muted)]">
                   {inspectPaper.filename} • {inspectPaper.year || "Previous Year"}
                 </span>
               </div>
               <button
                 onClick={() => setInspectPaper(null)}
-                className="text-gray-400 hover:text-gray-600 font-bold"
+                className="p-1 rounded-lg text-[var(--muted)] hover:text-[var(--text)] hover:bg-[var(--surface-subtle)] transition-colors"
+                aria-label="Close modal"
               >
-                ✕
+                <X size={16} />
               </button>
             </div>
 
             <div
-              className="flex-1 overflow-y-auto sa-scroll my-4 p-4 rounded-lg font-mono text-xs whitespace-pre-wrap leading-relaxed"
+              className="flex-1 overflow-y-auto sa-scroll my-4 p-4 rounded-xl font-mono text-xs whitespace-pre-wrap leading-relaxed border"
               style={{
                 background: "var(--surface-subtle)",
-                color: "var(--text)"
+                color: "var(--text)",
+                borderColor: "var(--line)"
               }}
             >
               {inspectPaper.extracted_text || inspectPaper.text_preview || "No selectable text was extracted."}
             </div>
 
-            <div className="flex justify-end pt-2">
+            <div className="flex justify-end pt-2 border-t" style={{ borderColor: "var(--line)" }}>
               <button
                 onClick={() => setInspectPaper(null)}
-                className="sa-btn-outline px-4 py-1.5 text-xs font-medium rounded-lg"
+                className="sa-btn-outline px-4 py-1.5 text-xs font-medium rounded-xl"
               >
                 Close
               </button>

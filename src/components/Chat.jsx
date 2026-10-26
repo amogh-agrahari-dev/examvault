@@ -297,7 +297,7 @@ function ChatPage({ initialTopicId, initialTopicName, initialDocumentName }) {
   ];
 
   return (
-    <div className="sa-fade-in h-[calc(100vh-140px)] flex gap-4 min-h-0">
+    <div className="sa-fade-in h-full flex gap-3 md:gap-4 min-h-0 p-2 sm:p-4 md:p-6 pb-[calc(3.75rem+env(safe-area-inset-bottom,0px))] md:pb-6 overflow-hidden">
 
       {/* ── Left panel: topic selector (desktop) ─── */}
       <div className="hidden lg:flex flex-col sa-card w-64 flex-shrink-0 overflow-hidden">
@@ -328,7 +328,7 @@ function ChatPage({ initialTopicId, initialTopicName, initialDocumentName }) {
       {sidebarOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
-          <div className="absolute left-0 top-0 h-full w-72 sa-card rounded-none border-r flex flex-col overflow-hidden z-50"
+          <div className="absolute left-0 top-0 h-full w-72 sa-card rounded-none border-r flex flex-col overflow-hidden z-50 pb-[calc(3.75rem+env(safe-area-inset-bottom,0px))] md:pb-0"
             style={{ borderColor: "var(--line)" }}>
             <div className="flex items-center justify-between p-4 border-b" style={{ borderColor: "var(--line)" }}>
               <span className="text-sm font-semibold">Select Topic</span>
@@ -537,7 +537,7 @@ function ChatPage({ initialTopicId, initialTopicName, initialDocumentName }) {
 
         {/* ── Input bar ── */}
         {selectedTopic && !loadingSession && (
-          <div className="p-4 border-t flex-shrink-0" style={{ borderColor: "var(--line)" }}>
+          <div className="p-2.5 sm:p-4 border-t flex-shrink-0" style={{ borderColor: "var(--line)" }}>
             <div className="flex items-end gap-2">
               <textarea
                 ref={inputRef}

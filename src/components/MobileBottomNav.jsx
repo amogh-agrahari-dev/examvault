@@ -14,7 +14,7 @@ export default function MobileBottomNav({ page, setPage }) {
     if (itemId === "dashboard" && page === "dashboard") return true;
     if (itemId === "documents" && (page === "documents" || page === "document-study" || page === "upload" || page === "analysis")) return true;
     if (itemId === "notes" && (page === "notes" || page === "note-editor")) return true;
-    if (itemId === "group-discussions" && page === "group-discussions") return true;
+    if (itemId === "group-discussions" && (page === "group-discussions" || page === "chat")) return true;
     if (itemId === "leaderboard" && page === "leaderboard") return true;
     return false;
   };

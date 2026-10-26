@@ -563,7 +563,7 @@ export default function DiscussionRoom({ discussion, topic, accessToken, onBack 
 
       {/* Composer Area */}
       {discussion.is_member && (
-        <div className="bg-[var(--surface-subtle)] px-2.5 sm:px-4 py-2 shrink-0">
+        <div className="bg-[var(--surface-subtle)] px-2.5 sm:px-4 pt-2 shrink-0 border-t border-[var(--line-subtle)] pb-[calc(3.75rem+env(safe-area-inset-bottom,0px))] md:pb-2.5">
            {/* Modifiers */}
            <div className="flex items-center gap-1.5 mb-2 px-0.5 overflow-x-auto whitespace-nowrap sa-scroll flex-nowrap py-0.5">
               <button type="button" onClick={() => setChatMode("chat")} className={`px-3 py-1 rounded-full text-xs font-medium transition-colors flex items-center gap-1.5 shrink-0 ${chatMode === "chat" ? "bg-[var(--surface)] border-blue-500 text-blue-600 dark:text-blue-400 shadow-sm border" : "bg-[var(--surface)] text-[var(--muted)] shadow-sm border border-transparent hover:bg-[var(--surface-hover)]"}`}>
@@ -578,7 +578,7 @@ export default function DiscussionRoom({ discussion, topic, accessToken, onBack 
            </div>
            
            <div className="flex items-end gap-2">
-              <div className="flex-1 bg-[var(--surface)] rounded-lg flex items-end shadow-sm">
+              <div className="flex-1 bg-[var(--surface)] rounded-xl flex items-end shadow-sm border border-[var(--line-subtle)]">
                  <textarea 
                     ref={inputRef}
                     value={input}
@@ -587,10 +587,10 @@ export default function DiscussionRoom({ discussion, topic, accessToken, onBack 
                     placeholder={
                       chatMode === "verify" ? "Enter a claim to verify..." :
                       chatMode === "ask" ? "Ask a question about this topic..." :
-                      "Type a message"
+                      "Type a message..."
                     }
                     disabled={aiLoading}
-                    className="w-full bg-transparent border-none outline-none resize-none px-3 py-2.5 max-h-32 min-h-[40px] text-[15px] text-[var(--text)]"
+                    className="w-full bg-transparent border-none outline-none resize-none px-3 py-2.5 max-h-32 min-h-[40px] text-sm text-[var(--text)]"
                     rows={1}
                     style={{ height: "auto" }}
                     onInput={(e) => {
@@ -602,15 +602,15 @@ export default function DiscussionRoom({ discussion, topic, accessToken, onBack 
               <button 
                  onClick={handleSend}
                  disabled={!input.trim() || aiLoading}
-                 className="w-10 h-10 rounded-full flex items-center justify-center bg-[var(--ink-btn)] text-[var(--ink-btn-text)] text-white shrink-0 hover:bg-[var(--ink-btn-hover)] disabled:opacity-50 disabled:bg-gray-300 transition-colors"
+                 className="w-10 h-10 rounded-full flex items-center justify-center bg-[var(--ink-btn)] text-[var(--ink-btn-text)] text-white shrink-0 hover:bg-[var(--ink-btn-hover)] disabled:opacity-50 disabled:bg-gray-300 transition-colors shadow-sm"
               >
-                 <Send size={18} className="ml-1" />
+                 <Send size={18} className="ml-0.5" />
               </button>
            </div>
         </div>
       )}
       {!discussion.is_member && (
-         <div className="bg-[var(--surface-subtle)] p-4 shrink-0 text-center text-sm text-[var(--muted)]">
+         <div className="bg-[var(--surface-subtle)] p-4 shrink-0 text-center text-sm text-[var(--muted)] border-t border-[var(--line-subtle)] pb-[calc(3.75rem+env(safe-area-inset-bottom,0px))] md:pb-4">
             You must join the discussion to send messages.
          </div>
       )}
@@ -622,7 +622,7 @@ export default function DiscussionRoom({ discussion, topic, accessToken, onBack 
               <button onClick={() => { setShowMenu(null); setParticipantFilter(""); }}><ArrowLeft size={20} /></button>
               <h2 className="text-lg font-semibold">Group Info & Participants</h2>
             </div>
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-24 md:pb-4">
               <div className="bg-[var(--surface)] p-4 rounded-xl border shadow-sm" style={{ borderColor: "var(--line)" }}>
                 <h3 className="text-xl font-bold text-[var(--text)] mb-1">{discussion.title}</h3>
                 <p className="text-sm text-[var(--muted)]">Group • {membersList.length} participants</p>

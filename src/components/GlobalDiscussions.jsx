@@ -85,7 +85,7 @@ export default function GlobalDiscussions({ accessToken, showToast, initialDiscu
         </div>
 
         {/* Chat List */}
-        <div className="flex-1 overflow-y-auto sa-scroll bg-[var(--surface)]">
+        <div className="flex-1 overflow-y-auto sa-scroll bg-[var(--surface)] pb-20 md:pb-0">
           {loading ? (
              <div className="text-center p-8 text-[var(--muted)] text-sm">Loading chats...</div>
           ) : filteredDiscussions.length === 0 ? (
