@@ -6,6 +6,7 @@ import {
   Target, CalendarDays, BarChart2, ShieldAlert, Cpu, Database, Loader2
 } from "lucide-react";
 import { ProgressBar, Badge } from "./UI";
+import { FormattedText } from "./MathRenderer";
 import {
   getActiveStudyPlan,
   generateStudyPlan,
@@ -649,7 +650,7 @@ function Planner({ go, showToast, selectDoc, accessToken }) {
                                     task.completed ? "line-through text-slate-400" : ""
                                   }`}
                                 >
-                                  {task.title}
+                                  <FormattedText text={task.title} inline />
                                 </span>
                                 {getActivityBadge(task.type)}
                               </div>

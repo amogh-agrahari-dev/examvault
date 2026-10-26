@@ -4,12 +4,23 @@ import { getDocumentTopics, getDocuments } from "../services/api";
 import Flashcards from "./Flashcards";
 import { Badge, EmptyState } from "./UI";
 
-function DocumentStudy({ go, doc, selectDoc, accessToken, showToast }) {
+import GroupDiscussions from "./GroupDiscussions";
+import DiscussionRoom from "./DiscussionRoom";
+
+function DocumentStudy({ go, doc, selectDoc, accessToken, showToast, defaultTab = "flashcards" }) {
   const [activeDoc, setActiveDoc] = useState(doc);
   const [topics, setTopics] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [loading, setLoading] = useState(true);
   const [docsList, setDocsList] = useState([]);
+  
+  // New states for Discussions
+  const [activeTab, setActiveTab] = useState(defaultTab);
+  const [activeDiscussion, setActiveDiscussion] = useState(null);
+
+  useEffect(() => {
+    setActiveTab(defaultTab);
+  }, [defaultTab]);
 
   // If no document passed, fetch user's documents from Neon
   useEffect(() => {
@@ -47,6 +58,7 @@ function DocumentStudy({ go, doc, selectDoc, accessToken, showToast }) {
         setTopics(res.topics || []);
         if (res.topics?.length > 0) {
           setSelectedTopic(res.topics[0]);
+          setActiveDiscussion(null);
         } else {
           setSelectedTopic(null);
         }
@@ -60,6 +72,11 @@ function DocumentStudy({ go, doc, selectDoc, accessToken, showToast }) {
       loadTopics();
     }
   }, [activeDoc, accessToken, showToast]);
+
+  // Reset tab when topic changes
+  useEffect(() => {
+    setActiveDiscussion(null);
+  }, [selectedTopic]);
 
   if (!activeDoc && !loading) {
     return (
@@ -79,14 +96,14 @@ function DocumentStudy({ go, doc, selectDoc, accessToken, showToast }) {
   }
 
   return (
-    <div className="sa-fade-in flex flex-col md:flex-row gap-6">
-      {/* Sidebar for Topics */}
-      <div className="w-full md:w-64 flex flex-col gap-4">
+    <div className="sa-fade-in flex flex-col md:flex-row gap-6 h-[calc(100vh-100px)]">
+      {/* Sidebar for Topics (hidden when active discussion is open on small screens) */}
+      <div className={`w-full md:w-64 flex-col gap-4 ${activeDiscussion ? "hidden md:flex" : "flex"}`}>
         <button onClick={() => go("documents")} className="flex items-center gap-2 text-sm font-medium hover:opacity-70 transition-opacity" style={{ color: "var(--text)" }}>
           <ArrowLeft size={16} /> Back to Documents
         </button>
 
-        <div className="sa-card p-4">
+        <div className="sa-card p-4 flex-1 flex flex-col overflow-hidden">
           <div className="mb-4">
             <h3 className="sa-serif font-semibold text-base truncate" title={activeDoc?.filename || activeDoc?.name}>
               {activeDoc?.filename || activeDoc?.name}
@@ -106,7 +123,7 @@ function DocumentStudy({ go, doc, selectDoc, accessToken, showToast }) {
               )}
             </div>
           ) : (
-            <div className="space-y-1 max-h-[60vh] overflow-y-auto sa-scroll pr-1">
+            <div className="space-y-1 flex-1 overflow-y-auto sa-scroll pr-1">
               {topics.map((t) => (
                 <button
                   key={t.id}
@@ -126,14 +143,65 @@ function DocumentStudy({ go, doc, selectDoc, accessToken, showToast }) {
       </div>
 
       {/* Main Study Area */}
-      <div className="flex-1">
+      <div className="flex-1 flex flex-col overflow-hidden">
         {selectedTopic ? (
-          <Flashcards 
-            topic={selectedTopic} 
-            accessToken={accessToken} 
-            showToast={showToast}
-            go={go}
-          />
+          activeDiscussion ? (
+            <div className="flex flex-col md:flex-row h-full gap-4 overflow-hidden">
+              <div className="flex-1 flex flex-col h-full overflow-hidden">
+                <DiscussionRoom 
+                  discussion={activeDiscussion} 
+                  topic={selectedTopic} 
+                  accessToken={accessToken} 
+                  onBack={() => setActiveDiscussion(null)} 
+                />
+              </div>
+              <div className="w-full md:w-80 flex flex-col h-[50vh] md:h-full overflow-hidden">
+                <div className="sa-card flex-1 overflow-hidden p-2">
+                   <h3 className="sa-serif font-semibold text-sm mb-2 px-2 pt-2">Topic Resources</h3>
+                   <div className="h-full overflow-hidden">
+                     <Flashcards topic={selectedTopic} accessToken={accessToken} showToast={showToast} go={go} compact={true} />
+                   </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col h-full overflow-hidden">
+              <div className="flex items-center gap-4 border-b mb-4" style={{ borderColor: "var(--line)" }}>
+                <button 
+                  onClick={() => setActiveTab("flashcards")} 
+                  className={`pb-2 px-2 text-sm font-semibold transition-colors ${activeTab === "flashcards" ? "border-b-2" : "opacity-50"}`}
+                  style={{ borderColor: activeTab === "flashcards" ? "var(--text)" : "transparent" }}
+                >
+                  Flashcards
+                </button>
+                <button 
+                  onClick={() => setActiveTab("discussions")} 
+                  className={`pb-2 px-2 text-sm font-semibold transition-colors ${activeTab === "discussions" ? "border-b-2" : "opacity-50"}`}
+                  style={{ borderColor: activeTab === "discussions" ? "var(--text)" : "transparent" }}
+                >
+                  Group Discussions
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto sa-scroll pr-2 pb-4">
+                {activeTab === "flashcards" && (
+                  <Flashcards 
+                    topic={selectedTopic} 
+                    accessToken={accessToken} 
+                    showToast={showToast}
+                    go={go}
+                  />
+                )}
+                {activeTab === "discussions" && (
+                  <GroupDiscussions 
+                    topic={selectedTopic} 
+                    accessToken={accessToken} 
+                    onOpenDiscussion={setActiveDiscussion} 
+                  />
+                )}
+              </div>
+            </div>
+          )
         ) : (
           <div className="sa-card p-12 text-center flex flex-col items-center justify-center">
              <BookOpen size={32} color="var(--muted)" className="mb-4" />

@@ -36,13 +36,18 @@ function Sidebar({ page, setPage, collapsed, setCollapsed, mobileOpen, setMobile
         >
           {collapsed ? <ChevronRight size={16} /> : <><ChevronLeft size={16} /> Collapse</>}
         </button>
-        <div className="flex items-center gap-2 px-2 py-2 rounded-lg" style={{ background: "rgba(255,255,255,0.05)" }}>
-          <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "var(--accent)" }}>
+        <div 
+          onClick={() => { setPage("profile"); if (setMobileOpen) setMobileOpen(false); }}
+          className="flex items-center gap-2 px-2 py-2 rounded-lg cursor-pointer hover:bg-white/10 transition-colors group" 
+          style={{ background: "rgba(255,255,255,0.05)" }}
+          title="View your public profile"
+        >
+          <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform" style={{ background: "var(--accent)" }}>
             <span className="text-xs font-bold" style={{ color: "var(--accent-ink)" }}>{initials}</span>
           </div>
           {!collapsed && (
             <div className="min-w-0">
-              <div className="text-white text-xs font-medium truncate">{user?.full_name || "ExamVault student"}</div>
+              <div className="text-white text-xs font-medium truncate group-hover:text-[var(--accent)] transition-colors">{user?.full_name || "ExamVault student"}</div>
               <div className="text-xs truncate" style={{ color: "#9BA4BE" }}>{user?.reputation_credits ?? 0} Vault Credits</div>
             </div>
           )}

@@ -47,6 +47,7 @@ function Dashboard({ go, showToast, selectDoc, accessToken }) {
   ];
 
   const quickActions = [
+    { label: "Quick Notes", icon: PenLine, page: "notes" },
     { label: "Study Planner", icon: Target, page: "planner" },
     { label: "Generate Quiz", icon: HelpCircle, page: "quiz-setup" },
     { label: "Topic Summaries", icon: BookOpen, page: "summary" },

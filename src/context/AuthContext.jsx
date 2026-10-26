@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from "
 import { getCurrentUser, loginUser, registerUser } from "../services/api";
 
 const TOKEN_KEY = "examvault_access_token";
+const USER_KEY = "examvault_user";
 
 const AuthContext = createContext(null);
 
@@ -28,10 +29,27 @@ function storeToken(token) {
   }
 }
 
+function getStoredUser() {
+  try {
+    const raw = localStorage.getItem(USER_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function storeUser(user) {
+  try {
+    if (user) localStorage.setItem(USER_KEY, JSON.stringify(user));
+    else localStorage.removeItem(USER_KEY);
+  } catch {}
+}
+
 export function AuthProvider({ children }) {
   const [accessToken, setAccessToken] = useState(getStoredToken);
-  const [user, setUser] = useState(null);
-  const [isInitializing, setIsInitializing] = useState(true);
+  // Optimistic instant hydration from local storage (0ms blank screen)
+  const [user, setUser] = useState(getStoredUser);
+  const [isInitializing, setIsInitializing] = useState(() => !getStoredUser() && Boolean(getStoredToken()));
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -45,9 +63,13 @@ export function AuthProvider({ children }) {
 
       try {
         const currentUser = await getCurrentUser(accessToken);
-        if (active) setUser(currentUser);
+        if (active) {
+          setUser(currentUser);
+          storeUser(currentUser);
+        }
       } catch {
         storeToken(null);
+        storeUser(null);
         if (active) {
           setAccessToken(null);
           setUser(null);
@@ -66,8 +88,10 @@ export function AuthProvider({ children }) {
     const tokenResponse = await loginUser({ email, password });
     storeToken(tokenResponse.access_token);
     setAccessToken(tokenResponse.access_token);
-    const currentUser = await getCurrentUser(tokenResponse.access_token);
+    // Use user directly from backend response to avoid second sequential roundtrip
+    const currentUser = tokenResponse.user || (await getCurrentUser(tokenResponse.access_token));
     setUser(currentUser);
+    storeUser(currentUser);
     navigateTo("/dashboard");
     return currentUser;
   };
@@ -80,6 +104,7 @@ export function AuthProvider({ children }) {
 
   const logout = () => {
     storeToken(null);
+    storeUser(null);
     setAccessToken(null);
     setUser(null);
     setError("");
@@ -105,3 +130,4 @@ export function useAuth() {
   if (!context) throw new Error("useAuth must be used within an AuthProvider");
   return context;
 }
+

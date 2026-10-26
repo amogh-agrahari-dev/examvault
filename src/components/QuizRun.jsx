@@ -1,44 +1,102 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { Clock, Flag, ArrowLeft, ArrowRight } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Clock, Flag, ArrowLeft, ArrowRight, X } from "lucide-react";
 import { Badge } from "./UI";
-import { QUIZ_BANK } from "../data/mockData";
+import CodingWorkspace from "./CodingWorkspace";
+import { FormattedText } from "./MathRenderer";
+import { startQuizAttempt, saveQuizAnswer, submitQuizAttempt, getQuiz } from "../services/api";
 
-function QuizRun({ go, config, onFinish, fullScreenTitle }) {
-  const questions = useMemo(() => {
-    const n = config.count || 10;
-    const pool = [];
-    for (let i = 0; i < n; i++) pool.push(QUIZ_BANK[i % QUIZ_BANK.length]);
-    return pool;
-  }, [config.count]);
-
+function QuizRun({ go, config, onFinish, fullScreenTitle, accessToken, showToast }) {
+  const generatedQuiz = config?.generatedQuiz;
+  const [attempt, setAttempt] = useState(null);
+  const [questions, setQuestions] = useState(generatedQuiz?.questions || []);
   const [current, setCurrent] = useState(0);
+  
   const [answers, setAnswers] = useState({});
   const [marked, setMarked] = useState({});
-  const [seconds, setSeconds] = useState(config.count === 20 ? 2400 : config.count === 5 ? 600 : 1200);
+  const [seconds, setSeconds] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (seconds <= 0) return;
+    if (!generatedQuiz || !generatedQuiz.id) {
+      go("quiz-setup");
+      return;
+    }
+
+    let isMounted = true;
+    async function initQuiz() {
+      try {
+        let qs = generatedQuiz.questions;
+        if (!qs || qs.length === 0) {
+          const fetched = await getQuiz(generatedQuiz.id, accessToken);
+          qs = fetched.questions || [];
+          if (isMounted) setQuestions(qs);
+        } else {
+          if (isMounted) setQuestions(qs);
+        }
+
+        const att = await startQuizAttempt(generatedQuiz.id, accessToken);
+        if (!isMounted) return;
+        setAttempt(att);
+        const expiry = new Date(att.expiry_timestamp).getTime();
+        const now = new Date().getTime();
+        const diff = Math.max(0, Math.floor((expiry - now) / 1000));
+        setSeconds(diff > 0 ? diff : (generatedQuiz.duration || 20) * 60);
+        setLoading(false);
+      } catch (err) {
+        if (!isMounted) return;
+        showToast("Failed to start quiz attempt");
+        go("quiz-setup");
+      }
+    }
+
+    initQuiz();
+    return () => { isMounted = false; };
+  }, [generatedQuiz?.id, accessToken]);
+
+  useEffect(() => {
+    if (seconds <= 0 || loading) return;
     const t = setInterval(() => setSeconds((s) => (s > 0 ? s - 1 : 0)), 1000);
     return () => clearInterval(t);
-  }, [seconds > 0]);
+  }, [seconds > 0, loading]);
 
   const mm = String(Math.floor(seconds / 60)).padStart(2, "0");
   const ss = String(seconds % 60).padStart(2, "0");
   const q = questions[current];
 
-  const select = (optIdx) => setAnswers({ ...answers, [current]: optIdx });
-  const toggleMark = () => setMarked({ ...marked, [current]: !marked[current] });
+  // Debounced auto-save
+  useEffect(() => {
+    if (!q || !attempt) return;
+    const qid = q.id;
+    const timer = setTimeout(() => {
+      saveQuizAnswer(attempt.id, qid, {
+        student_answer: typeof answers[qid] === 'string' && q.question_type !== 'coding' ? answers[qid] : undefined,
+        selected_options: q.question_type === 'mcq' ? { selected: answers[qid] } : undefined,
+        submitted_code: q.question_type === 'coding' ? answers[qid] : undefined,
+        programming_language: q.question_type === 'coding' ? 'python' : undefined,
+        review_flag: marked[qid] || false
+      }, accessToken).catch(e => console.error("Autosave failed", e));
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [answers[q?.id], marked[q?.id], q?.id, attempt?.id, accessToken, q?.question_type]);
 
-  const submit = () => {
-    let correct = 0;
-    questions.forEach((qq, i) => { if (answers[i] === qq.correct) correct++; });
-    onFinish({ questions, answers, correct, total: questions.length, timeTaken: (config.count === 20 ? 2400 : config.count === 5 ? 600 : 1200) - seconds });
+  const setAnswer = (val) => setAnswers({ ...answers, [q.id]: val });
+  const toggleMark = () => setMarked({ ...marked, [q.id]: !marked[q.id] });
+
+  const submit = async () => {
+    if (!attempt) return;
+    try {
+      await submitQuizAttempt(attempt.id, accessToken);
+      onFinish({ attemptId: attempt.id, quizId: generatedQuiz?.id, quiz: generatedQuiz });
+    } catch(e) {
+      showToast("Failed to submit quiz");
+    }
   };
 
   const status = (i) => {
+    const qid = questions[i].id;
     if (i === current) return "current";
-    if (marked[i]) return "marked";
-    if (answers[i] !== undefined) return "answered";
+    if (marked[qid]) return "marked";
+    if (answers[qid] !== undefined) return "answered";
     return "unattempted";
   };
   const statusStyle = {
@@ -48,12 +106,27 @@ function QuizRun({ go, config, onFinish, fullScreenTitle }) {
     unattempted: { background: "#EFEDE6", color: "var(--text)" },
   };
 
+  if (loading) return <div className="p-8 text-center text-sm" style={{ color: "var(--muted)" }}>Starting your attempt...</div>;
+
   return (
     <div className="sa-fade-in">
       <div className="flex items-center justify-between flex-wrap gap-2 mb-5">
-        <div>
-          <h2 className="sa-serif text-xl font-semibold">{fullScreenTitle || "Computer Networks Quiz"}</h2>
-          <p className="text-xs mt-0.5" style={{ color: "var(--muted)" }}>Question {current + 1} of {questions.length}</p>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => {
+              if (window.confirm("Exit this quiz attempt and return to Quiz Dashboard? Your answers will be saved.")) {
+                go("quiz-setup");
+              }
+            }}
+            className="p-1.5 rounded-lg border hover:bg-[var(--surface-subtle)] text-[var(--muted)]"
+            title="Exit to Quiz Dashboard"
+          >
+            <ArrowLeft size={16} />
+          </button>
+          <div>
+            <h2 className="sa-serif text-xl font-semibold">{fullScreenTitle || generatedQuiz?.title || "Quiz"}</h2>
+            <p className="text-xs mt-0.5" style={{ color: "var(--muted)" }}>Question {current + 1} of {questions.length}</p>
+          </div>
         </div>
         <div className="flex items-center gap-2 px-3 py-2 rounded-lg" style={{ background: seconds < 60 ? "var(--danger-soft)" : "#EFEDE6" }}>
           <Clock size={15} color={seconds < 60 ? "var(--danger)" : "var(--text)"} />
@@ -62,23 +135,58 @@ function QuizRun({ go, config, onFinish, fullScreenTitle }) {
       </div>
 
       <div className="grid lg:grid-cols-[1fr_260px] gap-5">
-        <div className="sa-card sa-card-lg p-6">
+        <div className="sa-card sa-card-lg p-6 flex flex-col">
           <div className="flex items-center gap-2 mb-4">
-            <Badge tone="info">{q.topic}</Badge>
-            {marked[current] && <Badge tone="accent"><Flag size={11} /> Marked</Badge>}
+            <Badge tone="info">{q.question_type.toUpperCase()}</Badge>
+            <Badge tone="accent">{q.difficulty.toUpperCase()}</Badge>
+            {marked[q.id] && <Badge tone="accent"><Flag size={11} /> Marked</Badge>}
           </div>
-          <h3 className="text-base font-medium leading-relaxed mb-6">{q.q}</h3>
-          <div className="space-y-2.5">
-            {q.options.map((opt, i) => (
-              <div key={i} onClick={() => select(i)}
-                className={`sa-option-card px-4 py-3 flex items-center gap-3 text-sm ${answers[current] === i ? "selected" : ""}`}>
+          <div className="text-base font-medium leading-relaxed mb-6">
+            <FormattedText text={q.question_text} />
+          </div>
+          
+          <div className="flex-1 space-y-2.5">
+            {q.question_type === 'mcq' && q.public_options && Object.entries(q.public_options).map(([key, val]) => (
+              <div key={key} onClick={() => setAnswer(key)}
+                className={`sa-option-card px-4 py-3 flex items-center gap-3 text-sm ${answers[q.id] === key ? "selected" : ""}`}>
                 <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-semibold"
-                  style={{ border: "1.5px solid " + (answers[current] === i ? "var(--ink)" : "#CFCBBB"), background: answers[current] === i ? "var(--ink)" : "transparent", color: answers[current] === i ? "#fff" : "var(--muted)" }}>
-                  {String.fromCharCode(65 + i)}
+                  style={{ border: "1.5px solid " + (answers[q.id] === key ? "var(--ink)" : "#CFCBBB"), background: answers[q.id] === key ? "var(--ink)" : "transparent", color: answers[q.id] === key ? "#fff" : "var(--muted)" }}>
+                  {key}
                 </div>
-                <span>{opt}</span>
+                <span className="flex-1">
+                  <FormattedText text={val} inline />
+                </span>
               </div>
             ))}
+
+            {q.question_type === 'short_answer' && (
+              <textarea 
+                className="w-full h-32 p-3 rounded-lg text-sm outline-none resize-none"
+                style={{ border: "1px solid var(--line)" }}
+                placeholder="Write your answer here..."
+                value={answers[q.id] || ""}
+                onChange={(e) => setAnswer(e.target.value)}
+              />
+            )}
+
+            {q.question_type === 'coding' && (
+              <CodingWorkspace 
+                question={q} 
+                value={answers[q.id] || ""} 
+                onChange={setAnswer} 
+                onRun={async (code, customInput) => {
+                  const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api/v1";
+                  const res = await fetch(`${API_BASE_URL}/quiz/code/run`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}` },
+                    body: JSON.stringify({ question_id: q.id, code, language: "python", stdin: customInput || "" })
+                  });
+                  const data = await res.json();
+                  if (!res.ok) throw new Error(data.detail || "Execution failed.");
+                  return data;
+                }}
+              />
+            )}
           </div>
 
           <div className="flex items-center justify-between mt-8 flex-wrap gap-2">
@@ -87,7 +195,7 @@ function QuizRun({ go, config, onFinish, fullScreenTitle }) {
               <ArrowLeft size={14} /> Previous
             </button>
             <button onClick={toggleMark} className="sa-btn-outline px-4 py-2 text-sm font-medium flex items-center gap-1.5">
-              <Flag size={14} /> {marked[current] ? "Unmark" : "Mark for Review"}
+              <Flag size={14} /> {marked[q.id] ? "Unmark" : "Mark for Review"}
             </button>
             {current === questions.length - 1 ? (
               <button onClick={submit} className="sa-btn-accent px-5 py-2 text-sm font-medium">Submit</button>
@@ -117,12 +225,11 @@ function QuizRun({ go, config, onFinish, fullScreenTitle }) {
               </div>
             ))}
           </div>
-          <button onClick={submit} className="sa-btn-primary w-full mt-4 py-2 text-sm font-medium">Submit {fullScreenTitle ? "Exam" : "Quiz"}</button>
+          <button onClick={submit} className="sa-btn-primary w-full mt-4 py-2 text-sm font-medium">Submit Quiz</button>
         </div>
       </div>
     </div>
   );
 }
-
 
 export default QuizRun;

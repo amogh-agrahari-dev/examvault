@@ -1,7 +1,7 @@
 // Central mock data store for ExamVault — swap these for real API calls later.
 import {
   LayoutDashboard, FileText, MessageSquare, HelpCircle, BookOpen, Layers,
-  ClipboardList, Calendar, TrendingUp, Settings as SettingsIcon,
+  ClipboardList, Calendar, TrendingUp, Settings as SettingsIcon, Users, PenLine
 } from "lucide-react";
 
 const DOCUMENTS = [
@@ -54,24 +54,24 @@ const QUIZ_BANK = [
   { q: "Which OSI layer is responsible for routing packets between networks?", options: ["Data Link", "Network", "Transport", "Session"], correct: 1, topic: "OSI Model", explanation: "The Network layer (Layer 3) handles logical addressing and routing between different networks." },
   { q: "What does TCP guarantee that UDP does not?", options: ["Lower latency", "Ordered, reliable delivery", "Smaller header size", "Multicast support"], correct: 1, topic: "TCP/IP", explanation: "TCP is connection-oriented and guarantees ordered, reliable delivery via acknowledgements and retransmission." },
   { q: "In a star topology, what happens if the central node fails?", options: ["Only one device is affected", "The entire network goes down", "Nothing, it self-heals", "Only new connections are blocked"], correct: 1, topic: "Network Topologies", explanation: "Because every device connects through the central hub/switch, its failure takes down the whole network." },
-  { q: "Which routing algorithm uses the Bellman-Ford equation?", options: ["Link State", "Distance Vector", "Path Vector", "Flooding"], correct: 1, topic: "Routing Algorithms", explanation: "Distance Vector routing (e.g. RIP) computes shortest paths using the Bellman-Ford equation." },
-  { q: "Which layer is responsible for end-to-end flow control?", options: ["Physical", "Network", "Transport", "Presentation"], correct: 2, topic: "Transport Layer", explanation: "The Transport layer manages flow control and reliable end-to-end delivery between hosts." },
+  { q: "Which routing algorithm uses the Bellman-Ford equation?", options: ["Link State", "Distance Vector", "Path Vector", "Flooding"], correct: 1, topic: "Routing Algorithms", explanation: "Distance Vector routing (e.g. RIP) computes shortest paths using the Bellman-Ford equation: $D_x(y) = \\min_v \\{ c(x,v) + D_v(y) \\}$." },
+  { q: "In a fully connected mesh network with $n$ nodes, how many physical links are required?", options: ["$n$", "$n \\log n$", "$\\frac{n(n-1)}{2}$", "$2n$"], correct: 2, topic: "Network Topologies", explanation: "A full mesh topology requires $\\frac{n(n-1)}{2}$ bidirectional links so every node connects directly to every other node." },
+  { q: "What is the integrating factor for the first-order linear ODE $\\frac{dy}{dx} + P(x)y = Q(x)$?", options: ["$I(x) = e^{\\int P(x) dx}$", "$I(x) = \\int P(x) dx$", "$I(x) = e^{-\\int Q(x) dx}$", "$I(x) = \\ln|P(x)|$"], correct: 0, topic: "Differential Equations", explanation: "Multiplying by the integrating factor $I(x) = e^{\\int P(x) dx}$ makes the left side an exact derivative: $\\frac{d}{dx}[y \\cdot I(x)] = Q(x) I(x)$." },
   { q: "HTTP operates primarily at which OSI layer?", options: ["Transport", "Session", "Application", "Presentation"], correct: 2, topic: "Application Layer", explanation: "HTTP is an application-layer protocol used for web communication." },
   { q: "What is the primary purpose of subnetting?", options: ["Increase bandwidth", "Divide a network into smaller segments", "Encrypt traffic", "Compress packets"], correct: 1, topic: "TCP/IP", explanation: "Subnetting divides a larger network into smaller, more manageable segments for efficiency and security." },
   { q: "Which device operates at the Data Link layer?", options: ["Router", "Switch", "Hub", "Repeater"], correct: 1, topic: "OSI Model", explanation: "Switches use MAC addresses to forward frames, operating at Layer 2 (Data Link)." },
-  { q: "In mesh topology, connections between n nodes require how many links?", options: ["n", "n log n", "n(n-1)/2", "2n"], correct: 2, topic: "Network Topologies", explanation: "A fully connected mesh needs n(n-1)/2 links so every node connects directly to every other node." },
   { q: "Link State routing floods information about:", options: ["Only neighbor costs", "The entire network topology", "Only the destination", "Nothing, it uses static tables"], correct: 1, topic: "Routing Algorithms", explanation: "Link State protocols (e.g. OSPF) flood topology information so each router builds a full map of the network." },
 ];
 
 const FLASHCARDS = [
-  { q: "What is mutual induction?", a: "The phenomenon in which a change in current in one coil induces an EMF in a neighboring coil, due to the changing magnetic flux linking both coils.", topic: "Engineering Mathematics" },
+  { q: "What is Faraday's Law & Mutual Induction?", a: "The induced EMF in a coil is given by $\\mathcal{E} = -M \\frac{dI}{dt}$, where $M$ is mutual inductance and $\\frac{dI}{dt}$ is the rate of change of primary current. Magnetic flux linkage satisfies $\\Phi = L I$.", topic: "Engineering Mathematics" },
   { q: "Define the OSI Model.", a: "A 7-layer conceptual framework (Physical, Data Link, Network, Transport, Session, Presentation, Application) that standardizes how different systems communicate over a network.", topic: "Computer Networks" },
   { q: "What is a deadlock?", a: "A state where a set of processes are blocked because each process is holding a resource and waiting for another resource held by another process in the set.", topic: "Operating Systems" },
-  { q: "What is the time complexity of binary search?", a: "O(log n), since the search space is halved on every comparison.", topic: "Data Structures" },
-  { q: "What is the Laplace Transform used for?", a: "It converts a differential equation in the time domain into an algebraic equation in the frequency (s) domain, making it easier to solve linear systems.", topic: "Engineering Mathematics" },
+  { q: "What is the time complexity of binary search?", a: "$\\mathcal{O}(\\log n)$, since the search interval is halved on each step: $T(n) = T(n/2) + \\mathcal{O}(1)$.", topic: "Data Structures" },
+  { q: "What is the definition of the unilateral Laplace Transform?", a: "The transform converts time-domain signals to the $s$-domain: $$\\mathcal{L}\\{f(t)\\} = F(s) = \\int_0^{\\infty} f(t) e^{-st} \\, dt$$ where $s = \\sigma + j\\omega$.", topic: "Engineering Mathematics" },
+  { q: "State Bayes' Theorem for conditional probability.", a: "For hypothesis $A$ and evidence $B$: $$P(A|B) = \\frac{P(B|A) \\cdot P(A)}{P(B)}$$", topic: "Engineering Mathematics" },
   { q: "Differentiate TCP and UDP.", a: "TCP is connection-oriented, reliable, and ordered. UDP is connectionless, faster, and does not guarantee delivery or order.", topic: "Computer Networks" },
-  { q: "What is virtual memory?", a: "A memory management technique that gives an application the illusion of a large, contiguous address space by mapping it to physical memory and disk.", topic: "Operating Systems" },
-  { q: "What is a self-balancing binary search tree?", a: "A BST that automatically keeps its height small (e.g. AVL, Red-Black trees) by rebalancing after insertions/deletions, keeping operations at O(log n).", topic: "Data Structures" },
+  { q: "What is a self-balancing binary search tree?", a: "A BST that automatically keeps its height $h = \\mathcal{O}(\\log n)$ (e.g., AVL, Red-Black trees) by rebalancing after insertions/deletions.", topic: "Data Structures" },
 ];
 
 const WEEKLY_ACTIVITY = [
@@ -90,18 +90,48 @@ const TOPIC_MASTERY_RADAR = [
 const NAV_ITEMS = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
   { id: "documents", label: "My Documents", icon: FileText },
+  { id: "notes", label: "Quick Notes", icon: PenLine },
   { id: "chat", label: "AI Chat", icon: MessageSquare },
   { id: "quiz-setup", label: "Quiz", icon: HelpCircle },
   { id: "summary", label: "Summaries", icon: BookOpen },
   { id: "flashcards", label: "Flashcards", icon: Layers },
   { id: "mock-exam", label: "Mock Exams", icon: ClipboardList },
   { id: "planner", label: "Study Planner", icon: Calendar },
-  { id: "progress", label: "Progress", icon: TrendingUp },
+  { id: "group-discussions", label: "Group Discussions", icon: Users },
+  { id: "subjects", label: "Predict Paper", icon: TrendingUp },
   { id: "settings", label: "Settings", icon: SettingsIcon },
 ];
 
 
 const SUMMARY_CONTENT = {
+  "Linear Algebra & Transforms": {
+    overview: "Linear transformations and integral transforms form the mathematical backbone of engineering analysis. We map continuous differential operators into algebraic matrices and frequency-domain poles.",
+    concepts: [
+      "Eigenvalue equation: $A \\mathbf{v} = \\lambda \\mathbf{v}$, where $\\det(A - \\lambda I) = 0$ yields characteristic roots.",
+      "Laplace transformation: $\\mathcal{L}\\{f'(t)\\} = s F(s) - f(0)$ converts differential systems into linear algebraic equations.",
+      "Orthogonality condition: $\\langle \\mathbf{u}, \\mathbf{v} \\rangle = \\mathbf{u}^T \\mathbf{v} = 0$ simplifies basis projections in $\\mathbb{R}^n$."
+    ],
+    definitions: [
+      ["Characteristic Polynomial", "The polynomial equation $P(\\lambda) = \\det(A - \\lambda I) = 0$ determining the spectrum of matrix $A$."],
+      ["Convolution Theorem", "States that $\\mathcal{L}\\{(f * g)(t)\\} = F(s) \\cdot G(s)$, simplifying time-domain convolution into multiplication."]
+    ],
+    formulas: [
+      {
+        equation_latex: "\\mathcal{L}\\{f(t)\\} = F(s) = \\int_0^{\\infty} e^{-st} f(t) \\, dt",
+        variables: "s = \\sigma + j\\omega, \\, t \\ge 0",
+        explanation: "Unilateral Laplace Transform converting time-domain differential equations into frequency-domain algebraic expressions."
+      },
+      {
+        equation_latex: "E_{\\text{rms}} = 4.44 \\cdot f \\cdot N \\cdot \\Phi_m",
+        variables: "E_{\\text{rms}} = \\text{Induced RMS EMF (V)}, \\, f = \\text{frequency (Hz)}, \\, N = \\text{turns}, \\, \\Phi_m = \\text{peak flux (Wb)}",
+        explanation: "Transformer induced EMF formula obtained by evaluating Faraday's law $\\mathcal{E} = -N \\frac{d\\Phi}{dt}$ for sinusoidal excitation."
+      }
+    ],
+    examTips: [
+      "Always verify initial conditions $f(0)$ and $f'(0)$ before taking inverse Laplace transforms.",
+      "Remember that symmetric matrices have purely real eigenvalues and orthogonal eigenvectors."
+    ]
+  },
   "OSI Model": {
     overview: "The OSI Model is a 7-layer conceptual framework that standardizes how different computer systems communicate over a network, from physical transmission up to the application the user interacts with.",
     concepts: ["Each layer serves the layer above it and is served by the layer below.", "Data is encapsulated with headers as it moves down the stack on the sender's side.", "The mnemonic 'Please Do Not Throw Sausage Pizza Away' recalls the 7 layers in order."],
@@ -119,27 +149,33 @@ const SUMMARY_CONTENT = {
 };
 
 const MOCK_AI_RESPONSES = {
-  transformer: `### Transformer — Working
+  transformer: `### Transformer — Working & Mathematical Principles
 **Basic Principle**
-A transformer works on the principle of mutual electromagnetic induction.
-**Working**
-1. AC is supplied to the primary winding.
-2. Alternating magnetic flux is produced.
-3. The flux links with the secondary winding.
-4. EMF is induced in the secondary winding.
-FORMULA: E = 4.44 f N Φm
-TIP: Remember that a transformer requires alternating magnetic flux — it cannot step up or down a pure DC supply.`,
+A transformer operates on Faraday's law of mutual electromagnetic induction.
+
+**Working & Equations**
+1. AC voltage $V_1$ is supplied to the primary winding with $N_1$ turns.
+2. Alternating magnetic flux $\\Phi(t) = \\Phi_m \\sin(\\omega t)$ links both primary and secondary windings.
+3. The instantaneous induced EMF in the secondary winding with $N_2$ turns is:
+$$\\mathcal{E}_2(t) = -N_2 \\frac{d\\Phi}{dt} = -N_2 \\omega \\Phi_m \\cos(\\omega t)$$
+4. The RMS value of induced EMF is:
+$$E = 4.44 \\cdot f \\cdot N \\cdot \\Phi_m$$
+
+**Voltage & Transformation Ratio**
+$$\\frac{V_1}{V_2} = \\frac{N_1}{N_2} = \\frac{I_2}{I_1} = k$$
+
+TIP: A pure DC supply cannot be stepped up or down because $\\frac{d\\Phi}{dt} = 0$, which would cause excessive primary current and winding burnout.`,
   default: `### {TOPIC}
-**Basic Principle**
-Here's a structured breakdown grounded in your uploaded document.
-**Working**
-1. The concept builds on the fundamentals covered earlier in the chapter.
-2. Each step follows logically from the underlying definition.
-3. Worked examples in the document illustrate the typical exam pattern.
+**Core Fundamentals**
+Here is a structured breakdown grounded in your uploaded document.
+
+**Mathematical Formulation**
+For any continuous system governed by $f(x)$, the general equilibrium equation is:
+$$\\sum_{i=1}^n F_i = 0 \\quad \\text{and} \\quad \\int_a^b f(x) \\, dx = C$$
+
 - Commonly tested in 5-mark and 10-mark questions
-- Often paired with a labeled diagram
-FORMULA: See the highlighted formula box on page 34 of your document
-TIP: Practice at least two past-paper variations of this question before your exam.`,
+- Often paired with numerical problem solving
+TIP: Practice at least two variations of this derivation before your exam.`,
 };
 
 export {

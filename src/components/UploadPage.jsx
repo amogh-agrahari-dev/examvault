@@ -3,7 +3,7 @@ import { FileUp, FileText, CheckCircle2, Circle } from "lucide-react";
 import { ProgressBar } from "./UI";
 import { uploadStudyDocument } from "../services/api";
 
-function UploadPage({ go, showToast, accessToken }) {
+function UploadPage({ go, showToast, accessToken, uploadParams }) {
   const [stage, setStage] = useState("idle"); // idle, processing, done, failed
   const [statusText, setStatusText] = useState("");
   const [fileData, setFileData] = useState(null);
@@ -18,7 +18,7 @@ function UploadPage({ go, showToast, accessToken }) {
     setStatusText("Uploading and parsing document...");
 
     try {
-      const response = await uploadStudyDocument(file, accessToken);
+      const response = await uploadStudyDocument(file, accessToken, uploadParams);
       // Backend returns document object
       setStatusText("Generating flashcards and topics...");
       // For now the backend processes async in the background.

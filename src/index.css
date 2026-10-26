@@ -234,3 +234,1025 @@ html.dark, .dark {
 
 /* Used by the upload-processing spinner in UploadPage */
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* Chat Markdown Styling */
+.markdown-chat-content p {
+  margin-bottom: 0.5em;
+}
+.markdown-chat-content p:last-child {
+  margin-bottom: 0;
+}
+.markdown-chat-content ul {
+  list-style-type: disc;
+  padding-left: 1.5em;
+  margin-bottom: 0.5em;
+}
+.markdown-chat-content ol {
+  list-style-type: decimal;
+  padding-left: 1.5em;
+  margin-bottom: 0.5em;
+}
+.markdown-chat-content pre {
+  background-color: var(--surface-hover);
+  padding: 0.5em;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin-bottom: 0.5em;
+}
+.markdown-chat-content code {
+  background-color: var(--surface-hover);
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  font-family: monospace;
+}
+.markdown-chat-content pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+/* KaTeX Math Typography & Dark Mode Styling */
+.katex {
+  color: inherit;
+  font-size: 1.05em;
+  text-rendering: auto;
+}
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.35rem 0.25rem;
+  margin: 0.75rem 0;
+  max-width: 100%;
+}
+.katex-display::-webkit-scrollbar {
+  height: 4px;
+}
+.katex-display::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb);
+  border-radius: 999px;
+}
+.inline-math-container {
+  display: inline;
+}
+.inline-math-container .katex {
+  padding: 0 0.15em;
+}
+
+/* =========================================================================
+   Quick Short Notes - Word-like Editor Styles
+   ========================================================================= */
+
+.note-document-paper {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--line);
+  box-shadow: 0 4px 24px var(--shadow-color), 0 1px 3px rgba(0,0,0,0.05);
+  border-radius: 14px;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.note-editor-content .ProseMirror {
+  outline: none;
+  min-height: 480px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text);
+}
+
+.note-editor-content .ProseMirror p {
+  margin-top: 0;
+  margin-bottom: 0.85em;
+}
+
+.note-editor-content .ProseMirror h1 {
+  font-family: 'Newsreader', serif;
+  font-size: 1.85rem;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-top: 1.4em;
+  margin-bottom: 0.5em;
+  color: var(--text);
+}
+
+.note-editor-content .ProseMirror h2 {
+  font-family: 'Newsreader', serif;
+  font-size: 1.45rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 1.2em;
+  margin-bottom: 0.45em;
+  color: var(--text);
+}
+
+.note-editor-content .ProseMirror h3 {
+  font-family: 'Newsreader', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin-top: 1em;
+  margin-bottom: 0.4em;
+  color: var(--text);
+}
+
+.note-editor-content .ProseMirror ul[data-type="taskList"] {
+  list-style: none !important;
+  padding-left: 0.25rem !important;
+  margin-top: 0.35em !important;
+  margin-bottom: 0.85em !important;
+}
+
+.note-editor-content .ProseMirror ul[data-type="taskList"] li {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 0.6rem !important;
+  list-style: none !important;
+  margin-bottom: 0.4em !important;
+}
+
+.note-editor-content .ProseMirror ul[data-type="taskList"] li label {
+  user-select: none;
+  cursor: pointer;
+  margin-top: 0.2em;
+}
+
+.note-editor-content .ProseMirror ul[data-type="taskList"] li input[type="checkbox"] {
+  cursor: pointer !important;
+  accent-color: var(--accent) !important;
+  width: 16px !important;
+  height: 16px !important;
+  border-radius: 4px !important;
+}
+
+.note-editor-content .ProseMirror ul[data-type="taskList"] li[data-checked="true"] > div > p {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+
+.note-editor-content .ProseMirror ul:not([data-type="taskList"]) {
+  list-style: disc outside !important;
+  padding-left: 1.75rem !important;
+  margin-top: 0.35em !important;
+  margin-bottom: 0.85em !important;
+}
+
+.note-editor-content .ProseMirror ol {
+  list-style: decimal outside !important;
+  padding-left: 1.75rem !important;
+  margin-top: 0.35em !important;
+  margin-bottom: 0.85em !important;
+}
+
+.note-editor-content .ProseMirror li {
+  display: list-item !important;
+  margin-bottom: 0.3em !important;
+  padding-left: 0.2rem !important;
+}
+
+.note-editor-content .ProseMirror li p {
+  margin-top: 0 !important;
+  margin-bottom: 0.25em !important;
+}
+
+.note-editor-content .ProseMirror blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.note-editor-content .ProseMirror hr {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 1.5rem 0;
+}
+
+.note-editor-content .ProseMirror img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 1rem auto;
+  border: 1px solid var(--line);
+  box-shadow: 0 4px 12px var(--shadow-color);
+  transition: box-shadow 0.2s ease, outline 0.15s ease;
+}
+
+.note-editor-content .ProseMirror img.ProseMirror-selectednode {
+  outline: 3px solid var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.note-editor-content .ProseMirror mark {
+  border-radius: 2px;
+  padding: 0.1em 0.25em;
+}
+
+.note-editor-content .ProseMirror p.is-editor-empty:first-child::before {
+  color: var(--muted);
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Side-by-side image stacking in a row */
+.note-editor-content .ProseMirror .node-image.image-row-item,
+.note-editor-content .ProseMirror .node-image[data-layout="row"],
+.note-editor-content .ProseMirror .node-image[data-image-layout="row"],
+.note-editor-content .ProseMirror .node-image:has([data-layout="row"]),
+.note-editor-content .ProseMirror .node-image:has(.image-node-row),
+.note-editor-content .ProseMirror [data-node-view-wrapper].image-node-row {
+  display: inline-flex !important;
+  vertical-align: top !important;
+  box-sizing: border-box !important;
+  margin: 6px 4px !important;
+  transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.15s ease !important;
+}
+
+.note-editor-content .ProseMirror .node-image.image-row-item > [data-node-view-wrapper],
+.note-editor-content .ProseMirror .node-image[data-layout="row"] > [data-node-view-wrapper],
+.note-editor-content .ProseMirror .node-image:has([data-layout="row"]) > [data-node-view-wrapper] {
+  display: flex !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.note-editor-content .ProseMirror .node-image.image-row-item img,
+.note-editor-content .ProseMirror .node-image[data-layout="row"] img,
+.note-editor-content .ProseMirror [data-node-view-wrapper].image-node-row img {
+  margin: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  display: block !important;
+}
+
+@media (max-width: 640px) {
+  .note-editor-content .ProseMirror .node-image.image-row-item,
+  .note-editor-content .ProseMirror .node-image[data-layout="row"],
+  .note-editor-content .ProseMirror [data-node-view-wrapper].image-node-row {
+    width: 100% !important;
+    margin: 6px 0 !important;
+  }
+}
+
+/* Print to PDF Styles */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 15mm 15mm 20mm 15mm;
+  }
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .no-print, header, nav, aside, .sa-sidebar, .sa-topbar, #root > div > div:first-child:not(.print-container) {
+    display: none !important;
+  }
+  .note-editor-content .ProseMirror {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .note-editor-content .ProseMirror img {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+}
+
+/* =========================================================================
+   macOS Sequoia / Sonoma Design System (for Quick Notes Dashboard)
+   ========================================================================= */
+
+.macos-font {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", "Segoe UI", Roboto, system-ui, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+.macos-window-shell {
+  border-radius: 18px;
+  box-shadow: 0 25px 65px -12px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+.dark .macos-window-shell {
+  box-shadow: 0 30px 75px -15px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.macos-titlebar {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.dark .macos-titlebar {
+  background: rgba(30, 30, 36, 0.85);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.macos-traffic-light {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 1px 2px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.macos-traffic-light:hover {
+  filter: brightness(0.92);
+}
+
+.macos-traffic-light:active {
+  transform: scale(0.92);
+}
+
+.macos-traffic-close {
+  background: #ff5f56;
+  border: 0.5px solid #e0443e;
+}
+
+.macos-traffic-minimize {
+  background: #ffbd2e;
+  border: 0.5px solid #dea123;
+}
+
+.macos-traffic-zoom {
+  background: #27c93f;
+  border: 0.5px solid #1aab29;
+}
+
+.macos-traffic-symbol {
+  opacity: 0;
+  font-size: 8px;
+  font-weight: 800;
+  color: rgba(0, 0, 0, 0.65);
+  line-height: 1;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+}
+
+.macos-traffic-container:hover .macos-traffic-symbol {
+  opacity: 1;
+}
+
+.macos-sidebar {
+  background: rgba(246, 245, 241, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.dark .macos-sidebar {
+  background: rgba(23, 23, 28, 0.78);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.macos-sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  transition: background-color 0.12s ease, color 0.12s ease, transform 0.1s ease;
+}
+
+.macos-sidebar-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dark .macos-sidebar-item:hover {
+  background-color: rgba(255, 255, 255, 0.07);
+}
+
+.macos-sidebar-item.active {
+  background-color: #007AFF;
+  color: #FFFFFF !important;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0, 122, 255, 0.28);
+}
+
+.macos-sidebar-item.active * {
+  color: #FFFFFF !important;
+}
+
+.macos-segmented-bar {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px;
+  border-radius: 9px;
+  background: rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.dark .macos-segmented-bar {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.macos-segmented-btn {
+  padding: 4px 10px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.macos-segmented-btn.active {
+  background: #FFFFFF;
+  color: #1c1c1e;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 1px rgba(0, 0, 0, 0.06);
+  font-weight: 600;
+}
+
+.dark .macos-segmented-btn.active {
+  background: rgba(255, 255, 255, 0.22);
+  color: #FFFFFF;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.macos-note-card {
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dark .macos-note-card {
+  background: rgba(36, 36, 42, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.macos-note-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 122, 255, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 122, 255, 0.2);
+}
+
+.dark .macos-note-card:hover {
+  border-color: rgba(10, 132, 255, 0.5);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(10, 132, 255, 0.3);
+}
+
+.macos-sheet-modal {
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.dark .macos-sheet-modal {
+  background: rgba(36, 36, 44, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+/* =========================================================================
+   macOS Note Editor Window System
+   ========================================================================= */
+
+.macos-editor-shell {
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 25px 65px -12px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dark .macos-editor-shell {
+  background: #18181C;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.macos-editor-shell.maximized {
+  position: fixed;
+  inset: 12px;
+  z-index: 50;
+  border-radius: 16px;
+  max-width: none !important;
+  height: calc(100vh - 24px);
+  margin: 0 !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.macos-editor-shell.maximized .macos-paper-canvas {
+  flex: 1;
+  max-height: none;
+}
+
+.macos-editor-toolbar {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.dark .macos-editor-toolbar {
+  background: rgba(28, 28, 34, 0.82);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.macos-segmented-btn:not(.active):hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.dark .macos-segmented-btn:not(.active):hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.macos-tool-btn {
+  padding: 5px 7px;
+  border-radius: 7px;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.12s ease;
+  user-select: none;
+}
+
+.macos-tool-btn:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.dark .macos-tool-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.macos-tool-btn.active {
+  background: rgba(0, 122, 255, 0.14);
+  color: #007AFF !important;
+  font-weight: 600;
+}
+
+.dark .macos-tool-btn.active {
+  background: rgba(10, 132, 255, 0.24);
+  color: #0A84FF !important;
+}
+
+.macos-spotlight-bar {
+  background: rgba(254, 243, 199, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(245, 158, 11, 0.22);
+}
+
+.dark .macos-spotlight-bar {
+  background: rgba(69, 26, 3, 0.35);
+  border-bottom: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.macos-paper-canvas {
+  background: rgba(244, 243, 239, 0.55);
+}
+
+.dark .macos-paper-canvas {
+  background: #141418;
+}
+
+.macos-document-sheet {
+  background: #FFFFFF;
+  border-radius: 18px;
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s ease;
+}
+
+.dark .macos-document-sheet {
+  background: #1E1E24;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* Clean, refined Apple-inspired typography for Note Editor */
+.note-editor-content .ProseMirror,
+.macos-document-sheet .note-editor-content .ProseMirror {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Inter, sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  letter-spacing: -0.012em;
+  color: var(--text);
+}
+
+.note-editor-content .ProseMirror h1,
+.macos-document-sheet .note-editor-content .ProseMirror h1 {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", -apple-system, sans-serif;
+  font-size: 1.95rem;
+  font-weight: 700;
+  letter-spacing: -0.026em;
+  line-height: 1.25;
+  margin-top: 1.3em;
+  margin-bottom: 0.45em;
+  color: var(--text);
+}
+
+.note-editor-content .ProseMirror h2,
+.macos-document-sheet .note-editor-content .ProseMirror h2 {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", -apple-system, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  margin-top: 1.15em;
+  margin-bottom: 0.4em;
+  color: var(--text);
+}
+
+.note-editor-content .ProseMirror h3,
+.macos-document-sheet .note-editor-content .ProseMirror h3 {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", -apple-system, sans-serif;
+  font-size: 1.22rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.35;
+  margin-top: 1em;
+  margin-bottom: 0.35em;
+  color: var(--text);
+}
+
+/* Typography presets for Note Editor */
+.note-font-sans .note-editor-content .ProseMirror {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+.note-font-serif .note-editor-content .ProseMirror {
+  font-family: 'Newsreader', Georgia, Cambria, "Times New Roman", Times, serif !important;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.note-font-serif .note-editor-content .ProseMirror h1,
+.note-font-serif .note-editor-content .ProseMirror h2,
+.note-font-serif .note-editor-content .ProseMirror h3 {
+  font-family: 'Newsreader', Georgia, serif !important;
+}
+
+.note-font-mono .note-editor-content .ProseMirror {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* Inline code styling inside editor */
+.note-editor-content .ProseMirror code:not(pre code) {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+  font-size: 0.88em !important;
+  background-color: var(--chip-bg) !important;
+  color: var(--accent-ink) !important;
+  padding: 0.15em 0.4em !important;
+  border-radius: 4px !important;
+  border: 1px solid var(--line) !important;
+  font-weight: 500;
+}
+
+.dark .note-editor-content .ProseMirror code:not(pre code) {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  color: var(--accent) !important;
+}
+
+/* Enhanced callout / quote styling */
+.note-editor-content .ProseMirror blockquote {
+  border-left: 3px solid var(--accent) !important;
+  padding: 0.5rem 1rem !important;
+  margin: 1.25rem 0 !important;
+  font-style: italic;
+  color: var(--muted);
+  background: var(--accent-soft);
+  border-radius: 0 10px 10px 0;
+}
+
+.dark .note-editor-content .ProseMirror blockquote {
+  background: rgba(245, 158, 11, 0.07);
+}
+
+/* Document Paper Sheet aesthetic */
+.note-page-sheet-shadow {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 10px 32px rgba(20, 33, 61, 0.07);
+}
+
+.dark .note-page-sheet-shadow {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2), 0 12px 36px rgba(0, 0, 0, 0.4);
+}
+
+/* =========================================================================
+   Interactive Code Card & Simulation Studio
+   ========================================================================= */
+
+.macos-code-card {
+  border-radius: 14px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.macos-code-card:hover {
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(232, 163, 61, 0.4);
+}
+
+.dark .macos-code-card {
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.dark .macos-code-card:hover {
+  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(245, 158, 11, 0.5);
+}
+
+.macos-code-card pre {
+  margin: 0 !important;
+}
+
+.macos-code-card pre code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+  line-height: 1.6;
+}
+
+/* =========================================================================
+   SYNTAX HIGHLIGHTING THEMES FOR CODE BLOCKS (HLJS)
+   ========================================================================= */
+
+/* --- 1. One Dark Pro (Default Dark) --- */
+.macos-code-card[data-theme="one-dark-pro"] pre code,
+.macos-code-card:not([data-mode="light"]):not([data-theme="dracula"]):not([data-theme="monokai"]):not([data-theme="night-owl"]):not([data-theme="github-dark"]):not([data-theme="solarized-light"]) pre code {
+  color: #abb2bf;
+}
+.macos-code-card[data-theme="one-dark-pro"] .hljs-keyword,
+.macos-code-card:not([data-mode="light"]):not([data-theme="dracula"]):not([data-theme="monokai"]):not([data-theme="night-owl"]):not([data-theme="github-dark"]):not([data-theme="solarized-light"]) .hljs-keyword {
+  color: #c678dd !important;
+  font-weight: 600;
+}
+.macos-code-card[data-theme="one-dark-pro"] .hljs-built_in,
+.macos-code-card:not([data-mode="light"]):not([data-theme="dracula"]):not([data-theme="monokai"]):not([data-theme="night-owl"]):not([data-theme="github-dark"]):not([data-theme="solarized-light"]) .hljs-built_in {
+  color: #56b6c2 !important;
+}
+.macos-code-card[data-theme="one-dark-pro"] .hljs-type,
+.macos-code-card:not([data-mode="light"]):not([data-theme="dracula"]):not([data-theme="monokai"]):not([data-theme="night-owl"]):not([data-theme="github-dark"]):not([data-theme="solarized-light"]) .hljs-type {
+  color: #e5c07b !important;
+}
+.macos-code-card[data-theme="one-dark-pro"] .hljs-literal,
+.macos-code-card:not([data-mode="light"]):not([data-theme="dracula"]):not([data-theme="monokai"]):not([data-theme="night-owl"]):not([data-theme="github-dark"]):not([data-theme="solarized-light"]) .hljs-literal {
+  color: #d19a66 !important;
+}
+.macos-code-card[data-theme="one-dark-pro"] .hljs-number,
+.macos-code-card:not([data-mode="light"]):not([data-theme="dracula"]):not([data-theme="monokai"]):not([data-theme="night-owl"]):not([data-theme="github-dark"]):not([data-theme="solarized-light"]) .hljs-number {
+  color: #d19a66 !important;
+}
+.macos-code-card[data-theme="one-dark-pro"] .hljs-operator,
+.macos-code-card:not([data-mode="light"]):not([data-theme="dracula"]):not([data-theme="monokai"]):not([data-theme="night-owl"]):not([data-theme="github-dark"]):not([data-theme="solarized-light"]) .hljs-operator {
+  color: #56b6c2 !important;
+}
+.macos-code-card[data-theme="one-dark-pro"] .hljs-string,
+.macos-code-card:not([data-mode="light"]):not([data-theme="dracula"]):not([data-theme="monokai"]):not([data-theme="night-owl"]):not([data-theme="github-dark"]):not([data-theme="solarized-light"]) .hljs-string {
+  color: #98c379 !important;
+}
+.macos-code-card[data-theme="one-dark-pro"] .hljs-title,
+.macos-code-card[data-theme="one-dark-pro"] .hljs-title.function_,
+.macos-code-card:not([data-mode="light"]):not([data-theme="dracula"]):not([data-theme="monokai"]):not([data-theme="night-owl"]):not([data-theme="github-dark"]):not([data-theme="solarized-light"]) .hljs-title {
+  color: #61afef !important;
+  font-weight: 600;
+}
+.macos-code-card[data-theme="one-dark-pro"] .hljs-title.class_,
+.macos-code-card:not([data-mode="light"]):not([data-theme="dracula"]):not([data-theme="monokai"]):not([data-theme="night-owl"]):not([data-theme="github-dark"]):not([data-theme="solarized-light"]) .hljs-title.class_ {
+  color: #e5c07b !important;
+}
+.macos-code-card[data-theme="one-dark-pro"] .hljs-params,
+.macos-code-card:not([data-mode="light"]):not([data-theme="dracula"]):not([data-theme="monokai"]):not([data-theme="night-owl"]):not([data-theme="github-dark"]):not([data-theme="solarized-light"]) .hljs-params {
+  color: #e06c75 !important;
+}
+.macos-code-card[data-theme="one-dark-pro"] .hljs-comment,
+.macos-code-card:not([data-mode="light"]):not([data-theme="dracula"]):not([data-theme="monokai"]):not([data-theme="night-owl"]):not([data-theme="github-dark"]):not([data-theme="solarized-light"]) .hljs-comment {
+  color: #5c6370 !important;
+  font-style: italic;
+}
+.macos-code-card[data-theme="one-dark-pro"] .hljs-variable,
+.macos-code-card:not([data-mode="light"]):not([data-theme="dracula"]):not([data-theme="monokai"]):not([data-theme="night-owl"]):not([data-theme="github-dark"]):not([data-theme="solarized-light"]) .hljs-variable {
+  color: #e06c75 !important;
+}
+.macos-code-card[data-theme="one-dark-pro"] .hljs-attr,
+.macos-code-card:not([data-mode="light"]):not([data-theme="dracula"]):not([data-theme="monokai"]):not([data-theme="night-owl"]):not([data-theme="github-dark"]):not([data-theme="solarized-light"]) .hljs-attr {
+  color: #d19a66 !important;
+}
+
+/* --- 2. Dracula --- */
+.macos-code-card[data-theme="dracula"] pre code { color: #f8f8f2; }
+.macos-code-card[data-theme="dracula"] .hljs-keyword { color: #ff79c6 !important; font-weight: 600; }
+.macos-code-card[data-theme="dracula"] .hljs-built_in { color: #8be9fd !important; }
+.macos-code-card[data-theme="dracula"] .hljs-type { color: #8be9fd !important; }
+.macos-code-card[data-theme="dracula"] .hljs-literal { color: #bd93f9 !important; }
+.macos-code-card[data-theme="dracula"] .hljs-number { color: #bd93f9 !important; }
+.macos-code-card[data-theme="dracula"] .hljs-operator { color: #ff79c6 !important; }
+.macos-code-card[data-theme="dracula"] .hljs-string { color: #f1fa8c !important; }
+.macos-code-card[data-theme="dracula"] .hljs-title,
+.macos-code-card[data-theme="dracula"] .hljs-title.function_ { color: #50fa7b !important; font-weight: 600; }
+.macos-code-card[data-theme="dracula"] .hljs-title.class_ { color: #8be9fd !important; }
+.macos-code-card[data-theme="dracula"] .hljs-params { color: #f8f8f2 !important; }
+.macos-code-card[data-theme="dracula"] .hljs-comment { color: #6272a4 !important; font-style: italic; }
+.macos-code-card[data-theme="dracula"] .hljs-variable { color: #f8f8f2 !important; }
+.macos-code-card[data-theme="dracula"] .hljs-attr { color: #50fa7b !important; }
+
+/* --- 3. Monokai --- */
+.macos-code-card[data-theme="monokai"] pre code { color: #f8f8f2; }
+.macos-code-card[data-theme="monokai"] .hljs-keyword { color: #f92672 !important; font-weight: 600; }
+.macos-code-card[data-theme="monokai"] .hljs-built_in { color: #66d9ef !important; }
+.macos-code-card[data-theme="monokai"] .hljs-type { color: #66d9ef !important; font-style: italic; }
+.macos-code-card[data-theme="monokai"] .hljs-literal { color: #ae81ff !important; }
+.macos-code-card[data-theme="monokai"] .hljs-number { color: #ae81ff !important; }
+.macos-code-card[data-theme="monokai"] .hljs-operator { color: #f92672 !important; }
+.macos-code-card[data-theme="monokai"] .hljs-string { color: #e6db74 !important; }
+.macos-code-card[data-theme="monokai"] .hljs-title,
+.macos-code-card[data-theme="monokai"] .hljs-title.function_ { color: #a6e22e !important; font-weight: 600; }
+.macos-code-card[data-theme="monokai"] .hljs-title.class_ { color: #a6e22e !important; }
+.macos-code-card[data-theme="monokai"] .hljs-params { color: #fd971f !important; }
+.macos-code-card[data-theme="monokai"] .hljs-comment { color: #75715e !important; font-style: italic; }
+.macos-code-card[data-theme="monokai"] .hljs-variable { color: #f8f8f2 !important; }
+.macos-code-card[data-theme="monokai"] .hljs-attr { color: #a6e22e !important; }
+
+/* --- 4. Night Owl --- */
+.macos-code-card[data-theme="night-owl"] pre code { color: #d6deeb; }
+.macos-code-card[data-theme="night-owl"] .hljs-keyword { color: #c792ea !important; font-weight: 600; }
+.macos-code-card[data-theme="night-owl"] .hljs-built_in { color: #addb67 !important; }
+.macos-code-card[data-theme="night-owl"] .hljs-type { color: #ffcb8b !important; }
+.macos-code-card[data-theme="night-owl"] .hljs-literal { color: #ff5874 !important; }
+.macos-code-card[data-theme="night-owl"] .hljs-number { color: #f78c6c !important; }
+.macos-code-card[data-theme="night-owl"] .hljs-operator { color: #7fdbca !important; }
+.macos-code-card[data-theme="night-owl"] .hljs-string { color: #ecc48d !important; }
+.macos-code-card[data-theme="night-owl"] .hljs-title,
+.macos-code-card[data-theme="night-owl"] .hljs-title.function_ { color: #82aaff !important; font-weight: 600; }
+.macos-code-card[data-theme="night-owl"] .hljs-title.class_ { color: #ffcb8b !important; }
+.macos-code-card[data-theme="night-owl"] .hljs-params { color: #d7dbe0 !important; }
+.macos-code-card[data-theme="night-owl"] .hljs-comment { color: #637777 !important; font-style: italic; }
+.macos-code-card[data-theme="night-owl"] .hljs-variable { color: #addb67 !important; }
+.macos-code-card[data-theme="night-owl"] .hljs-attr { color: #7fdbca !important; }
+
+/* --- 5. GitHub Dark --- */
+.macos-code-card[data-theme="github-dark"] pre code { color: #c9d1d9; }
+.macos-code-card[data-theme="github-dark"] .hljs-keyword { color: #ff7b72 !important; font-weight: 600; }
+.macos-code-card[data-theme="github-dark"] .hljs-built_in { color: #ffa657 !important; }
+.macos-code-card[data-theme="github-dark"] .hljs-type { color: #ffa657 !important; }
+.macos-code-card[data-theme="github-dark"] .hljs-literal { color: #79c0ff !important; }
+.macos-code-card[data-theme="github-dark"] .hljs-number { color: #79c0ff !important; }
+.macos-code-card[data-theme="github-dark"] .hljs-operator { color: #79c0ff !important; }
+.macos-code-card[data-theme="github-dark"] .hljs-string { color: #a5d6ff !important; }
+.macos-code-card[data-theme="github-dark"] .hljs-title,
+.macos-code-card[data-theme="github-dark"] .hljs-title.function_ { color: #d2a8ff !important; font-weight: 600; }
+.macos-code-card[data-theme="github-dark"] .hljs-title.class_ { color: #ffa657 !important; }
+.macos-code-card[data-theme="github-dark"] .hljs-params { color: #c9d1d9 !important; }
+.macos-code-card[data-theme="github-dark"] .hljs-comment { color: #8b949e !important; font-style: italic; }
+.macos-code-card[data-theme="github-dark"] .hljs-variable { color: #c9d1d9 !important; }
+.macos-code-card[data-theme="github-dark"] .hljs-attr { color: #79c0ff !important; }
+
+/* --- 6. GitHub Light (Default Light) --- */
+.macos-code-card[data-theme="github-light"] pre code,
+.macos-code-card[data-mode="light"] pre code,
+.macos-code-card.is-light pre code {
+  color: #24292f;
+}
+.macos-code-card[data-theme="github-light"] .hljs-keyword,
+.macos-code-card[data-mode="light"] .hljs-keyword,
+.macos-code-card.is-light .hljs-keyword {
+  color: #cf222e !important;
+  font-weight: 600;
+}
+.macos-code-card[data-theme="github-light"] .hljs-built_in,
+.macos-code-card[data-mode="light"] .hljs-built_in,
+.macos-code-card.is-light .hljs-built_in {
+  color: #953800 !important;
+}
+.macos-code-card[data-theme="github-light"] .hljs-type,
+.macos-code-card[data-mode="light"] .hljs-type,
+.macos-code-card.is-light .hljs-type {
+  color: #953800 !important;
+}
+.macos-code-card[data-theme="github-light"] .hljs-literal,
+.macos-code-card[data-mode="light"] .hljs-literal,
+.macos-code-card.is-light .hljs-literal {
+  color: #0550ae !important;
+}
+.macos-code-card[data-theme="github-light"] .hljs-number,
+.macos-code-card[data-mode="light"] .hljs-number,
+.macos-code-card.is-light .hljs-number {
+  color: #0550ae !important;
+}
+.macos-code-card[data-theme="github-light"] .hljs-operator,
+.macos-code-card[data-mode="light"] .hljs-operator,
+.macos-code-card.is-light .hljs-operator {
+  color: #0550ae !important;
+}
+.macos-code-card[data-theme="github-light"] .hljs-string,
+.macos-code-card[data-mode="light"] .hljs-string,
+.macos-code-card.is-light .hljs-string {
+  color: #0a3069 !important;
+}
+.macos-code-card[data-theme="github-light"] .hljs-title,
+.macos-code-card[data-theme="github-light"] .hljs-title.function_,
+.macos-code-card[data-mode="light"] .hljs-title,
+.macos-code-card.is-light .hljs-title {
+  color: #8250df !important;
+  font-weight: 600;
+}
+.macos-code-card[data-theme="github-light"] .hljs-title.class_,
+.macos-code-card[data-mode="light"] .hljs-title.class_,
+.macos-code-card.is-light .hljs-title.class_ {
+  color: #953800 !important;
+}
+.macos-code-card[data-theme="github-light"] .hljs-params,
+.macos-code-card[data-mode="light"] .hljs-params,
+.macos-code-card.is-light .hljs-params {
+  color: #24292f !important;
+}
+.macos-code-card[data-theme="github-light"] .hljs-comment,
+.macos-code-card[data-mode="light"] .hljs-comment,
+.macos-code-card.is-light .hljs-comment {
+  color: #6e7781 !important;
+  font-style: italic;
+}
+.macos-code-card[data-theme="github-light"] .hljs-variable,
+.macos-code-card[data-mode="light"] .hljs-variable,
+.macos-code-card.is-light .hljs-variable {
+  color: #24292f !important;
+}
+.macos-code-card[data-theme="github-light"] .hljs-attr,
+.macos-code-card[data-mode="light"] .hljs-attr,
+.macos-code-card.is-light .hljs-attr {
+  color: #0550ae !important;
+}
+
+/* --- 7. Solarized Light --- */
+.macos-code-card[data-theme="solarized-light"] pre code { color: #657b83; }
+.macos-code-card[data-theme="solarized-light"] .hljs-keyword { color: #859900 !important; font-weight: 600; }
+.macos-code-card[data-theme="solarized-light"] .hljs-built_in { color: #b58900 !important; }
+.macos-code-card[data-theme="solarized-light"] .hljs-type { color: #b58900 !important; }
+.macos-code-card[data-theme="solarized-light"] .hljs-literal { color: #d33682 !important; }
+.macos-code-card[data-theme="solarized-light"] .hljs-number { color: #d33682 !important; }
+.macos-code-card[data-theme="solarized-light"] .hljs-operator { color: #859900 !important; }
+.macos-code-card[data-theme="solarized-light"] .hljs-string { color: #2aa198 !important; }
+.macos-code-card[data-theme="solarized-light"] .hljs-title,
+.macos-code-card[data-theme="solarized-light"] .hljs-title.function_ { color: #268bd2 !important; font-weight: 600; }
+.macos-code-card[data-theme="solarized-light"] .hljs-title.class_ { color: #b58900 !important; }
+.macos-code-card[data-theme="solarized-light"] .hljs-params { color: #657b83 !important; }
+.macos-code-card[data-theme="solarized-light"] .hljs-comment { color: #93a1a1 !important; font-style: italic; }
+.macos-code-card[data-theme="solarized-light"] .hljs-variable { color: #657b83 !important; }
+.macos-code-card[data-theme="solarized-light"] .hljs-attr { color: #2aa198 !important; }
+
+/* --- 8. Global Generic HLJS Fallback --- */
+.hljs-keyword { color: #c678dd !important; font-weight: 600; }
+.hljs-built_in { color: #56b6c2 !important; }
+.hljs-type { color: #e5c07b !important; }
+.hljs-literal { color: #d19a66 !important; }
+.hljs-number { color: #d19a66 !important; }
+.hljs-operator { color: #56b6c2 !important; }
+.hljs-string { color: #98c379 !important; }
+.hljs-title, .hljs-title.function_ { color: #61afef !important; font-weight: 600; }
+.hljs-params { color: #e06c75 !important; }
+/* Print stylesheet for predicted exam papers */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .sa-sidebar, .sa-topbar, .no-print, header, nav {
+    display: none !important;
+  }
+  .exam-paper-container {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .exam-model-answer {
+    display: none !important;
+  }
+}
+
+
+
+
+
+
