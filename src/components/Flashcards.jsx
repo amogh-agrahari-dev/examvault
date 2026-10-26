@@ -223,12 +223,12 @@ function Flashcards({ topic, accessToken, showToast, go, selectDoc, compact }) {
 
       {/* Interactive 3D Flip Card */}
       <div 
-        className="sa-flip-card w-full flex-1 cursor-pointer select-none" 
+        className="sa-flip-card w-full cursor-pointer select-none transition-all" 
         style={{ 
           height: compact 
-            ? (cardImageUrl ? 340 : 250) 
-            : (cardImageUrl ? 400 : 310), 
-          minHeight: cardImageUrl ? 320 : 220 
+            ? (cardImageUrl ? 320 : 230) 
+            : (cardImageUrl ? "clamp(290px, 44vh, 390px)" : "clamp(210px, 34vh, 310px)"), 
+          minHeight: cardImageUrl ? 270 : 190 
         }}
         onClick={() => setFlipped(!flipped)}
       >
@@ -239,7 +239,7 @@ function Flashcards({ topic, accessToken, showToast, go, selectDoc, compact }) {
             style={{ background: "var(--ink)", borderColor: "var(--line)" }}
           >
             {/* Header pill */}
-            <div className="flex items-center justify-between w-full mb-2">
+            <div className="flex items-center justify-between w-full mb-1 sm:mb-2">
               <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
                 Question
               </span>
@@ -251,14 +251,14 @@ function Flashcards({ topic, accessToken, showToast, go, selectDoc, compact }) {
             {/* Embedded Diagram / Figure */}
             {cardImageUrl && (
               <div 
-                className="my-2 relative group rounded-xl overflow-hidden border border-white/20 bg-black/40 p-1 cursor-zoom-in max-w-full"
+                className="my-1.5 sm:my-2 relative group rounded-xl overflow-hidden border border-white/20 bg-black/40 p-1 cursor-zoom-in max-w-full"
                 onClick={(e) => { e.stopPropagation(); setPreviewImage(cardImageUrl); }}
                 title="Click to zoom full diagram"
               >
                 <img 
                   src={cardImageUrl} 
                   alt="Study Diagram" 
-                  className="max-h-28 sm:max-h-36 max-w-full object-contain rounded transition-transform group-hover:scale-105"
+                  className="max-h-24 sm:max-h-36 max-w-full object-contain rounded transition-transform group-hover:scale-105"
                 />
                 <div className="absolute bottom-1 right-1 bg-black/80 text-white px-1.5 py-0.5 rounded text-[10px] flex items-center gap-1 opacity-80 group-hover:opacity-100">
                   <ZoomIn size={11} /> Zoom
@@ -267,11 +267,11 @@ function Flashcards({ topic, accessToken, showToast, go, selectDoc, compact }) {
             )}
 
             {/* Question Text */}
-            <div className="my-auto py-2 text-white font-medium text-base sm:text-lg sa-serif leading-relaxed overflow-y-auto max-h-[190px] sa-scroll w-full">
+            <div className="my-auto py-2 text-white font-medium text-sm sm:text-base md:text-lg sa-serif leading-relaxed overflow-y-auto max-h-[150px] sm:max-h-[190px] sa-scroll w-full px-1">
               <FormattedText text={card.question} />
             </div>
 
-            <p className="text-[11px] text-white/50 mt-2">
+            <p className="text-[10px] sm:text-[11px] text-white/50 mt-1 sm:mt-2">
               Tap card or press Space to see answer
             </p>
           </div>
@@ -282,7 +282,7 @@ function Flashcards({ topic, accessToken, showToast, go, selectDoc, compact }) {
             style={{ background: "var(--surface)", borderColor: "var(--line)" }}
           >
             {/* Header pill */}
-            <div className="flex items-center justify-between w-full mb-2">
+            <div className="flex items-center justify-between w-full mb-1 sm:mb-2">
               <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
                 Answer
               </span>
@@ -294,24 +294,24 @@ function Flashcards({ topic, accessToken, showToast, go, selectDoc, compact }) {
             {/* Embedded Diagram on Answer side */}
             {cardImageUrl && (
               <div 
-                className="my-2 relative group rounded-xl overflow-hidden border border-black/10 dark:border-white/10 bg-black/5 p-1 cursor-zoom-in max-w-full"
+                className="my-1.5 sm:my-2 relative group rounded-xl overflow-hidden border border-black/10 dark:border-white/10 bg-black/5 p-1 cursor-zoom-in max-w-full"
                 onClick={(e) => { e.stopPropagation(); setPreviewImage(cardImageUrl); }}
                 title="Click to zoom diagram"
               >
                 <img 
                   src={cardImageUrl} 
                   alt="Study Diagram" 
-                  className="max-h-24 sm:max-h-32 max-w-full object-contain rounded transition-transform group-hover:scale-105"
+                  className="max-h-20 sm:max-h-32 max-w-full object-contain rounded transition-transform group-hover:scale-105"
                 />
               </div>
             )}
 
             {/* Answer Text */}
-            <div className="my-auto py-2 text-[var(--text)] text-sm sm:text-base leading-relaxed overflow-y-auto max-h-[190px] sa-scroll w-full">
+            <div className="my-auto py-2 text-[var(--text)] text-xs sm:text-sm md:text-base leading-relaxed overflow-y-auto max-h-[150px] sm:max-h-[190px] sa-scroll w-full px-1">
               <FormattedText text={card.answer} />
             </div>
 
-            <p className="text-[11px] text-[var(--muted)] mt-2">
+            <p className="text-[10px] sm:text-[11px] text-[var(--muted)] mt-1 sm:mt-2">
               Tap card to return to question
             </p>
           </div>
@@ -319,7 +319,7 @@ function Flashcards({ topic, accessToken, showToast, go, selectDoc, compact }) {
       </div>
 
       {/* Row 1: Flip & Step Navigation Controls */}
-      <div className={`grid grid-cols-3 gap-2 ${compact ? "mt-2.5" : "mt-3.5"}`}>
+      <div className={`grid grid-cols-3 gap-2 ${compact ? "mt-2.5" : "mt-2.5 sm:mt-3.5"}`}>
         <button 
           onClick={prev} 
           className="sa-btn-outline py-2 px-2 text-xs sm:text-sm font-semibold flex items-center justify-center gap-1 active:scale-98"
@@ -349,20 +349,20 @@ function Flashcards({ topic, accessToken, showToast, go, selectDoc, compact }) {
 
       {/* Row 2: Spaced Repetition Mastery Actions */}
       {!compact && (
-        <div className="grid grid-cols-2 gap-2.5 mt-2.5">
+        <div className="grid grid-cols-2 gap-2 sm:gap-2.5 mt-2 sm:mt-2.5">
           <button 
             onClick={() => { if (showToast) showToast("Added to review pile"); next(); }} 
-            className="sa-btn-outline py-2.5 text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 active:scale-98 hover:border-amber-500"
+            className="sa-btn-outline py-2 sm:py-2.5 text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 active:scale-98 hover:border-amber-500"
           >
-            <RotateCcw size={14} className="text-amber-500" /> 
+            <RotateCcw size={13} className="text-amber-500" /> 
             <span>Review Again</span>
           </button>
 
           <button 
             onClick={() => { setKnown(known + 1); if (showToast) showToast("Marked as mastered! +5 credits"); next(); }} 
-            className="sa-btn-primary py-2.5 text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 shadow-sm active:scale-98"
+            className="sa-btn-primary py-2 sm:py-2.5 text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 shadow-sm active:scale-98"
           >
-            <Check size={15} /> 
+            <Check size={14} /> 
             <span>I Know This {known > 0 ? `(${known})` : ""}</span>
           </button>
         </div>
