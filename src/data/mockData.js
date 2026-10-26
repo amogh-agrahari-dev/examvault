@@ -1,7 +1,7 @@
 // Central mock data store for ExamVault — swap these for real API calls later.
 import {
   LayoutDashboard, FileText, MessageSquare, HelpCircle, BookOpen, Layers,
-  ClipboardList, Calendar, TrendingUp, Settings as SettingsIcon, Users, PenLine
+  ClipboardList, Calendar, TrendingUp, Settings as SettingsIcon, Users, PenLine, Trophy
 } from "lucide-react";
 
 const DOCUMENTS = [
@@ -95,8 +95,7 @@ const NAV_ITEMS = [
   { id: "quiz-setup", label: "Quiz", icon: HelpCircle },
   { id: "summary", label: "Summaries", icon: BookOpen },
   { id: "flashcards", label: "Flashcards", icon: Layers },
-  { id: "mock-exam", label: "Mock Exams", icon: ClipboardList },
-  { id: "planner", label: "Study Planner", icon: Calendar },
+  { id: "leaderboard", label: "Leaderboard", icon: Trophy },
   { id: "group-discussions", label: "Group Discussions", icon: Users },
   { id: "subjects", label: "Predict Paper", icon: TrendingUp },
   { id: "settings", label: "Settings", icon: SettingsIcon },

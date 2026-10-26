@@ -377,13 +377,13 @@ export default function PredictedPaperGenerator({
         </div>
 
         {/* Action Controls */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap w-full sm:w-auto">
           {/* Subject Filter Dropdown */}
           <select
             value={selectedSubjectId}
             onChange={(e) => setSelectedSubjectId(e.target.value)}
-            className="sa-input text-xs px-3 py-2 rounded-lg border font-medium cursor-pointer"
-            style={{ minWidth: 160 }}
+            className="sa-input text-xs px-3 py-2 rounded-lg border font-medium cursor-pointer w-full sm:w-auto"
+            style={{ minWidth: 140 }}
           >
             <option value="">All Subjects</option>
             {subjects.map((s) => (
@@ -399,10 +399,10 @@ export default function PredictedPaperGenerator({
               setIsUploadOpen(true);
               fetchMainDocs();
             }}
-            className="sa-btn-outline flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-lg shadow-sm"
+            className="sa-btn-outline flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg shadow-sm"
           >
             <FileText size={14} className="text-amber-500" />
-            <span>Select From My Documents</span>
+            <span>From Documents</span>
           </button>
 
           <button
@@ -410,7 +410,7 @@ export default function PredictedPaperGenerator({
               setModalMode("upload");
               setIsUploadOpen(true);
             }}
-            className="sa-btn-primary flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-lg shadow-sm"
+            className="sa-btn-primary flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-lg shadow-sm"
           >
             <Upload size={14} /> Upload Past Paper
           </button>
@@ -418,7 +418,7 @@ export default function PredictedPaperGenerator({
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex items-center border-b gap-2 no-print" style={{ borderColor: "var(--line)" }}>
+      <div className="flex items-center border-b gap-2 no-print overflow-x-auto whitespace-nowrap sa-scroll flex-nowrap" style={{ borderColor: "var(--line)" }}>
         <button
           onClick={() => setActiveTab("papers")}
           className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
@@ -723,7 +723,7 @@ export default function PredictedPaperGenerator({
 
           {/* Genuine University Examination Paper Container */}
           <div
-            className="exam-paper-container sa-card p-6 md:p-10 rounded-2xl border shadow-sm space-y-8"
+            className="exam-paper-container sa-card p-3.5 sm:p-6 md:p-10 rounded-2xl border shadow-sm space-y-6 sm:space-y-8"
             style={{
               background: "var(--surface)",
               borderColor: "var(--line)",

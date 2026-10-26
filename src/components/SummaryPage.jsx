@@ -229,7 +229,7 @@ function SummaryPage({ go, accessToken, showToast }) {
           </button>
         </div>
         
-        <div className="sa-card p-8 md:p-10">
+        <div className="sa-card p-4 sm:p-8 md:p-10">
           <div className="mb-8 border-b pb-6" style={{ borderColor: "var(--line)" }}>
             <h1 className="sa-serif text-3xl font-bold mb-2">{activeSummary.topic_name}</h1>
             <div className="flex items-center gap-2 text-xs" style={{ color: "var(--muted)" }}>
@@ -448,7 +448,7 @@ function SummaryPage({ go, accessToken, showToast }) {
     
     return (
       <div className="sa-fade-in max-w-5xl mx-auto space-y-6">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-8 flex-wrap gap-3">
           <div>
             <h2 className="sa-serif text-2xl font-semibold">AI Topic Summaries</h2>
             <p className="text-sm mt-1" style={{ color: "var(--muted)" }}>Comprehensive, exam-oriented study notes generated from your documents.</p>

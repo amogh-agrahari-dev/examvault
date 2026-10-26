@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
 import {
   Target, HelpCircle, PenLine, Award, Flame, BookOpen, MessageSquare,
-  Layers, ArrowRight, FileText, Upload, Sparkles, CheckCircle2
+  Layers, ArrowRight, FileText, Upload, Sparkles, CheckCircle2, Trophy
 } from "lucide-react";
 import { ProgressBar, Badge } from "./UI";
 import { useAuth } from "../context/AuthContext";
-import { getDocuments, getActiveStudyPlan } from "../services/api";
+import { getDocuments } from "../services/api";
 
 function Dashboard({ go, showToast, selectDoc, accessToken }) {
   const { user } = useAuth();
   const [docs, setDocs] = useState([]);
-  const [activePlan, setActivePlan] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,12 +19,8 @@ function Dashboard({ go, showToast, selectDoc, accessToken }) {
         return;
       }
       try {
-        const [docsRes, planRes] = await Promise.all([
-          getDocuments(accessToken).catch(() => ({ documents: [] })),
-          getActiveStudyPlan(accessToken).catch(() => ({ plan: null }))
-        ]);
+        const docsRes = await getDocuments(accessToken).catch(() => ({ documents: [] }));
         setDocs(docsRes.documents || []);
-        setActivePlan(planRes.plan || null);
       } catch (err) {
         console.warn("Dashboard data fetch error:", err);
       } finally {
@@ -38,17 +33,18 @@ function Dashboard({ go, showToast, selectDoc, accessToken }) {
   const completedDocs = docs.filter((d) => d.status === "completed");
   const latestDoc = completedDocs[0] || docs[0];
 
+  const totalTopics = docs.reduce((acc, d) => acc + (d.topics?.length || 0), 0);
+
   const stats = [
     { label: "Vault Documents", value: docs.length.toString(), icon: FileText, tone: "info" },
-    { label: "Exam Readiness", value: activePlan ? `${activePlan.readinessScore}%` : "74%", icon: Target, tone: "accent" },
-    { label: "Tasks Done", value: activePlan ? `${activePlan.completedTasks}/${activePlan.totalTasks}` : "0", icon: PenLine, tone: "muted" },
+    { label: "Course Topics", value: totalTopics > 0 ? totalTopics.toString() : "8+", icon: Target, tone: "accent" },
     { label: "Vault Credits", value: (user?.reputation_credits ?? 10).toString(), icon: Award, tone: "success" },
     { label: "Study Streak", value: "5 days", icon: Flame, tone: "danger" },
   ];
 
   const quickActions = [
+    { label: "Leaderboard", icon: Trophy, page: "leaderboard" },
     { label: "Quick Notes", icon: PenLine, page: "notes" },
-    { label: "Study Planner", icon: Target, page: "planner" },
     { label: "Generate Quiz", icon: HelpCircle, page: "quiz-setup" },
     { label: "Topic Summaries", icon: BookOpen, page: "summary" },
     { label: "Flashcards", icon: Layers, page: "flashcards" },
@@ -64,7 +60,7 @@ function Dashboard({ go, showToast, selectDoc, accessToken }) {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3">
         {stats.map((s) => (
           <div key={s.label} className="sa-card p-4">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center mb-3"

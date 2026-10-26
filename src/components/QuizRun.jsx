@@ -135,7 +135,7 @@ function QuizRun({ go, config, onFinish, fullScreenTitle, accessToken, showToast
       </div>
 
       <div className="grid lg:grid-cols-[1fr_260px] gap-5">
-        <div className="sa-card sa-card-lg p-6 flex flex-col">
+        <div className="sa-card sa-card-lg p-3.5 sm:p-6 flex flex-col">
           <div className="flex items-center gap-2 mb-4">
             <Badge tone="info">{q.question_type.toUpperCase()}</Badge>
             <Badge tone="accent">{q.difficulty.toUpperCase()}</Badge>

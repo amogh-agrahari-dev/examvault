@@ -16,6 +16,7 @@ import {
   UserCheck
 } from "lucide-react";
 import { getUserProfile } from "../services/api";
+import BadgesGrid from "./BadgesGrid";
 
 export default function UserProfile({ userId, go, accessToken, currentUserId }) {
   const [profile, setProfile] = useState(null);
@@ -113,11 +114,11 @@ export default function UserProfile({ userId, go, accessToken, currentUserId }) 
         </div>
 
         {/* Profile Content */}
-        <div className="px-6 sm:px-10 pb-8 pt-0 relative">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between -mt-16 sm:-mt-20 mb-6 gap-4">
-            <div className="flex flex-col sm:flex-row sm:items-end gap-5">
+        <div className="px-3.5 sm:px-10 pb-6 sm:pb-8 pt-0 relative">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between -mt-14 sm:-mt-20 mb-6 gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-end gap-3.5 sm:gap-5">
               <div 
-                className="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl border-4 flex items-center justify-center text-3xl sm:text-4xl font-bold shadow-xl flex-shrink-0"
+                className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl sm:rounded-3xl border-4 flex items-center justify-center text-2xl sm:text-4xl font-bold shadow-xl flex-shrink-0"
                 style={{
                   background: "linear-gradient(135deg, var(--accent) 0%, #F59E0B 100%)",
                   color: "#FFFFFF",
@@ -128,7 +129,7 @@ export default function UserProfile({ userId, go, accessToken, currentUserId }) 
               </div>
               <div className="mb-2">
                 <div className="flex items-center gap-2.5 flex-wrap">
-                  <h1 className="sa-serif text-2xl sm:text-3xl font-bold text-[var(--text)]">
+                  <h1 className="sa-serif text-xl sm:text-3xl font-bold text-[var(--text)]">
                     {loading ? "Loading Scholar..." : profile?.full_name}
                   </h1>
                   <span 
@@ -172,41 +173,41 @@ export default function UserProfile({ userId, go, accessToken, currentUserId }) 
           ) : profile ? (
             <div className="space-y-6">
               {/* Four Stat Highlights */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4">
                 <div 
-                  className="p-5 rounded-2xl border flex flex-col items-center justify-center text-center transition-all hover:shadow-md"
+                  className="p-3.5 sm:p-5 rounded-2xl border flex flex-col items-center justify-center text-center transition-all hover:shadow-md"
                   style={{ background: "var(--surface-subtle)", borderColor: "var(--line)" }}
                 >
-                  <BookOpen size={24} className="text-blue-500 mb-2" />
-                  <span className="text-2xl font-bold text-[var(--text)]">{profile.documents_count}</span>
-                  <span className="text-xs text-[var(--muted)] mt-0.5">Documents Uploaded</span>
+                  <BookOpen size={22} className="text-blue-500 mb-1.5" />
+                  <span className="text-xl sm:text-2xl font-bold text-[var(--text)]">{profile.documents_count}</span>
+                  <span className="text-[11px] sm:text-xs text-[var(--muted)] mt-0.5">Documents Uploaded</span>
                 </div>
 
                 <div 
-                  className="p-5 rounded-2xl border flex flex-col items-center justify-center text-center transition-all hover:shadow-md"
+                  className="p-3.5 sm:p-5 rounded-2xl border flex flex-col items-center justify-center text-center transition-all hover:shadow-md"
                   style={{ background: "var(--surface-subtle)", borderColor: "var(--line)" }}
                 >
-                  <TrendingUp size={24} className="text-emerald-500 mb-2" />
-                  <span className="text-2xl font-bold text-[var(--text)]">{profile.quizzes_taken}</span>
-                  <span className="text-xs text-[var(--muted)] mt-0.5">Quizzes Completed</span>
+                  <TrendingUp size={22} className="text-emerald-500 mb-1.5" />
+                  <span className="text-xl sm:text-2xl font-bold text-[var(--text)]">{profile.quizzes_taken}</span>
+                  <span className="text-[11px] sm:text-xs text-[var(--muted)] mt-0.5">Quizzes Completed</span>
                 </div>
 
                 <div 
-                  className="p-5 rounded-2xl border flex flex-col items-center justify-center text-center transition-all hover:shadow-md"
+                  className="p-3.5 sm:p-5 rounded-2xl border flex flex-col items-center justify-center text-center transition-all hover:shadow-md"
                   style={{ background: "var(--surface-subtle)", borderColor: "var(--line)" }}
                 >
-                  <MessageSquare size={24} className="text-amber-500 mb-2" />
-                  <span className="text-2xl font-bold text-[var(--text)]">{profile.discussions_joined}</span>
-                  <span className="text-xs text-[var(--muted)] mt-0.5">Discussions Joined</span>
+                  <MessageSquare size={22} className="text-amber-500 mb-1.5" />
+                  <span className="text-xl sm:text-2xl font-bold text-[var(--text)]">{profile.discussions_joined}</span>
+                  <span className="text-[11px] sm:text-xs text-[var(--muted)] mt-0.5">Discussions Joined</span>
                 </div>
 
                 <div 
-                  className="p-5 rounded-2xl border flex flex-col items-center justify-center text-center transition-all hover:shadow-md"
+                  className="p-3.5 sm:p-5 rounded-2xl border flex flex-col items-center justify-center text-center transition-all hover:shadow-md"
                   style={{ background: "var(--surface-subtle)", borderColor: "var(--line)" }}
                 >
-                  <Flame size={24} className="text-purple-500 mb-2" />
-                  <span className="text-2xl font-bold text-[var(--text)]">{profile.messages_sent}</span>
-                  <span className="text-xs text-[var(--muted)] mt-0.5">Messages Contributed</span>
+                  <Flame size={22} className="text-purple-500 mb-1.5" />
+                  <span className="text-xl sm:text-2xl font-bold text-[var(--text)]">{profile.messages_sent}</span>
+                  <span className="text-[11px] sm:text-xs text-[var(--muted)] mt-0.5">Messages Contributed</span>
                 </div>
               </div>
 
@@ -255,58 +256,7 @@ export default function UserProfile({ userId, go, accessToken, currentUserId }) 
                   className="p-6 rounded-2xl border"
                   style={{ background: "var(--surface)", borderColor: "var(--line)" }}
                 >
-                  <div className="flex items-center gap-2.5 mb-4">
-                    <Star size={18} color="var(--accent)" />
-                    <h3 className="font-bold text-base text-[var(--text)]">Recognitions & Merits</h3>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2.5">
-                    {profile.reputation_credits >= 10 && (
-                      <span 
-                        className="px-3 py-1.5 rounded-xl text-xs font-medium border flex items-center gap-2 shadow-xs"
-                        style={{ background: "var(--surface-subtle)", borderColor: "var(--line)", color: "var(--text)" }}
-                      >
-                        <ShieldCheck size={14} className="text-blue-500" />
-                        Verified Scholar
-                      </span>
-                    )}
-                    {profile.discussions_joined > 0 && (
-                      <span 
-                        className="px-3 py-1.5 rounded-xl text-xs font-medium border flex items-center gap-2 shadow-xs"
-                        style={{ background: "var(--surface-subtle)", borderColor: "var(--line)", color: "var(--text)" }}
-                      >
-                        <MessageSquare size={14} className="text-amber-500" />
-                        Community Collaborator
-                      </span>
-                    )}
-                    {profile.quizzes_taken >= 3 && (
-                      <span 
-                        className="px-3 py-1.5 rounded-xl text-xs font-medium border flex items-center gap-2 shadow-xs"
-                        style={{ background: "var(--surface-subtle)", borderColor: "var(--line)", color: "var(--text)" }}
-                      >
-                        <Award size={14} className="text-emerald-500" />
-                        Quiz Explorer
-                      </span>
-                    )}
-                    {profile.messages_sent >= 10 && (
-                      <span 
-                        className="px-3 py-1.5 rounded-xl text-xs font-medium border flex items-center gap-2 shadow-xs"
-                        style={{ background: "var(--surface-subtle)", borderColor: "var(--line)", color: "var(--text)" }}
-                      >
-                        <Flame size={14} className="text-orange-500" />
-                        Active Conversationalist
-                      </span>
-                    )}
-                    {profile.topics_count > 0 && (
-                      <span 
-                        className="px-3 py-1.5 rounded-xl text-xs font-medium border flex items-center gap-2 shadow-xs"
-                        style={{ background: "var(--surface-subtle)", borderColor: "var(--line)", color: "var(--text)" }}
-                      >
-                        <FileText size={14} className="text-indigo-500" />
-                        Curriculum Analyst
-                      </span>
-                    )}
-                  </div>
+                  <BadgesGrid profile={profile} />
                 </div>
               </div>
             </div>

@@ -875,13 +875,13 @@ export default function FlowchartModal({ isOpen, onClose, onInsert, initialPromp
         {/* =========================================================================
             Modal Header & Mode Switcher
             ========================================================================= */}
-        <div className="p-4 md:px-6 md:py-3.5 border-b border-[var(--line)] flex items-center justify-between gap-4 bg-[var(--surface-subtle)]">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center">
-              <GitBranch size={20} />
+        <div className="p-3 md:px-6 md:py-3.5 border-b border-[var(--line)] flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 bg-[var(--surface-subtle)]">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 md:w-9 md:h-9 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center flex-shrink-0">
+              <GitBranch size={18} />
             </div>
-            <div>
-              <h2 className="sa-serif text-lg font-bold text-[var(--text)]">Flowchart & Diagram Studio</h2>
+            <div className="min-w-0">
+              <h2 className="sa-serif text-base sm:text-lg font-bold text-[var(--text)] truncate">Flowchart & Diagram Studio</h2>
               <p className="text-xs text-[var(--muted)] hidden sm:block">
                 Build revision flowcharts with drag-and-drop shapes, text boxes, or natural language prompts.
               </p>
@@ -889,10 +889,10 @@ export default function FlowchartModal({ isOpen, onClose, onInsert, initialPromp
           </div>
 
           {/* Mode Switch Tabs */}
-          <div className="flex items-center gap-1 p-1 bg-[var(--surface)] border border-[var(--line)] rounded-xl">
+          <div className="flex items-center gap-1 p-1 bg-[var(--surface)] border border-[var(--line)] rounded-xl overflow-x-auto whitespace-nowrap flex-nowrap sa-scroll max-w-full">
             <button
               onClick={() => setActiveTab("prompt")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all flex-shrink-0 ${
                 activeTab === "prompt"
                   ? "bg-[var(--accent)] text-[#1A1408] shadow-xs"
                   : "text-[var(--muted)] hover:text-[var(--text)]"
@@ -903,7 +903,7 @@ export default function FlowchartModal({ isOpen, onClose, onInsert, initialPromp
             </button>
             <button
               onClick={() => setActiveTab("nested")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all flex-shrink-0 ${
                 activeTab === "nested"
                   ? "bg-[var(--accent)] text-[#1A1408] shadow-xs"
                   : "text-[var(--muted)] hover:text-[var(--text)]"
@@ -914,7 +914,7 @@ export default function FlowchartModal({ isOpen, onClose, onInsert, initialPromp
             </button>
             <button
               onClick={() => setActiveTab("canvas")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all flex-shrink-0 ${
                 activeTab === "canvas"
                   ? "bg-[var(--accent)] text-[#1A1408] shadow-xs"
                   : "text-[var(--muted)] hover:text-[var(--text)]"
@@ -927,7 +927,7 @@ export default function FlowchartModal({ isOpen, onClose, onInsert, initialPromp
 
           <button
             onClick={onClose}
-            className="p-2 rounded-lg text-[var(--muted)] hover:text-[var(--text)] hover:bg-[var(--surface-hover)]"
+            className="p-2 rounded-lg text-[var(--muted)] hover:text-[var(--text)] hover:bg-[var(--surface-hover)] ml-auto sm:ml-0"
           >
             <X size={18} />
           </button>
@@ -1172,7 +1172,7 @@ export default function FlowchartModal({ isOpen, onClose, onInsert, initialPromp
             ========================================================================= */}
         <div className="p-2 md:px-4 border-b border-[var(--line)] flex items-center justify-between gap-2 flex-wrap bg-[var(--surface)] text-xs">
           {/* Add & Drag Shapes Palette (Option 1) */}
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap flex-nowrap sa-scroll max-w-full py-0.5">
             <span className="text-[var(--muted)] font-medium pr-1 hidden sm:inline">Add / Drag:</span>
             
             {/* Process Box */}

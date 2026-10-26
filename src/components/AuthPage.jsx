@@ -53,7 +53,7 @@ function AuthPage({ mode = "login" }) {
 
   return (
     <div className="sa-root min-h-screen flex flex-col">
-      <header className="w-full max-w-7xl mx-auto flex items-center justify-between px-6 py-5 md:px-10">
+      <header className="w-full max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5 md:px-10">
         <button type="button" onClick={() => navigateTo("/")} className="flex items-center gap-2" aria-label="Go to ExamVault home">
           <span className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: "var(--ink)" }}>
             <GraduationCap size={19} color="var(--accent)" />
@@ -63,7 +63,7 @@ function AuthPage({ mode = "login" }) {
         <ThemeToggle />
       </header>
 
-      <main className="flex-1 w-full max-w-7xl mx-auto px-6 py-8 md:px-10 md:py-12 flex items-center">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 md:px-10 md:py-12 flex items-center">
         <div className="w-full grid lg:grid-cols-[minmax(0,1fr)_460px] gap-12 lg:gap-20 items-center">
           <section className="hidden lg:block max-w-xl sa-fade-in">
             <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] mb-5" style={{ color: "var(--accent-ink)" }}>

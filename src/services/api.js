@@ -640,6 +640,13 @@ export function getUserProfile(userId, accessToken) {
   });
 }
 
+export function getLeaderboard(accessToken, limit = 20) {
+  return request(`/users/leaderboard?limit=${limit}`, {
+    headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
+    cacheTtlMs: 15000,
+  });
+}
+
 export function globalSearch(query, accessToken) {
   return request(`/users/search/global?q=${encodeURIComponent(query)}`, {
     headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},

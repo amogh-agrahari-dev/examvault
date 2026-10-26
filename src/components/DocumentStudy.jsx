@@ -96,14 +96,14 @@ function DocumentStudy({ go, doc, selectDoc, accessToken, showToast, defaultTab 
   }
 
   return (
-    <div className="sa-fade-in flex flex-col md:flex-row gap-6 h-[calc(100vh-100px)]">
+    <div className="sa-fade-in flex flex-col md:flex-row gap-6 min-h-[calc(100vh-130px)] md:h-[calc(100vh-100px)]">
       {/* Sidebar for Topics (hidden when active discussion is open on small screens) */}
       <div className={`w-full md:w-64 flex-col gap-4 ${activeDiscussion ? "hidden md:flex" : "flex"}`}>
         <button onClick={() => go("documents")} className="flex items-center gap-2 text-sm font-medium hover:opacity-70 transition-opacity" style={{ color: "var(--text)" }}>
           <ArrowLeft size={16} /> Back to Documents
         </button>
 
-        <div className="sa-card p-4 flex-1 flex flex-col overflow-hidden">
+        <div className="sa-card p-4 flex-1 flex flex-col overflow-hidden max-h-56 md:max-h-none">
           <div className="mb-4">
             <h3 className="sa-serif font-semibold text-base truncate" title={activeDoc?.filename || activeDoc?.name}>
               {activeDoc?.filename || activeDoc?.name}

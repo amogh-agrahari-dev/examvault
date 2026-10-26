@@ -417,8 +417,7 @@ export default function DiscussionRoom({ discussion, topic, accessToken, onBack 
 
       {/* Chat Area */}
       <div 
-         className="flex-1 overflow-y-auto px-[5%] md:px-[10%] py-4 space-y-1 relative bg-[var(--paper)] text-[var(--text)] " 
-         
+         className="flex-1 overflow-y-auto px-2.5 sm:px-[5%] md:px-[10%] py-4 space-y-1 relative bg-[var(--paper)] text-[var(--text)] " 
       >
         {loading && messages.length === 0 ? (
           <div className="text-center mt-10">
@@ -564,16 +563,16 @@ export default function DiscussionRoom({ discussion, topic, accessToken, onBack 
 
       {/* Composer Area */}
       {discussion.is_member && (
-        <div className="bg-[var(--surface-subtle)] px-4 py-2 shrink-0">
+        <div className="bg-[var(--surface-subtle)] px-2.5 sm:px-4 py-2 shrink-0">
            {/* Modifiers */}
-           <div className="flex items-center gap-2 mb-2 px-1">
-              <button type="button" onClick={() => setChatMode("chat")} className={`px-3 py-1 rounded-full text-xs font-medium transition-colors flex items-center gap-1.5 ${chatMode === "chat" ? "bg-[var(--surface)] border-blue-500 text-blue-600 dark:text-blue-400 shadow-sm border" : "bg-[var(--surface)] text-[var(--muted)] shadow-sm border border-transparent hover:bg-[var(--surface-hover)]"}`}>
+           <div className="flex items-center gap-1.5 mb-2 px-0.5 overflow-x-auto whitespace-nowrap sa-scroll flex-nowrap py-0.5">
+              <button type="button" onClick={() => setChatMode("chat")} className={`px-3 py-1 rounded-full text-xs font-medium transition-colors flex items-center gap-1.5 shrink-0 ${chatMode === "chat" ? "bg-[var(--surface)] border-blue-500 text-blue-600 dark:text-blue-400 shadow-sm border" : "bg-[var(--surface)] text-[var(--muted)] shadow-sm border border-transparent hover:bg-[var(--surface-hover)]"}`}>
                 <MessageSquare size={14} /> Chat
               </button>
-              <button type="button" onClick={() => setChatMode("verify")} className={`px-3 py-1 rounded-full text-xs font-medium transition-colors flex items-center gap-1.5 ${chatMode === "verify" ? "bg-[var(--surface)] border-green-500 text-green-600 dark:text-green-400 shadow-sm border" : "bg-[var(--surface)] text-[var(--muted)] shadow-sm border border-transparent hover:bg-[var(--surface-hover)]"}`}>
+              <button type="button" onClick={() => setChatMode("verify")} className={`px-3 py-1 rounded-full text-xs font-medium transition-colors flex items-center gap-1.5 shrink-0 ${chatMode === "verify" ? "bg-[var(--surface)] border-green-500 text-green-600 dark:text-green-400 shadow-sm border" : "bg-[var(--surface)] text-[var(--muted)] shadow-sm border border-transparent hover:bg-[var(--surface-hover)]"}`}>
                 <CheckCircle size={14} /> Verify Claim
               </button>
-              <button type="button" onClick={() => setChatMode("ask")} className={`px-3 py-1 rounded-full text-xs font-medium transition-colors flex items-center gap-1.5 ${chatMode === "ask" ? "bg-[var(--surface)] border-purple-500 text-purple-600 dark:text-purple-400 shadow-sm border" : "bg-[var(--surface)] text-[var(--muted)] shadow-sm border border-transparent hover:bg-[var(--surface-hover)]"}`}>
+              <button type="button" onClick={() => setChatMode("ask")} className={`px-3 py-1 rounded-full text-xs font-medium transition-colors flex items-center gap-1.5 shrink-0 ${chatMode === "ask" ? "bg-[var(--surface)] border-purple-500 text-purple-600 dark:text-purple-400 shadow-sm border" : "bg-[var(--surface)] text-[var(--muted)] shadow-sm border border-transparent hover:bg-[var(--surface-hover)]"}`}>
                 <Bot size={14} /> Ask AI
               </button>
            </div>

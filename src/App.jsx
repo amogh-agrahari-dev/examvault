@@ -13,8 +13,7 @@ import QuizResult from "./components/QuizResult";
 import SummaryPage from "./components/SummaryPage";
 import ChatPage from "./components/Chat";
 import Flashcards from "./components/Flashcards";
-import MockExamIntro from "./components/MockExam";
-import Planner from "./components/Planner";
+import Leaderboard from "./components/Leaderboard";
 import ProgressPage from "./components/Progress";
 import SettingsPage from "./components/Settings";
 import AuthPage from "./components/AuthPage";
@@ -25,6 +24,7 @@ import NotesDashboard from "./components/NotesDashboard";
 import NoteEditor from "./components/NoteEditor";
 import UserProfile from "./components/UserProfile";
 import UserProfileModal from "./components/UserProfileModal";
+import MobileBottomNav from "./components/MobileBottomNav";
 import { Toast } from "./components/UI";
 import { useAuth } from "./context/AuthContext";
 
@@ -91,8 +91,7 @@ function App() {
     summary: ["Summaries", null],
     chat: ["AI Chat", null],
     flashcards: ["Flashcards", null],
-    "mock-exam": ["Mock Exams", null],
-    planner: ["Study Planner", null],
+    leaderboard: ["Scholar Leaderboard", null],
     "group-discussions": ["Group Discussions", null],
     settings: ["Settings", null],
     subjects: ["Subjects & Paper Generator", null],
@@ -105,8 +104,6 @@ function App() {
     ? "quiz-setup"
     : page === "analysis" || page === "upload" || page === "document-study"
     ? "documents"
-    : page === "mock-exam"
-    ? "mock-exam"
     : page === "note-editor"
     ? "notes"
     : page;
@@ -125,8 +122,7 @@ function App() {
   else if (page === "summary") body = <SummaryPage go={go} accessToken={accessToken} />;
   else if (page === "chat") body = <ChatPage accessToken={accessToken} />;
   else if (page === "flashcards") body = <Flashcards showToast={showToast} accessToken={accessToken} go={go} selectDoc={setSelectedDoc} />;
-  else if (page === "mock-exam") body = <MockExamIntro go={go} setQuizConfig={setQuizConfig} />;
-  else if (page === "planner") body = <Planner go={go} showToast={showToast} selectDoc={setSelectedDoc} accessToken={accessToken} />;
+  else if (page === "leaderboard") body = <Leaderboard go={go} accessToken={accessToken} onOpenProfile={(uid) => { setActiveProfileUserId(uid); go("profile"); }} />;
   else if (page === "group-discussions") body = <GlobalDiscussions accessToken={accessToken} showToast={showToast} initialDiscussionId={uploadParams?.discussionId} />;
   else if (page === "settings") body = <SettingsPage showToast={showToast} />;
   else if (page === "subjects") body = <SubjectsDashboard go={go} selectSubject={setSelectedSubject} accessToken={accessToken} showToast={showToast} />;
@@ -147,10 +143,13 @@ function App() {
           onOpenProfile={(uid) => setActiveProfileUserId(uid)}
           accessToken={accessToken}
         />
-        <div className={`flex-1 ${page === "group-discussions" || page === "note-editor" ? "overflow-hidden flex flex-col min-h-0" : "overflow-y-auto sa-scroll p-4 md:p-8"}`}>
+        <div className={`flex-1 ${page === "group-discussions" || page === "note-editor" ? "overflow-hidden flex flex-col min-h-0" : "overflow-y-auto sa-scroll p-3 sm:p-5 md:p-8 pb-20 md:pb-8"}`}>
           {body}
         </div>
       </div>
+      {page !== "note-editor" && (
+        <MobileBottomNav page={activeNavId} setPage={go} />
+      )}
       {activeProfileUserId && (
         <UserProfileModal 
           userId={activeProfileUserId} 

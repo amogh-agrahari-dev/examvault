@@ -15,6 +15,7 @@ import {
   Star
 } from "lucide-react";
 import { getUserProfile } from "../services/api";
+import BadgesGrid from "./BadgesGrid";
 
 export default function UserProfileModal({ userId, onClose, accessToken, onOpenDiscussion }) {
   const [profile, setProfile] = useState(null);
@@ -78,17 +79,17 @@ export default function UserProfileModal({ userId, onClose, accessToken, onOpenD
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm sa-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-black/60 backdrop-blur-sm sa-fade-in"
       onClick={onClose}
     >
       <div 
-        className="sa-card w-full max-w-xl max-h-[90vh] overflow-y-auto sa-scroll rounded-2xl shadow-2xl relative border"
+        className="sa-card w-full max-w-xl max-h-[92vh] overflow-y-auto sa-scroll rounded-2xl shadow-2xl relative border"
         style={{ borderColor: "var(--line)" }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Banner with gradient & close button */}
         <div 
-          className="h-32 w-full relative p-4 flex justify-between items-start"
+          className="h-28 sm:h-32 w-full relative p-3 sm:p-4 flex justify-between items-start"
           style={{
             background: "linear-gradient(135deg, var(--ink) 0%, #1e293b 50%, #0f172a 100%)",
             borderTopLeftRadius: "1rem",
@@ -115,12 +116,12 @@ export default function UserProfileModal({ userId, onClose, accessToken, onOpenD
         </div>
 
         {/* Content Container */}
-        <div className="px-6 pb-6 pt-0 relative">
+        <div className="px-3.5 sm:px-6 pb-5 sm:pb-6 pt-0 relative">
           {/* Avatar and basic info header */}
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between -mt-14 mb-5 gap-3">
-            <div className="flex items-end gap-3.5">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between -mt-12 sm:-mt-14 mb-5 gap-3">
+            <div className="flex items-end gap-3 sm:gap-3.5">
               <div 
-                className="w-24 h-24 rounded-2xl border-4 flex items-center justify-center text-2xl font-bold shadow-lg flex-shrink-0"
+                className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border-4 flex items-center justify-center text-xl sm:text-2xl font-bold shadow-lg flex-shrink-0"
                 style={{
                   background: "linear-gradient(135deg, var(--accent) 0%, #F59E0B 100%)",
                   color: "#FFFFFF",
@@ -248,59 +249,9 @@ export default function UserProfileModal({ userId, onClose, accessToken, onOpenD
               {/* Scholar Badges */}
               <div 
                 className="p-4 rounded-xl border"
-                style={{ background: "var(--surface-subtle)", borderColor: "var(--line)" }}
+                style={{ background: "var(--surface)", borderColor: "var(--line)" }}
               >
-                <div className="flex items-center gap-2 mb-3">
-                  <Star size={16} color="var(--accent)" />
-                  <span className="text-sm font-semibold text-[var(--text)]">Recognitions & Badges</span>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {profile.reputation_credits >= 10 && (
-                    <span 
-                      className="px-2.5 py-1 rounded-lg text-xs font-medium border flex items-center gap-1.5"
-                      style={{ background: "var(--surface)", borderColor: "var(--line)", color: "var(--text)" }}
-                    >
-                      <ShieldCheck size={13} className="text-blue-500" />
-                      Verified Member
-                    </span>
-                  )}
-                  {profile.discussions_joined > 0 && (
-                    <span 
-                      className="px-2.5 py-1 rounded-lg text-xs font-medium border flex items-center gap-1.5"
-                      style={{ background: "var(--surface)", borderColor: "var(--line)", color: "var(--text)" }}
-                    >
-                      <MessageSquare size={13} className="text-amber-500" />
-                      Community Collaborator
-                    </span>
-                  )}
-                  {profile.quizzes_taken >= 3 && (
-                    <span 
-                      className="px-2.5 py-1 rounded-lg text-xs font-medium border flex items-center gap-1.5"
-                      style={{ background: "var(--surface)", borderColor: "var(--line)", color: "var(--text)" }}
-                    >
-                      <Award size={13} className="text-emerald-500" />
-                      Quiz Explorer
-                    </span>
-                  )}
-                  {profile.messages_sent >= 10 && (
-                    <span 
-                      className="px-2.5 py-1 rounded-lg text-xs font-medium border flex items-center gap-1.5"
-                      style={{ background: "var(--surface)", borderColor: "var(--line)", color: "var(--text)" }}
-                    >
-                      <Flame size={13} className="text-orange-500" />
-                      Active Conversationalist
-                    </span>
-                  )}
-                  {profile.topics_count > 0 && (
-                    <span 
-                      className="px-2.5 py-1 rounded-lg text-xs font-medium border flex items-center gap-1.5"
-                      style={{ background: "var(--surface)", borderColor: "var(--line)", color: "var(--text)" }}
-                    >
-                      <FileText size={13} className="text-indigo-500" />
-                      Curriculum Analyst
-                    </span>
-                  )}
-                </div>
+                <BadgesGrid profile={profile} compact={true} />
               </div>
 
               {/* Quick Actions */}

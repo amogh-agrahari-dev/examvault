@@ -50,8 +50,8 @@ export const PAGE_TYPES = [
     badge: "Fluid",
     description: "Expansive edge-to-edge canvas with balanced gutters for code, diagrams & media",
     icon: Maximize2,
-    containerClass: "w-full max-w-[1260px] mx-auto px-2 sm:px-6 lg:px-10 py-4 sm:py-8 min-h-[calc(100vh-210px)]",
-    cardClass: "bg-[var(--surface)] border border-[var(--line)] shadow-xs rounded-2xl p-6 sm:p-12 lg:p-16 transition-all",
+    containerClass: "w-full max-w-[1260px] mx-auto px-1.5 sm:px-6 lg:px-10 py-3 sm:py-8 min-h-[calc(100vh-210px)]",
+    cardClass: "bg-[var(--surface)] border border-[var(--line)] shadow-xs rounded-2xl p-3.5 sm:p-8 lg:p-16 transition-all",
   },
   {
     id: "document",
@@ -59,8 +59,8 @@ export const PAGE_TYPES = [
     badge: "A4 Page",
     description: "Classic paper sheet with traditional elevation, margins & printed page layout",
     icon: FileText,
-    containerClass: "max-w-4xl mx-auto my-2 sm:my-6 px-2 sm:px-4",
-    cardClass: "bg-[var(--surface)] border border-[var(--line)] note-page-sheet-shadow rounded-xl p-8 sm:p-16 min-h-[960px] transition-all",
+    containerClass: "max-w-4xl mx-auto my-2 sm:my-6 px-1.5 sm:px-4",
+    cardClass: "bg-[var(--surface)] border border-[var(--line)] note-page-sheet-shadow rounded-xl p-4 sm:p-14 min-h-[960px] transition-all",
   },
   {
     id: "focus",
@@ -68,8 +68,8 @@ export const PAGE_TYPES = [
     badge: "Compact",
     description: "Distraction-free 740px centered column for dedicated writing and formulas",
     icon: AlignCenter,
-    containerClass: "max-w-3xl mx-auto px-2 sm:px-4 py-4 sm:py-8 min-h-[calc(100vh-210px)]",
-    cardClass: "bg-[var(--surface)] border border-[var(--line)] shadow-xs rounded-2xl p-6 sm:p-10 transition-all",
+    containerClass: "max-w-3xl mx-auto px-1.5 sm:px-4 py-3 sm:py-8 min-h-[calc(100vh-210px)]",
+    cardClass: "bg-[var(--surface)] border border-[var(--line)] shadow-xs rounded-2xl p-3.5 sm:p-8 transition-all",
   },
 ];
 
@@ -1182,9 +1182,9 @@ int main() {
           </div>
 
           {/* Center / Right: Layout Switcher, Font Switcher, Subject/Topic, PDF, Fullscreen */}
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap sa-scroll max-w-full py-0.5 flex-nowrap">
             {/* Page Type Selector Dropdown */}
-            <div className="relative note-top-dropdown">
+            <div className="relative note-top-dropdown flex-shrink-0">
               <button
                 onClick={() => {
                   setShowPageTypeMenu(!showPageTypeMenu);

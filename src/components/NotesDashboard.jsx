@@ -21,7 +21,7 @@ export default function NotesDashboard({ go, showToast, accessToken, onOpenNote 
   const [activeFolderFilter, setActiveFolderFilter] = useState("all"); // 'all', 'pinned', 'diagrams', 'recent', or subject id
   const [sortBy, setSortBy] = useState("updated_desc"); // updated_desc, title_asc, updated_asc
   const [viewMode, setViewMode] = useState(() => localStorage.getItem("examvault_notes_view_mode") || "grid"); // grid, list
-  const [sidebarOpen, setSidebarOpen] = useState(() => localStorage.getItem("examvault_notes_sidebar_open") !== "false");
+  const [sidebarOpen, setSidebarOpen] = useState(() => typeof window !== "undefined" && window.innerWidth >= 768 && localStorage.getItem("examvault_notes_sidebar_open") !== "false");
   const [isMaximized, setIsMaximized] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -338,7 +338,7 @@ export default function NotesDashboard({ go, showToast, accessToken, onOpenNote 
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5 self-start sm:self-auto">
+        <div className="flex items-center gap-2.5 self-stretch sm:self-auto justify-between sm:justify-start">
           {/* Segmented View Switcher (Mac-inspired clean pill, ExamVault themed) */}
           <div className="flex items-center p-1 rounded-lg border border-[var(--line)] bg-[var(--surface)] shadow-2xs">
             <button

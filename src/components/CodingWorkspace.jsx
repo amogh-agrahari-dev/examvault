@@ -296,7 +296,7 @@ export default function CodingWorkspace({
         </div>
 
         {/* Center / Right: Theme Selector, Dark/Light Mode, Auto Format & Controls */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap sa-scroll max-w-full py-0.5 flex-nowrap">
           {/* Quick Dark <-> Light Mode Switch */}
           <button
             type="button"
@@ -542,7 +542,7 @@ export default function CodingWorkspace({
       {/* =========================================================================
           Monaco Code Editor Canvas
           ========================================================================= */}
-      <div className={`h-[380px] border border-t-0 rounded-b-xl overflow-hidden shadow-sm relative transition-colors ${
+      <div className={`h-[300px] sm:h-[380px] border border-t-0 rounded-b-xl overflow-hidden shadow-sm relative transition-colors ${
         editorMode === "dark" ? "border-[#2e2e38]" : "border-[#e2e8f0]"
       }`}>
         <Editor

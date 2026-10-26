@@ -40,7 +40,7 @@ function UploadPage({ go, showToast, accessToken, uploadParams }) {
       {stage === "idle" && (
         <div
           onClick={() => fileInputRef.current?.click()}
-          className="sa-card sa-card-lg p-12 flex flex-col items-center justify-center text-center cursor-pointer"
+          className="sa-card sa-card-lg p-6 sm:p-12 flex flex-col items-center justify-center text-center cursor-pointer"
           style={{ borderStyle: "dashed", borderWidth: 2, borderColor: "#CFCBBB" }}
         >
           <input ref={fileInputRef} type="file" className="hidden" onChange={startProcessing} />
@@ -55,7 +55,7 @@ function UploadPage({ go, showToast, accessToken, uploadParams }) {
       )}
 
       {(stage === "processing" || stage === "failed") && (
-        <div className="sa-card sa-card-lg p-8">
+        <div className="sa-card sa-card-lg p-5 sm:p-8">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: "#EFEDE6" }}>
               <FileText size={18} color="var(--ink)" />
@@ -82,7 +82,7 @@ function UploadPage({ go, showToast, accessToken, uploadParams }) {
       )}
 
       {stage === "done" && (
-        <div className="sa-card sa-card-lg p-8 text-center">
+        <div className="sa-card sa-card-lg p-5 sm:p-8 text-center">
           <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: "var(--success-soft)" }}>
             <CheckCircle2 size={24} color="var(--success)" />
           </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import {
   GraduationCap, Upload, HelpCircle, BookOpen, MessageSquare, Layers,
-  ClipboardList, Calendar,
+  Trophy, TrendingUp,
 } from "lucide-react";
 import { Badge, ProgressBar } from "./UI";
 import ThemeToggle from "./ThemeToggle";
@@ -12,27 +12,27 @@ function Landing({ onEnter }) {
     { icon: BookOpen, title: "Topic-wise Summaries", desc: "Structured overviews, definitions and formulas pulled straight from your notes." },
     { icon: MessageSquare, title: "Document-based AI Chat", desc: "Ask questions and get answers grounded in the material you uploaded." },
     { icon: Layers, title: "Smart Flashcards", desc: "Auto-generated recall cards that adapt to what you keep missing." },
-    { icon: ClipboardList, title: "Mock Exams", desc: "Full-length timed exams that mirror the real thing, down to the palette." },
-    { icon: Calendar, title: "Personalized Study Planner", desc: "A day-by-day plan built around your exam date and free hours." },
+    { icon: Trophy, title: "Scholar Leaderboard & Merits", desc: "Climb the global rank by solving quizzes, participating in peer discussions, and earning Vault Credits." },
+    { icon: TrendingUp, title: "AI Paper Prediction", desc: "Predict your upcoming university exam questions directly from previous year papers." },
   ];
   return (
     <div className="sa-root min-h-screen">
-      <header className="max-w-6xl mx-auto flex items-center justify-between px-6 py-6">
+      <header className="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 py-5 sm:py-6">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "var(--ink)" }}>
             <GraduationCap size={18} color="var(--accent)" />
           </div>
           <span className="sa-serif text-lg font-semibold">ExamVault</span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <ThemeToggle />
-          <button onClick={onEnter} className="sa-btn-outline text-sm font-medium px-4 py-2">Open dashboard</button>
+          <button onClick={onEnter} className="sa-btn-outline text-xs sm:text-sm font-medium px-3 sm:px-4 py-1.5 sm:py-2">Open dashboard</button>
         </div>
       </header>
 
-      <section className="max-w-6xl mx-auto px-6 pt-10 pb-20 grid md:grid-cols-2 gap-12 items-center">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 sm:pt-10 pb-14 sm:pb-20 grid md:grid-cols-2 gap-8 md:gap-12 items-center">
         <div>
-          <h1 className="sa-serif text-4xl md:text-5xl font-semibold leading-tight mb-5">
+          <h1 className="sa-serif text-3xl sm:text-4xl md:text-5xl font-semibold leading-tight mb-4 sm:mb-5">
             Turn your notes into your personal AI exam coach.
           </h1>
           <p className="text-base leading-relaxed mb-8" style={{ color: "var(--muted)" }}>

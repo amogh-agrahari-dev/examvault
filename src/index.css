@@ -1251,8 +1251,27 @@ html.dark, .dark {
   }
 }
 
+/* =========================================================================
+   Mobile Touch & Viewport Optimizations
+   ========================================================================= */
 
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
 
+  button, input, select, textarea {
+    touch-action: manipulation;
+  }
 
+  /* Smooth momentum scrolling for mobile ribbon bars & tabs */
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
 
-
+  .overflow-x-auto::-webkit-scrollbar {
+    display: none;
+  }
+}
