@@ -68,6 +68,16 @@ const SubjectsDashboard = ({ go, selectSubject, accessToken, showToast }) => {
     }
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" && isModalOpen) {
+        setIsModalOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isModalOpen]);
+
   const totalNotes = subjects.reduce((acc, s) => acc + (s.document_count || 0), 0);
   const totalPapers = subjects.reduce((acc, s) => acc + (s.past_paper_count || 0), 0);
 
@@ -96,6 +106,7 @@ const SubjectsDashboard = ({ go, selectSubject, accessToken, showToast }) => {
         {/* Action Controls */}
         <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap w-full sm:w-auto">
           <button 
+            type="button"
             onClick={() => go("predict-paper")}
             className="sa-btn-outline flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl shadow-xs"
           >
@@ -103,6 +114,7 @@ const SubjectsDashboard = ({ go, selectSubject, accessToken, showToast }) => {
             <span>Open Paper Predictor</span>
           </button>
           <button 
+            type="button"
             onClick={() => setIsModalOpen(true)}
             className="sa-btn-primary flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-xl shadow-xs"
           >
@@ -199,6 +211,7 @@ const SubjectsDashboard = ({ go, selectSubject, accessToken, showToast }) => {
             Create your university courses to organize past exam papers, lecture notes, and run targeted paper predictions.
           </p>
           <button 
+            type="button"
             onClick={() => setIsModalOpen(true)}
             className="sa-btn-primary px-5 py-2.5 text-xs font-semibold rounded-xl flex items-center gap-2 shadow-xs"
           >
@@ -211,11 +224,21 @@ const SubjectsDashboard = ({ go, selectSubject, accessToken, showToast }) => {
           {subjects.map((s) => (
             <div 
               key={s.id} 
-              className="sa-card p-5 sm:p-6 rounded-2xl border flex flex-col justify-between hover:shadow-md transition-all group cursor-pointer"
+              role="button"
+              tabIndex={0}
+              aria-label={`Course: ${s.name}`}
+              className="sa-card p-5 sm:p-6 rounded-2xl border flex flex-col justify-between hover:shadow-md transition-all group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
               style={{ background: "var(--surface)", borderColor: "var(--line)" }}
               onClick={() => { 
                 selectSubject(s.id); 
                 go("predict-paper", { subjectId: s.id }); 
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  selectSubject(s.id);
+                  go("predict-paper", { subjectId: s.id });
+                }
               }}
             >
               <div>
@@ -262,6 +285,7 @@ const SubjectsDashboard = ({ go, selectSubject, accessToken, showToast }) => {
               {/* Action Buttons Row */}
               <div className="pt-2 border-t flex items-center gap-2" style={{ borderColor: "var(--line)" }}>
                 <button 
+                  type="button"
                   className="sa-btn-primary flex-1 text-xs py-2 px-3 font-semibold rounded-lg flex items-center justify-center gap-1.5"
                   onClick={(e) => { 
                     e.stopPropagation(); 
@@ -274,6 +298,7 @@ const SubjectsDashboard = ({ go, selectSubject, accessToken, showToast }) => {
                   <span>Predict Paper</span>
                 </button>
                 <button 
+                  type="button"
                   className="sa-btn-outline text-xs py-2 px-2.5 font-medium rounded-lg flex items-center justify-center gap-1"
                   onClick={(e) => { 
                     e.stopPropagation(); 
@@ -285,6 +310,8 @@ const SubjectsDashboard = ({ go, selectSubject, accessToken, showToast }) => {
                   <span>Notes</span>
                 </button>
                 <button 
+                  type="button"
+                  aria-label={`Delete ${s.name}`}
                   className="sa-btn-outline p-2 text-[var(--muted)] hover:text-red-500 hover:border-red-500 rounded-lg transition-colors shrink-0"
                   onClick={(e) => handleDelete(s.id, e)}
                   title="Delete subject"
@@ -299,14 +326,19 @@ const SubjectsDashboard = ({ go, selectSubject, accessToken, showToast }) => {
 
       {/* Create Subject Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="create-subject-title"
+        >
           <div 
-            className="sa-card w-full max-w-md p-6 rounded-2xl border shadow-2xl space-y-4"
+            className="sa-card w-full max-w-md p-6 rounded-2xl border shadow-2xl space-y-4 animate-scale-up"
             style={{ background: "var(--surface)", borderColor: "var(--line)" }}
           >
             <div className="flex items-start justify-between pb-3 border-b" style={{ borderColor: "var(--line)" }}>
               <div>
-                <h2 className="sa-serif text-lg font-bold text-[var(--text)] flex items-center gap-2">
+                <h2 id="create-subject-title" className="sa-serif text-lg font-bold text-[var(--text)] flex items-center gap-2">
                   <BookOpen size={18} className="text-amber-500" />
                   Create Academic Subject
                 </h2>
@@ -315,6 +347,7 @@ const SubjectsDashboard = ({ go, selectSubject, accessToken, showToast }) => {
                 </p>
               </div>
               <button 
+                type="button"
                 onClick={() => setIsModalOpen(false)}
                 className="p-1 rounded-lg text-[var(--muted)] hover:text-[var(--text)] hover:bg-[var(--surface-subtle)] transition-colors"
                 aria-label="Close modal"
@@ -325,10 +358,11 @@ const SubjectsDashboard = ({ go, selectSubject, accessToken, showToast }) => {
 
             <form onSubmit={handleCreate} className="space-y-4">
               <div>
-                <label className="text-xs font-semibold block mb-1 text-[var(--text)]">
+                <label htmlFor="create-subject-name" className="text-xs font-semibold block mb-1 text-[var(--text)]">
                   Subject / Course Name *
                 </label>
                 <input 
+                  id="create-subject-name"
                   type="text"
                   required
                   className="sa-input w-full p-2.5 text-xs rounded-xl border font-medium"
@@ -339,10 +373,11 @@ const SubjectsDashboard = ({ go, selectSubject, accessToken, showToast }) => {
               </div>
 
               <div>
-                <label className="text-xs font-semibold block mb-1 text-[var(--text)]">
+                <label htmlFor="create-subject-desc" className="text-xs font-semibold block mb-1 text-[var(--text)]">
                   Course Description / Syllabus Scope
                 </label>
                 <textarea 
+                  id="create-subject-desc"
                   rows={3}
                   className="sa-input w-full p-2.5 text-xs rounded-xl border font-medium resize-none leading-relaxed"
                   placeholder="e.g. SPPU 2019 Pattern TE IT Semester 5 curriculum covering routing algorithms, transport layer protocols..." 

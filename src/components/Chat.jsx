@@ -89,6 +89,8 @@ function TopicSelector({ documents, selectedTopicId, onSelect, onClose }) {
       {documents.map((doc) => (
         <div key={doc.document_id} className="mb-1">
           <button
+            type="button"
+            aria-expanded={Boolean(expanded[doc.document_id])}
             onClick={() => setExpanded((prev) => ({ ...prev, [doc.document_id]: !prev[doc.document_id] }))}
             className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-left text-sm font-medium transition-all hover:opacity-80"
             style={{ color: "var(--text)" }}
@@ -110,6 +112,7 @@ function TopicSelector({ documents, selectedTopicId, onSelect, onClose }) {
                 return (
                   <button
                     key={topic.id}
+                    type="button"
                     onClick={() => { onSelect(topic, doc); onClose?.(); }}
                     className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-xs font-medium transition-all"
                     style={{
@@ -512,7 +515,12 @@ function ChatPage({ initialTopicId, initialTopicName, initialDocumentName }) {
             style={{ background: "var(--danger-soft)", color: "var(--danger)" }}>
             <AlertCircle size={13} className="flex-shrink-0 mt-0.5" />
             <span className="flex-1">{error}</span>
-            <button onClick={() => setError(null)} className="flex-shrink-0 opacity-70 hover:opacity-100">
+            <button 
+              type="button"
+              aria-label="Dismiss error"
+              onClick={() => setError(null)} 
+              className="flex-shrink-0 opacity-70 hover:opacity-100"
+            >
               <X size={13} />
             </button>
           </div>
@@ -524,6 +532,7 @@ function ChatPage({ initialTopicId, initialTopicName, initialDocumentName }) {
             {quickPrompts.map((p) => (
               <button
                 key={p}
+                type="button"
                 onClick={() => sendMessage(p + " about " + selectedTopic.name)}
                 disabled={thinking}
                 className="text-xs px-3 py-1.5 rounded-full font-medium transition-all hover:scale-105 disabled:opacity-50"
@@ -542,6 +551,7 @@ function ChatPage({ initialTopicId, initialTopicName, initialDocumentName }) {
               <textarea
                 ref={inputRef}
                 value={input}
+                aria-label={`Ask a question about ${selectedTopic.name}`}
                 onChange={(e) => {
                   setInput(e.target.value);
                   e.target.style.height = "auto";
@@ -556,7 +566,7 @@ function ChatPage({ initialTopicId, initialTopicName, initialDocumentName }) {
                 placeholder={`Ask something about ${selectedTopic.name}...`}
                 rows={1}
                 disabled={thinking}
-                className="flex-1 px-4 py-2.5 rounded-2xl text-sm outline-none border resize-none overflow-hidden disabled:opacity-50"
+                className="flex-1 px-4 py-2.5 rounded-2xl text-sm outline-none border resize-none overflow-hidden disabled:opacity-50 focus-visible:border-[var(--accent)]"
                 style={{
                   borderColor: "var(--line)",
                   background: "var(--input-bg)",
@@ -567,6 +577,8 @@ function ChatPage({ initialTopicId, initialTopicName, initialDocumentName }) {
                 }}
               />
               <button
+                type="button"
+                aria-label="Send question"
                 onClick={() => sendMessage()}
                 disabled={!input.trim() || thinking}
                 className="sa-btn-accent p-2.5 rounded-full flex-shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"

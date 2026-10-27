@@ -177,22 +177,36 @@ export default function BadgesGrid({ profile, compact = false }) {
         </div>
 
         {/* Filter Pills */}
-        <div className="flex items-center gap-1.5 p-1 rounded-xl border bg-[var(--surface-subtle)] text-xs font-medium" style={{ borderColor: "var(--line)" }}>
+        <div 
+          role="tablist"
+          aria-label="Filter badges"
+          className="flex items-center gap-1.5 p-1 rounded-xl border bg-[var(--surface-subtle)] text-xs font-medium" 
+          style={{ borderColor: "var(--line)" }}
+        >
           <button
+            type="button"
+            role="tab"
+            aria-selected={filter === "all"}
             onClick={() => setFilter("all")}
-            className={`px-2.5 py-1 rounded-lg transition-all ${filter === "all" ? "bg-[var(--accent)] text-[var(--accent-ink)] font-semibold shadow-xs" : "text-[var(--muted)] hover:text-[var(--text)]"}`}
+            className={`px-3 py-1.5 rounded-lg transition-all ${filter === "all" ? "bg-[var(--accent)] text-[var(--accent-ink)] font-semibold shadow-xs" : "text-[var(--muted)] hover:text-[var(--text)]"}`}
           >
             All ({enrichedBadges.length})
           </button>
           <button
+            type="button"
+            role="tab"
+            aria-selected={filter === "unlocked"}
             onClick={() => setFilter("unlocked")}
-            className={`px-2.5 py-1 rounded-lg transition-all ${filter === "unlocked" ? "bg-[var(--accent)] text-[var(--accent-ink)] font-semibold shadow-xs" : "text-[var(--muted)] hover:text-[var(--text)]"}`}
+            className={`px-3 py-1.5 rounded-lg transition-all ${filter === "unlocked" ? "bg-[var(--accent)] text-[var(--accent-ink)] font-semibold shadow-xs" : "text-[var(--muted)] hover:text-[var(--text)]"}`}
           >
             Unlocked ({unlockedCount})
           </button>
           <button
+            type="button"
+            role="tab"
+            aria-selected={filter === "locked"}
             onClick={() => setFilter("locked")}
-            className={`px-2.5 py-1 rounded-lg transition-all ${filter === "locked" ? "bg-[var(--accent)] text-[var(--accent-ink)] font-semibold shadow-xs" : "text-[var(--muted)] hover:text-[var(--text)]"}`}
+            className={`px-3 py-1.5 rounded-lg transition-all ${filter === "locked" ? "bg-[var(--accent)] text-[var(--accent-ink)] font-semibold shadow-xs" : "text-[var(--muted)] hover:text-[var(--text)]"}`}
           >
             Locked ({lockedCount})
           </button>
@@ -200,7 +214,7 @@ export default function BadgesGrid({ profile, compact = false }) {
       </div>
 
       {/* Badges Grid */}
-      <div className={`grid gap-3 ${compact ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"}`}>
+      <div className={`grid gap-4 ${compact ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"}`}>
         {filteredBadges.map((badge) => {
           const Icon = badge.icon;
           const isExpanded = expandedBadge === badge.id;
@@ -209,7 +223,7 @@ export default function BadgesGrid({ profile, compact = false }) {
             <div
               key={badge.id}
               onClick={() => setExpandedBadge(isExpanded ? null : badge.id)}
-              className={`rounded-2xl p-4 border transition-all cursor-pointer relative overflow-hidden group select-none flex flex-col justify-between ${
+              className={`rounded-2xl p-4 sm:p-4.5 border transition-all cursor-pointer relative overflow-hidden group select-none flex flex-col justify-between ${
                 badge.unlocked
                   ? "bg-[var(--surface)] hover:border-[var(--accent)] hover:shadow-md"
                   : "bg-[var(--surface-subtle)]/70 hover:border-[var(--line-strong)] opacity-85 hover:opacity-100"
@@ -228,10 +242,10 @@ export default function BadgesGrid({ profile, compact = false }) {
 
               <div>
                 {/* Top Row: Visual Emblem + Lock / Unlocked Pill */}
-                <div className="flex items-start justify-between gap-2 mb-3">
+                <div className="flex items-start justify-between gap-2.5 mb-3">
                   {/* Visual Image / Emblem Icon */}
                   <div
-                    className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-md relative transition-transform group-hover:scale-105 ${
+                    className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-md relative shrink-0 transition-transform group-hover:scale-105 ${
                       badge.unlocked
                         ? `bg-gradient-to-tr ${badge.color} text-white`
                         : "bg-neutral-800/20 dark:bg-neutral-800/60 text-neutral-400 border border-neutral-700/40 grayscale"
@@ -247,12 +261,12 @@ export default function BadgesGrid({ profile, compact = false }) {
 
                   {/* Status Pill */}
                   {badge.unlocked ? (
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 inline-flex items-center gap-1">
-                      <Sparkles size={10} /> Unlocked
+                    <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 inline-flex items-center gap-1 shrink-0">
+                      <Sparkles size={11} /> Unlocked
                     </span>
                   ) : (
-                    <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-neutral-500/10 text-[var(--muted)] border border-neutral-500/20 inline-flex items-center gap-1">
-                      <Lock size={10} /> Locked
+                    <span className="text-[10px] font-medium px-2.5 py-1 rounded-full bg-neutral-500/10 text-[var(--muted)] border border-neutral-500/20 inline-flex items-center gap-1 shrink-0">
+                      <Lock size={11} /> Locked
                     </span>
                   )}
                 </div>
@@ -276,11 +290,18 @@ export default function BadgesGrid({ profile, compact = false }) {
               {/* Bottom Section: Progress bar or Unlock Instruction */}
               <div className="mt-3 pt-3 border-t border-[var(--line)]">
                 {badge.unlocked ? (
-                  <div className="flex items-center justify-between text-xs text-emerald-600 dark:text-emerald-400 font-medium">
-                    <span className="inline-flex items-center gap-1">
-                      <CheckCircle2 size={12} /> Requirement Met
-                    </span>
-                    <span className="text-[10px] text-[var(--muted)]">Active Merit</span>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                      <span className="inline-flex items-center gap-1.5">
+                        <CheckCircle2 size={13} className="shrink-0" /> Requirement Met
+                      </span>
+                      <span className="text-[10px] text-[var(--muted)]">Active Merit</span>
+                    </div>
+                    <div className="p-2 rounded-lg bg-emerald-500/5 border border-emerald-500/15 text-[11px] leading-tight">
+                      <div className="text-[10.5px] text-[var(--muted)]">
+                        <span className="font-semibold text-emerald-600 dark:text-emerald-400">Earned:</span> {badge.unlockRequirement}
+                      </div>
+                    </div>
                   </div>
                 ) : (
                   <div className="space-y-1.5">
@@ -300,7 +321,7 @@ export default function BadgesGrid({ profile, compact = false }) {
                     </div>
 
                     {/* How to Unlock Notice */}
-                    <div className="mt-2 p-2 rounded-lg bg-[var(--surface)] border border-[var(--line)] text-[11px] leading-tight">
+                    <div className="mt-2 p-2 rounded-lg bg-[var(--surface-subtle)] border border-[var(--line)] text-[11px] leading-tight">
                       <div className="flex items-start gap-1.5 text-[var(--accent)] font-semibold mb-0.5">
                         <Info size={12} className="shrink-0 mt-0.5" />
                         <span>How to Unlock:</span>

@@ -145,8 +145,8 @@ function AuthPage({ mode = "login" }) {
       </main>
 
       <footer className="w-full max-w-7xl mx-auto px-6 pb-6 md:px-10 flex items-center justify-between text-xs" style={{ color: "var(--muted)" }}>
-        <span>© 2024 ExamVault</span>
-        <span>Learn at your pace.</span>
+        <span>© {new Date().getFullYear()} ExamVault</span>
+        <span>Curriculum-grounded exam preparation.</span>
       </footer>
     </div>
   );

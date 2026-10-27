@@ -29,6 +29,7 @@ function Topbar({
   accessToken 
 }) {
   const [accountOpen, setAccountOpen] = useState(false);
+  const [notifsOpen, setNotifsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState(null);
@@ -41,8 +42,10 @@ function Topbar({
   const searchContainerRef = useRef(null);
   const searchInputRef = useRef(null);
   const debounceTimerRef = useRef(null);
+  const accountMenuRef = useRef(null);
+  const notifsMenuRef = useRef(null);
 
-  // Global keyboard shortcut: Cmd+K / Ctrl+K
+  // Global keyboard shortcut: Cmd+K / Ctrl+K and Escape dismiss
   useEffect(() => {
     const handleKeyDown = (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
@@ -52,17 +55,25 @@ function Topbar({
       } else if (e.key === "Escape") {
         setSearchOpen(false);
         setMobileSearchVisible(false);
+        setAccountOpen(false);
+        setNotifsOpen(false);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Click outside listener to dismiss search dropdown
+  // Click outside listener to dismiss search dropdown, account menu, and notifs
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (searchContainerRef.current && !searchContainerRef.current.contains(e.target)) {
         setSearchOpen(false);
+      }
+      if (accountMenuRef.current && !accountMenuRef.current.contains(e.target)) {
+        setAccountOpen(false);
+      }
+      if (notifsMenuRef.current && !notifsMenuRef.current.contains(e.target)) {
+        setNotifsOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -393,15 +404,61 @@ function Topbar({
         {/* Theme Toggle */}
         <ThemeToggle />
 
-        {/* Notifications */}
-        <button className="sa-btn-outline p-2 relative" title="Notifications" aria-label="Notifications">
-          <Bell size={16} />
-          <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full" style={{ background: "var(--accent)" }} />
-        </button>
+        {/* Notifications Popover */}
+        <div className="relative" ref={notifsMenuRef}>
+          <button 
+            type="button"
+            onClick={() => setNotifsOpen((prev) => !prev)}
+            className="sa-btn-outline p-2 relative" 
+            title="Notifications" 
+            aria-label="Notifications"
+            aria-expanded={notifsOpen}
+          >
+            <Bell size={16} />
+            <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full" style={{ background: "var(--accent)" }} />
+          </button>
+
+          {notifsOpen && (
+            <div 
+              role="dialog"
+              aria-label="Notifications"
+              className="absolute right-0 top-11 z-50 w-72 sm:w-80 sa-card p-3 shadow-2xl sa-fade-in border rounded-2xl" 
+              style={{ borderColor: "var(--line)" }}
+            >
+              <div className="flex items-center justify-between pb-2 border-b" style={{ borderColor: "var(--line)" }}>
+                <span className="text-xs font-bold uppercase tracking-wider text-[var(--text)]">Notifications</span>
+                <span className="text-[10px] font-semibold text-[var(--accent)] px-2 py-0.5 rounded-full" style={{ background: "var(--accent-soft)" }}>
+                  {user?.reputation_credits ?? 0} Credits
+                </span>
+              </div>
+              <div className="py-3 text-left space-y-2 text-xs">
+                <div className="p-2 rounded-xl bg-[var(--surface-subtle)] flex items-start gap-2.5">
+                  <span className="w-2 h-2 rounded-full mt-1.5 shrink-0" style={{ background: "var(--accent)" }} />
+                  <div>
+                    <div className="font-semibold text-[var(--text)]">Welcome to ExamVault</div>
+                    <div className="text-[11px] text-[var(--muted)] mt-0.5">
+                      Upload your course notes, generate quizzes, and start active study sessions.
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="pt-2 border-t text-center" style={{ borderColor: "var(--line)" }}>
+                <button
+                  type="button"
+                  onClick={() => setNotifsOpen(false)}
+                  className="text-xs font-semibold text-[var(--muted)] hover:text-[var(--text)] py-1"
+                >
+                  Dismiss
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* User Account Menu */}
-        <div className="relative">
+        <div className="relative" ref={accountMenuRef}>
           <button 
+            type="button"
             onClick={() => setAccountOpen((open) => !open)} 
             className="w-8 h-8 rounded-full flex items-center justify-center font-bold shadow-xs transition-transform hover:scale-105" 
             style={{ background: "var(--accent)", color: "var(--accent-ink)" }} 
@@ -412,7 +469,11 @@ function Topbar({
           </button>
 
           {accountOpen && (
-            <div className="absolute right-0 top-11 z-50 w-56 sa-card p-2 shadow-2xl sa-fade-in border rounded-2xl" style={{ borderColor: "var(--line)" }}>
+            <div 
+              role="menu"
+              className="absolute right-0 top-11 z-50 w-56 sa-card p-2 shadow-2xl sa-fade-in border rounded-2xl" 
+              style={{ borderColor: "var(--line)" }}
+            >
               <div className="px-3 py-2.5 border-b mb-1" style={{ borderColor: "var(--line)" }}>
                 <div className="text-sm font-bold truncate text-[var(--text)]">{user?.full_name || "Account"}</div>
                 <div className="text-xs truncate text-[var(--muted)]">{user?.email}</div>
@@ -424,6 +485,8 @@ function Topbar({
 
               {/* View My Profile */}
               <button
+                type="button"
+                role="menuitem"
                 onClick={() => {
                   setAccountOpen(false);
                   if (onOpenProfile) onOpenProfile(user?.id);
@@ -436,6 +499,8 @@ function Topbar({
               </button>
 
               <button 
+                type="button"
+                role="menuitem"
                 onClick={logout} 
                 className="w-full text-left px-3 py-2 rounded-xl text-xs font-semibold hover:bg-[var(--surface-subtle)] transition-colors" 
                 style={{ color: "var(--danger)" }}

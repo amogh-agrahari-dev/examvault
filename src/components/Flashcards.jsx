@@ -97,6 +97,10 @@ function Flashcards({ topic, accessToken, showToast, go, selectDoc, compact }) {
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+      if (e.key === "Escape" && previewImage) {
+        setPreviewImage(null);
+        return;
+      }
       if (e.key === "ArrowLeft") {
         prev();
       } else if (e.key === "ArrowRight") {
@@ -108,7 +112,7 @@ function Flashcards({ topic, accessToken, showToast, go, selectDoc, compact }) {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [flashcards.length]);
+  }, [flashcards.length, previewImage]);
 
   if (loading) {
     return (
@@ -223,7 +227,10 @@ function Flashcards({ topic, accessToken, showToast, go, selectDoc, compact }) {
 
       {/* Interactive 3D Flip Card */}
       <div 
-        className="sa-flip-card w-full cursor-pointer select-none transition-all" 
+        role="button"
+        tabIndex={0}
+        aria-label="Interactive Flashcard. Tap or press Space/Enter to flip."
+        className="sa-flip-card w-full cursor-pointer select-none transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]" 
         style={{ 
           height: compact 
             ? (cardImageUrl ? 320 : 230) 
@@ -231,6 +238,12 @@ function Flashcards({ topic, accessToken, showToast, go, selectDoc, compact }) {
           minHeight: cardImageUrl ? 270 : 190 
         }}
         onClick={() => setFlipped(!flipped)}
+        onKeyDown={(e) => {
+          if (e.key === " " || e.key === "Enter") {
+            e.preventDefault();
+            setFlipped(!flipped);
+          }
+        }}
       >
         <div className={`sa-flip-inner ${flipped ? "flipped" : ""}`}>
           {/* Question Side */}
@@ -321,6 +334,7 @@ function Flashcards({ topic, accessToken, showToast, go, selectDoc, compact }) {
       {/* Row 1: Flip & Step Navigation Controls */}
       <div className={`grid grid-cols-3 gap-2 ${compact ? "mt-2.5" : "mt-2.5 sm:mt-3.5"}`}>
         <button 
+          type="button"
           onClick={prev} 
           className="sa-btn-outline py-2 px-2 text-xs sm:text-sm font-semibold flex items-center justify-center gap-1 active:scale-98"
           title="Previous Card (Left Arrow)"
@@ -329,6 +343,7 @@ function Flashcards({ topic, accessToken, showToast, go, selectDoc, compact }) {
         </button>
 
         <button 
+          type="button"
           onClick={() => setFlipped(!flipped)} 
           className="sa-btn-outline py-2 px-2 text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 active:scale-98 shadow-xs"
           style={{ background: "var(--surface-subtle)" }}
@@ -339,6 +354,7 @@ function Flashcards({ topic, accessToken, showToast, go, selectDoc, compact }) {
         </button>
 
         <button 
+          type="button"
           onClick={next} 
           className="sa-btn-outline py-2 px-2 text-xs sm:text-sm font-semibold flex items-center justify-center gap-1 active:scale-98"
           title="Next Card (Right Arrow)"
@@ -351,6 +367,7 @@ function Flashcards({ topic, accessToken, showToast, go, selectDoc, compact }) {
       {!compact && (
         <div className="grid grid-cols-2 gap-2 sm:gap-2.5 mt-2 sm:mt-2.5">
           <button 
+            type="button"
             onClick={() => { if (showToast) showToast("Added to review pile"); next(); }} 
             className="sa-btn-outline py-2 sm:py-2.5 text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 active:scale-98 hover:border-amber-500"
           >
@@ -359,6 +376,7 @@ function Flashcards({ topic, accessToken, showToast, go, selectDoc, compact }) {
           </button>
 
           <button 
+            type="button"
             onClick={() => { setKnown(known + 1); if (showToast) showToast("Marked as mastered! +5 credits"); next(); }} 
             className="sa-btn-primary py-2 sm:py-2.5 text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 shadow-sm active:scale-98"
           >
@@ -372,21 +390,26 @@ function Flashcards({ topic, accessToken, showToast, go, selectDoc, compact }) {
       {previewImage && (
         <div 
           className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center p-3 sm:p-4 animate-fade-in"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="flashcard-diagram-title"
           onClick={() => setPreviewImage(null)}
         >
           <div 
-            className="relative max-w-4xl max-h-[92vh] bg-[var(--surface)] rounded-2xl p-3 sm:p-4 shadow-2xl flex flex-col items-center border"
+            className="relative max-w-4xl max-h-[92vh] bg-[var(--surface)] rounded-2xl p-3 sm:p-4 shadow-2xl flex flex-col items-center border animate-scale-up"
             style={{ borderColor: "var(--line)" }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="w-full flex items-center justify-between pb-2.5 mb-2 border-b" style={{ borderColor: "var(--line)" }}>
-              <div className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-[var(--text)]">
+              <div id="flashcard-diagram-title" className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-[var(--text)]">
                 <ImageIcon size={15} className="text-[var(--accent)]" />
                 <span>Extracted Diagram / Figure</span>
               </div>
               <button 
+                type="button"
                 onClick={() => setPreviewImage(null)} 
                 className="p-1 rounded-lg hover:bg-black/10 dark:hover:bg-white/10 text-[var(--muted)]"
+                aria-label="Close diagram preview"
               >
                 <X size={18} />
               </button>

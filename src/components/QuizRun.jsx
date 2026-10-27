@@ -100,19 +100,36 @@ function QuizRun({ go, config, onFinish, fullScreenTitle, accessToken, showToast
     return "unattempted";
   };
   const statusStyle = {
-    current: { background: "var(--ink)", color: "#fff" },
+    current: { background: "var(--accent)", color: "var(--accent-ink)" },
     answered: { background: "var(--success)", color: "#fff" },
-    marked: { background: "var(--accent)", color: "var(--accent-ink)" },
-    unattempted: { background: "#EFEDE6", color: "var(--text)" },
+    marked: { background: "var(--accent-soft)", color: "var(--accent-ink)" },
+    unattempted: { background: "var(--chip-bg)", color: "var(--text)" },
   };
 
-  if (loading) return <div className="p-8 text-center text-sm" style={{ color: "var(--muted)" }}>Starting your attempt...</div>;
+  if (loading) return <div className="p-12 text-center text-sm" style={{ color: "var(--muted)" }}>Starting your attempt...</div>;
+
+  if (!q) {
+    return (
+      <div className="sa-card p-12 text-center max-w-lg mx-auto sa-fade-in">
+        <h3 className="sa-serif text-xl font-bold mb-2 text-[var(--text)]">No Questions Found</h3>
+        <p className="text-sm mb-5 text-[var(--muted)]">This quiz does not contain any questions to display.</p>
+        <button 
+          type="button" 
+          onClick={() => go("quiz-setup")} 
+          className="sa-btn-primary px-4 py-2 text-sm font-semibold"
+        >
+          Return to Quizzes
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="sa-fade-in">
       <div className="flex items-center justify-between flex-wrap gap-2 mb-5">
         <div className="flex items-center gap-3">
           <button
+            type="button"
             onClick={() => {
               if (window.confirm("Exit this quiz attempt and return to Quiz Dashboard? Your answers will be saved.")) {
                 go("quiz-setup");
@@ -120,15 +137,22 @@ function QuizRun({ go, config, onFinish, fullScreenTitle, accessToken, showToast
             }}
             className="p-1.5 rounded-lg border hover:bg-[var(--surface-subtle)] text-[var(--muted)]"
             title="Exit to Quiz Dashboard"
+            aria-label="Exit quiz attempt"
           >
             <ArrowLeft size={16} />
           </button>
           <div>
-            <h2 className="sa-serif text-xl font-semibold">{fullScreenTitle || generatedQuiz?.title || "Quiz"}</h2>
-            <p className="text-xs mt-0.5" style={{ color: "var(--muted)" }}>Question {current + 1} of {questions.length}</p>
+            <h2 className="sa-serif text-xl font-semibold text-[var(--text)]">{fullScreenTitle || generatedQuiz?.title || "Quiz"}</h2>
+            <p className="text-xs mt-0.5 text-[var(--muted)]">Question {current + 1} of {questions.length}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2 px-3 py-2 rounded-lg" style={{ background: seconds < 60 ? "var(--danger-soft)" : "#EFEDE6" }}>
+        <div 
+          className="flex items-center gap-2 px-3 py-2 rounded-lg border" 
+          style={{ 
+            background: seconds < 60 ? "var(--danger-soft)" : "var(--chip-bg)",
+            borderColor: seconds < 60 ? "var(--danger)" : "var(--line)"
+          }}
+        >
           <Clock size={15} color={seconds < 60 ? "var(--danger)" : "var(--text)"} />
           <span className="text-sm font-mono font-semibold" style={{ color: seconds < 60 ? "var(--danger)" : "var(--text)" }}>{mm}:{ss}</span>
         </div>
@@ -137,32 +161,46 @@ function QuizRun({ go, config, onFinish, fullScreenTitle, accessToken, showToast
       <div className="grid lg:grid-cols-[1fr_260px] gap-5">
         <div className="sa-card sa-card-lg p-3.5 sm:p-6 flex flex-col">
           <div className="flex items-center gap-2 mb-4">
-            <Badge tone="info">{q.question_type.toUpperCase()}</Badge>
-            <Badge tone="accent">{q.difficulty.toUpperCase()}</Badge>
+            <Badge tone="info">{q.question_type?.toUpperCase() || "QUESTION"}</Badge>
+            <Badge tone="accent">{q.difficulty?.toUpperCase() || "MEDIUM"}</Badge>
             {marked[q.id] && <Badge tone="accent"><Flag size={11} /> Marked</Badge>}
           </div>
-          <div className="text-base font-medium leading-relaxed mb-6">
+          <div className="text-base font-medium leading-relaxed mb-6 text-[var(--text)]">
             <FormattedText text={q.question_text} />
           </div>
           
-          <div className="flex-1 space-y-2.5">
-            {q.question_type === 'mcq' && q.public_options && Object.entries(q.public_options).map(([key, val]) => (
-              <div key={key} onClick={() => setAnswer(key)}
-                className={`sa-option-card px-4 py-3 flex items-center gap-3 text-sm ${answers[q.id] === key ? "selected" : ""}`}>
-                <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-semibold"
-                  style={{ border: "1.5px solid " + (answers[q.id] === key ? "var(--ink)" : "#CFCBBB"), background: answers[q.id] === key ? "var(--ink)" : "transparent", color: answers[q.id] === key ? "#fff" : "var(--muted)" }}>
-                  {key}
-                </div>
-                <span className="flex-1">
-                  <FormattedText text={val} inline />
-                </span>
-              </div>
-            ))}
+          <div className="flex-1 space-y-2.5" role="radiogroup" aria-label="Question options">
+            {q.question_type === 'mcq' && q.public_options && Object.entries(q.public_options).map(([key, val]) => {
+              const isSelected = answers[q.id] === key;
+              return (
+                <button 
+                  key={key} 
+                  type="button"
+                  role="radio"
+                  aria-checked={isSelected}
+                  onClick={() => setAnswer(key)}
+                  className={`sa-option-card w-full text-left px-4 py-3 flex items-center gap-3 text-sm transition-all ${isSelected ? "selected" : ""}`}
+                >
+                  <div 
+                    className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold transition-colors"
+                    style={{ 
+                      border: `1.5px solid ${isSelected ? "var(--accent)" : "var(--line)"}`, 
+                      background: isSelected ? "var(--accent)" : "transparent", 
+                      color: isSelected ? "var(--accent-ink)" : "var(--muted)" 
+                    }}
+                  >
+                    {key}
+                  </div>
+                  <span className="flex-1 text-[var(--text)]">
+                    <FormattedText text={val} inline />
+                  </span>
+                </button>
+              );
+            })}
 
             {q.question_type === 'short_answer' && (
               <textarea 
-                className="w-full h-32 p-3 rounded-lg text-sm outline-none resize-none"
-                style={{ border: "1px solid var(--line)" }}
+                className="w-full h-32 p-3 rounded-lg text-sm outline-none resize-none bg-[var(--input-bg)] text-[var(--text)] border border-[var(--line)] focus:border-[var(--accent)]"
                 placeholder="Write your answer here..."
                 value={answers[q.id] || ""}
                 onChange={(e) => setAnswer(e.target.value)}

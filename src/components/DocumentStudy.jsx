@@ -245,10 +245,15 @@ function DocumentStudy({ go, doc, selectDoc, accessToken, showToast, defaultTab 
             <div className="flex flex-col flex-1 min-h-0">
               {/* Tab Switcher Segmented Control */}
               <div 
+                role="tablist"
+                aria-label="Study modes"
                 className="flex items-center p-1 rounded-xl border gap-1 bg-[var(--surface-subtle)] mb-3 w-fit"
                 style={{ borderColor: "var(--line)" }}
               >
                 <button 
+                  type="button"
+                  role="tab"
+                  aria-selected={activeTab === "flashcards"}
                   onClick={() => setActiveTab("flashcards")} 
                   className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center gap-1.5 ${
                     activeTab === "flashcards" 
@@ -260,6 +265,9 @@ function DocumentStudy({ go, doc, selectDoc, accessToken, showToast, defaultTab 
                   <span>Revision Flashcards</span>
                 </button>
                 <button 
+                  type="button"
+                  role="tab"
+                  aria-selected={activeTab === "discussions"}
                   onClick={() => setActiveTab("discussions")} 
                   className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center gap-1.5 ${
                     activeTab === "discussions" 

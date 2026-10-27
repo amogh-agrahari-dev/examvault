@@ -30,15 +30,17 @@ function Sidebar({ page, setPage, collapsed, setCollapsed, mobileOpen, setMobile
         )}
       </div>
 
-      <nav className="flex-1 px-3 space-y-1 overflow-y-auto sa-scroll">
+      <nav aria-label="Main Navigation" className="flex-1 px-3 space-y-1 overflow-y-auto sa-scroll">
         {NAV_ITEMS.map((item) => (
           <button
             key={item.id}
+            type="button"
             onClick={() => { setPage(item.id); setMobileOpen(false); }}
+            aria-current={page === item.id ? "page" : undefined}
             className={`sa-nav-item w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium ${page === item.id ? "active" : ""}`}
             title={!isMobile && collapsed ? item.label : undefined}
           >
-            <item.icon size={18} className="flex-shrink-0" />
+            <item.icon size={18} className="flex-shrink-0" aria-hidden="true" />
             {(isMobile || !collapsed) && <span className="truncate">{item.label}</span>}
           </button>
         ))}
@@ -47,17 +49,29 @@ function Sidebar({ page, setPage, collapsed, setCollapsed, mobileOpen, setMobile
       <div className="p-3 border-t" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
         {!isMobile && (
           <button
+            type="button"
             onClick={() => setCollapsed(!collapsed)}
+            aria-label={collapsed ? "Expand sidebar navigation" : "Collapse sidebar navigation"}
             className="sa-nav-item w-full hidden md:flex items-center gap-2 px-3 py-2 text-xs font-medium mb-2"
           >
             {collapsed ? <ChevronRight size={16} /> : <><ChevronLeft size={16} /> Collapse</>}
           </button>
         )}
         <div 
+          role="button"
+          tabIndex={0}
           onClick={() => { setPage("profile"); if (setMobileOpen) setMobileOpen(false); }}
-          className="flex items-center gap-2 px-2 py-2 rounded-lg cursor-pointer hover:bg-white/10 transition-colors group" 
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              setPage("profile");
+              if (setMobileOpen) setMobileOpen(false);
+            }
+          }}
+          className="flex items-center gap-2 px-2 py-2 rounded-lg cursor-pointer hover:bg-white/10 transition-colors group focus-visible:outline-2 focus-visible:outline-[var(--accent)]" 
           style={{ background: "rgba(255,255,255,0.05)" }}
           title="View your public profile"
+          aria-label="View your scholar profile"
         >
           <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform" style={{ background: "var(--accent)" }}>
             <span className="text-xs font-bold" style={{ color: "var(--accent-ink)" }}>{initials}</span>

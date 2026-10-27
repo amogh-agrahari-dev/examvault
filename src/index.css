@@ -118,6 +118,10 @@ html.dark, .dark {
 }
 .sa-btn-primary:hover { background: var(--ink-btn-hover); }
 .sa-btn-primary:active { transform: scale(0.98); }
+.sa-btn-primary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 
 .sa-btn-accent {
   background: var(--accent);
@@ -128,6 +132,10 @@ html.dark, .dark {
 }
 .sa-btn-accent:hover { filter: brightness(1.08); }
 .sa-btn-accent:active { transform: scale(0.98); }
+.sa-btn-accent:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 
 .sa-btn-outline {
   background: transparent;
@@ -139,6 +147,10 @@ html.dark, .dark {
 .sa-btn-outline:hover {
   border-color: var(--muted);
   background: var(--surface-subtle);
+}
+.sa-btn-outline:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .sa-auth-input {
@@ -1275,3 +1287,14 @@ html.dark, .dark {
     display: none;
   }
 }
+
+/* Accessible reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+

@@ -35,6 +35,9 @@ export default function MobileBottomNav({ page, setPage }) {
           return (
             <button
               key={item.id}
+              type="button"
+              aria-label={item.label}
+              aria-current={isActive ? "page" : undefined}
               onClick={() => {
                 setPage(item.id);
                 window.scrollTo({ top: 0, behavior: "smooth" });

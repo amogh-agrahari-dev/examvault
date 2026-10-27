@@ -91,6 +91,19 @@ export default function PredictedPaperGenerator({
   // Inspect raw extracted text modal
   const [inspectPaper, setInspectPaper] = useState(null);
 
+  // Close modals on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        if (inspectPaper) setInspectPaper(null);
+        else if (predictModalPaper) setPredictModalPaper(null);
+        else if (isUploadOpen) setIsUploadOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [inspectPaper, predictModalPaper, isUploadOpen]);
+
   // Initial loads
   useEffect(() => {
     fetchSubjects();
@@ -359,6 +372,7 @@ export default function PredictedPaperGenerator({
         <div>
           <div className="flex items-center gap-2 mb-1.5">
             <button
+              type="button"
               onClick={() => go("subjects")}
               className="text-xs flex items-center gap-1 font-medium hover:underline text-[var(--muted)] hover:text-[var(--text)] transition-colors"
             >
@@ -390,6 +404,7 @@ export default function PredictedPaperGenerator({
             onChange={(e) => setSelectedSubjectId(e.target.value)}
             className="sa-input text-xs px-3 py-2 rounded-xl border font-medium cursor-pointer w-full sm:w-auto"
             style={{ minWidth: 150 }}
+            aria-label="Filter past papers by subject"
           >
             <option value="">All Subjects</option>
             {subjects.map((s) => (
@@ -400,6 +415,7 @@ export default function PredictedPaperGenerator({
           </select>
 
           <button
+            type="button"
             onClick={() => {
               setModalMode("documents");
               setIsUploadOpen(true);
@@ -412,6 +428,7 @@ export default function PredictedPaperGenerator({
           </button>
 
           <button
+            type="button"
             onClick={() => {
               setModalMode("upload");
               setIsUploadOpen(true);
@@ -426,10 +443,15 @@ export default function PredictedPaperGenerator({
 
       {/* Navigation Tabs - Modern Segmented Control Container */}
       <div 
+        role="tablist"
+        aria-label="Exam Paper Predictor sections"
         className="flex items-center p-1 rounded-xl border gap-1 bg-[var(--surface-subtle)] overflow-x-auto whitespace-nowrap sa-scroll flex-nowrap no-print"
         style={{ borderColor: "var(--line)" }}
       >
         <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "papers"}
           onClick={() => setActiveTab("papers")}
           className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all ${
             activeTab === "papers"
@@ -443,6 +465,9 @@ export default function PredictedPaperGenerator({
 
         {currentPrediction && (
           <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === "viewer"}
             onClick={() => setActiveTab("viewer")}
             className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all ${
               activeTab === "viewer"
@@ -456,6 +481,9 @@ export default function PredictedPaperGenerator({
         )}
 
         <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "history"}
           onClick={() => setActiveTab("history")}
           className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all ${
             activeTab === "history"
@@ -1132,14 +1160,19 @@ export default function PredictedPaperGenerator({
       {/* MODAL: ADD EXAM RESOURCE (UPLOAD FILE OR SELECT FROM DOCUMENTS) */}
       {/* ============================================================ */}
       {isUploadOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="upload-modal-title"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+        >
           <div
             className="sa-card w-full max-w-lg max-h-[90vh] overflow-y-auto sa-scroll p-6 rounded-2xl border shadow-2xl space-y-4"
             style={{ background: "var(--surface)", borderColor: "var(--line)" }}
           >
             <div className="flex items-start justify-between pb-3 border-b" style={{ borderColor: "var(--line)" }}>
               <div>
-                <h3 className="sa-serif text-lg font-bold flex items-center gap-2 text-[var(--text)]">
+                <h3 id="upload-modal-title" className="sa-serif text-lg font-bold flex items-center gap-2 text-[var(--text)]">
                   <FolderLock size={18} className="text-amber-500" />
                   <span>{modalMode === "documents" ? "Select Resource From My Documents" : "Upload Examination Paper"}</span>
                 </h3>
@@ -1150,6 +1183,7 @@ export default function PredictedPaperGenerator({
                 </p>
               </div>
               <button
+                type="button"
                 onClick={() => setIsUploadOpen(false)}
                 className="p-1 rounded-lg text-[var(--muted)] hover:text-[var(--text)] hover:bg-[var(--surface-subtle)] transition-colors"
                 aria-label="Close modal"
@@ -1502,14 +1536,19 @@ export default function PredictedPaperGenerator({
       {/* MODAL: PREDICT CONFIGURATION & RUNNER */}
       {/* ============================================================ */}
       {predictModalPaper && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="predict-modal-title"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+        >
           <div
             className="sa-card w-full max-w-lg max-h-[90vh] overflow-y-auto sa-scroll p-6 rounded-2xl border shadow-2xl space-y-5"
             style={{ background: "var(--surface)", borderColor: "var(--line)" }}
           >
             <div className="flex items-start justify-between pb-3 border-b" style={{ borderColor: "var(--line)" }}>
               <div>
-                <h3 className="sa-serif text-lg font-bold flex items-center gap-2 text-[var(--text)]">
+                <h3 id="predict-modal-title" className="sa-serif text-lg font-bold flex items-center gap-2 text-[var(--text)]">
                   <Sparkles size={18} className="text-amber-500" />
                   <span>Predict Upcoming Examination Paper</span>
                 </h3>
@@ -1518,6 +1557,7 @@ export default function PredictedPaperGenerator({
                 </p>
               </div>
               <button
+                type="button"
                 onClick={() => setPredictModalPaper(null)}
                 className="p-1 rounded-lg text-[var(--muted)] hover:text-[var(--text)] hover:bg-[var(--surface-subtle)] transition-colors"
                 aria-label="Close modal"
@@ -1650,19 +1690,25 @@ export default function PredictedPaperGenerator({
       {/* MODAL: INSPECT RAW EXTRACTED PAST PAPER TEXT */}
       {/* ============================================================ */}
       {inspectPaper && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="inspect-modal-title"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+        >
           <div
             className="sa-card w-full max-w-2xl max-h-[85vh] flex flex-col p-6 rounded-2xl border shadow-2xl"
             style={{ background: "var(--surface)", borderColor: "var(--line)" }}
           >
             <div className="flex items-center justify-between pb-3 border-b" style={{ borderColor: "var(--line)" }}>
               <div>
-                <h3 className="sa-serif font-bold text-base text-[var(--text)]">Extracted Past Paper Content</h3>
+                <h3 id="inspect-modal-title" className="sa-serif font-bold text-base text-[var(--text)]">Extracted Past Paper Content</h3>
                 <span className="text-xs text-[var(--muted)]">
                   {inspectPaper.filename} • {inspectPaper.year || "Previous Year"}
                 </span>
               </div>
               <button
+                type="button"
                 onClick={() => setInspectPaper(null)}
                 className="p-1 rounded-lg text-[var(--muted)] hover:text-[var(--text)] hover:bg-[var(--surface-subtle)] transition-colors"
                 aria-label="Close modal"
@@ -1684,6 +1730,7 @@ export default function PredictedPaperGenerator({
 
             <div className="flex justify-end pt-2 border-t" style={{ borderColor: "var(--line)" }}>
               <button
+                type="button"
                 onClick={() => setInspectPaper(null)}
                 className="sa-btn-outline px-4 py-1.5 text-xs font-medium rounded-xl"
               >

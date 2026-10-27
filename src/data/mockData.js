@@ -91,13 +91,13 @@ const NAV_ITEMS = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
   { id: "documents", label: "My Documents", icon: FileText },
   { id: "notes", label: "Quick Notes", icon: PenLine },
-  { id: "chat", label: "AI Chat", icon: MessageSquare },
-  { id: "quiz-setup", label: "Quiz", icon: HelpCircle },
-  { id: "summary", label: "Summaries", icon: BookOpen },
-  { id: "flashcards", label: "Flashcards", icon: Layers },
+  { id: "chat", label: "AI Study Chat", icon: MessageSquare },
+  { id: "quiz-setup", label: "Practice Quizzes", icon: HelpCircle },
+  { id: "summary", label: "Topic Summaries", icon: BookOpen },
+  { id: "flashcards", label: "Revision Flashcards", icon: Layers },
   { id: "leaderboard", label: "Leaderboard", icon: Trophy },
   { id: "group-discussions", label: "Group Discussions", icon: Users },
-  { id: "subjects", label: "Predict Paper", icon: TrendingUp },
+  { id: "subjects", label: "Exam Predictor", icon: TrendingUp },
   { id: "settings", label: "Settings", icon: SettingsIcon },
 ];
 

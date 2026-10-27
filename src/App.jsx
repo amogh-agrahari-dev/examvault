@@ -80,25 +80,25 @@ function App() {
   );
 
   const titles = {
-    dashboard: ["Dashboard", null],
-    documents: ["My Documents", null],
-    upload: ["Upload Material", null],
-    "document-study": ["Study Document", null],
-    analysis: ["Document Analysis", null],
-    "quiz-setup": ["Quiz Dashboard", null],
-    "quiz-run": ["Quiz", null],
-    "quiz-result": ["Quiz Result", null],
-    summary: ["Summaries", null],
-    chat: ["AI Chat", null],
-    flashcards: ["Flashcards", null],
-    leaderboard: ["Scholar Leaderboard", null],
-    "group-discussions": ["Group Discussions", null],
-    settings: ["Settings", null],
-    subjects: ["Subjects & Paper Generator", null],
-    "predict-paper": ["Predict Examination", null],
-    notes: ["Quick Short Notes", null],
-    "note-editor": ["Note Editor", null],
-    profile: ["Scholar Profile", null],
+    dashboard: ["Dashboard", "Overview of your preparation and activity"],
+    documents: ["My Documents", "Curriculum notes and study materials"],
+    upload: ["Upload Material", "Add lecture slides, notes, or syllabi"],
+    "document-study": ["Study Document", "Revise with topics, flashcards, and group discussions"],
+    analysis: ["Document Analysis", "Structure and syllabus topic breakdown"],
+    "quiz-setup": ["Practice Quizzes", "Generate or attempt topic-based quizzes"],
+    "quiz-run": ["Quiz in Progress", "Answer questions before the timer elapses"],
+    "quiz-result": ["Quiz Evaluation", "Score analysis and detailed explanations"],
+    summary: ["Topic Summaries", "High-yield formulas and structured overviews"],
+    chat: ["AI Study Chat", "Grounded assistance on your uploaded materials"],
+    flashcards: ["Revision Flashcards", "Spaced repetition and active recall"],
+    leaderboard: ["Scholar Leaderboard", "Academic standings and earned Vault Credits"],
+    "group-discussions": ["Group Discussions", "Peer study rooms and topic discussions"],
+    settings: ["Settings", "Preferences, appearance, and profile"],
+    subjects: ["Exam Predictor", "Course curricula and paper blueprints"],
+    "predict-paper": ["Predicted Examination", "Pattern-grounded examination predictions"],
+    notes: ["Quick Notes", "Structured revision notebooks and markdown"],
+    "note-editor": ["Note Editor", "Rich text and diagramming canvas"],
+    profile: ["Scholar Profile", "Academic merits and study achievements"],
   };
   const activeNavId = page.startsWith("quiz")
     ? "quiz-setup"
@@ -137,7 +137,7 @@ function App() {
       <div className="flex-1 flex flex-col min-w-0">
         <Topbar 
           title={titles[page]?.[0] || "ExamVault"} 
-          subtitle={null} 
+          subtitle={titles[page]?.[1] || null} 
           onMenuClick={() => setMobileOpen(true)}
           go={go}
           selectDoc={setSelectedDoc}
@@ -149,7 +149,7 @@ function App() {
           {body}
         </div>
       </div>
-      {page !== "note-editor" && (
+      {page !== "note-editor" && page !== "quiz-run" && (
         <MobileBottomNav page={activeNavId} setPage={go} />
       )}
       {activeProfileUserId && (

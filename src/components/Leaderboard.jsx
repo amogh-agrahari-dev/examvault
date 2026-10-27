@@ -89,9 +89,18 @@ export default function Leaderboard({ go, accessToken, onOpenProfile }) {
         {/* Current User Standing Card */}
         {currentUserEntry && (
           <div 
+            role="button"
+            tabIndex={0}
             onClick={() => handleUserClick(currentUserEntry.id)}
-            className="sa-card p-3 sm:p-4 flex items-center justify-between gap-3 sm:gap-4 shrink-0 shadow-xs cursor-pointer hover:border-[var(--accent)] transition-colors self-start sm:self-auto w-full sm:w-auto"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleUserClick(currentUserEntry.id);
+              }
+            }}
+            className="sa-card p-3 sm:p-4 flex items-center justify-between gap-3 sm:gap-4 shrink-0 shadow-xs cursor-pointer hover:border-[var(--accent)] transition-colors self-start sm:self-auto w-full sm:w-auto focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
             title="Click to view your public profile"
+            aria-label="View your public profile"
           >
             <div className="flex items-center gap-3">
               <div 
@@ -375,10 +384,19 @@ export default function Leaderboard({ go, accessToken, onOpenProfile }) {
               return (
                 <div
                   key={item.id}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => handleUserClick(item.id)}
-                  className={`p-3 sm:p-4 flex items-center justify-between gap-2.5 sm:gap-4 transition-colors hover:bg-[var(--surface-subtle)] active:bg-[var(--surface-hover)] cursor-pointer group ${
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handleUserClick(item.id);
+                    }
+                  }}
+                  className={`p-3 sm:p-4 flex items-center justify-between gap-2.5 sm:gap-4 transition-colors hover:bg-[var(--surface-subtle)] active:bg-[var(--surface-hover)] cursor-pointer group focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
                     isCurrentUser ? "bg-amber-500/5 font-medium" : ""
                   }`}
+                  aria-label={`View profile of ${item.full_name}, ranked number ${item.rank}`}
                 >
                   {/* Left: Rank, Avatar, Scholar Identity */}
                   <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">

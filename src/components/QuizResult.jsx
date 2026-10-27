@@ -57,12 +57,13 @@ export default function QuizResult({ go, result, accessToken, showToast, setConf
     <div className="sa-fade-in max-w-2xl mx-auto space-y-6 pb-12">
       <div className="flex items-center justify-between">
         <button
+          type="button"
           onClick={() => go("quiz-setup")}
-          className="sa-btn-outline px-3 py-1.5 text-xs font-medium flex items-center gap-1.5"
+          className="sa-btn-outline px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5"
         >
-          <ArrowLeft size={13} /> Quiz Dashboard
+          <ArrowLeft size={13} /> Back to Quizzes
         </button>
-        <span className="text-xs uppercase tracking-wider font-semibold" style={{ color: "var(--muted)" }}>
+        <span className="text-xs uppercase tracking-wider font-semibold text-[var(--muted)]">
           {data.quiz_title || "Quiz Evaluation"}
         </span>
       </div>
@@ -84,7 +85,13 @@ export default function QuizResult({ go, result, accessToken, showToast, setConf
           </div>
           <div className="text-xs font-semibold uppercase tracking-wide mt-1" style={{ color: "var(--muted)" }}>Score</div>
           {scorePct !== null && (
-            <span className={`text-xs font-semibold mt-1.5 px-2 py-0.5 rounded-full ${scorePct >= 70 ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : scorePct >= 40 ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300' : 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'}`}>
+            <span 
+              className="text-xs font-semibold mt-1.5 px-2.5 py-0.5 rounded-full"
+              style={{
+                background: scorePct >= 70 ? "var(--success-soft)" : scorePct >= 40 ? "var(--accent-soft)" : "var(--danger-soft)",
+                color: scorePct >= 70 ? "var(--success)" : scorePct >= 40 ? "var(--accent-ink)" : "var(--danger)"
+              }}
+            >
               {scorePct}%
             </span>
           )}
@@ -219,24 +226,29 @@ export default function QuizResult({ go, result, accessToken, showToast, setConf
 
       <div className="flex flex-wrap gap-3 justify-center pt-2">
         <button
+          type="button"
           onClick={handleAttemptAgain}
           disabled={reloading}
-          className="sa-btn-accent px-6 py-2.5 text-sm font-semibold flex items-center gap-2 shadow-sm"
+          className="sa-btn-accent px-6 py-2.5 text-sm font-semibold flex items-center gap-2 shadow-xs"
         >
           <RotateCcw size={15} className={reloading ? "animate-spin" : ""} />
-          {reloading ? "Preparing Quiz..." : "Attempt Again"}
+          <span>{reloading ? "Preparing Quiz..." : "Attempt Again"}</span>
         </button>
         <button
+          type="button"
           onClick={() => go("quiz-setup")}
-          className="sa-btn-primary px-5 py-2.5 text-sm font-medium flex items-center gap-2"
+          className="sa-btn-primary px-5 py-2.5 text-sm font-semibold flex items-center gap-2 shadow-xs"
         >
-          <ArrowLeft size={15} /> Quiz Dashboard
+          <ArrowLeft size={15} />
+          <span>Back to Quizzes</span>
         </button>
         <button
+          type="button"
           onClick={() => go("dashboard")}
-          className="sa-btn-outline px-5 py-2.5 text-sm font-medium flex items-center gap-2"
+          className="sa-btn-outline px-5 py-2.5 text-sm font-semibold flex items-center gap-2"
         >
-          <LayoutDashboard size={15} /> Back to Dashboard
+          <LayoutDashboard size={15} />
+          <span>Dashboard</span>
         </button>
       </div>
     </div>

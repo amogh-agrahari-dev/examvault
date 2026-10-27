@@ -23,6 +23,16 @@ export default function UserProfileModal({ userId, onClose, accessToken, onOpenD
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" && onClose) {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
+  useEffect(() => {
     if (!userId) return;
     let isMounted = true;
     setLoading(true);
@@ -81,9 +91,12 @@ export default function UserProfileModal({ userId, onClose, accessToken, onOpenD
     <div 
       className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-black/60 backdrop-blur-sm sa-fade-in"
       onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="user-profile-modal-title"
     >
       <div 
-        className="sa-card w-full max-w-xl max-h-[92vh] overflow-y-auto sa-scroll rounded-2xl shadow-2xl relative border"
+        className="sa-card w-full max-w-xl max-h-[92vh] overflow-y-auto sa-scroll rounded-2xl shadow-2xl relative border animate-scale-up"
         style={{ borderColor: "var(--line)" }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -107,9 +120,11 @@ export default function UserProfileModal({ userId, onClose, accessToken, onOpenD
           </div>
 
           <button
+            type="button"
             onClick={onClose}
             className="w-8 h-8 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center transition-colors"
             title="Close"
+            aria-label="Close user profile"
           >
             <X size={16} />
           </button>
@@ -144,7 +159,7 @@ export default function UserProfileModal({ userId, onClose, accessToken, onOpenD
           {/* Scholar Details - Always completely on the card surface with perfect contrast */}
           <div className="mb-5">
             <div className="flex items-center gap-2 flex-wrap">
-              <h2 className="sa-serif text-xl sm:text-2xl font-bold text-[var(--text)]">
+              <h2 id="user-profile-modal-title" className="sa-serif text-xl sm:text-2xl font-bold text-[var(--text)]">
                 {loading ? "Loading..." : profile?.full_name}
               </h2>
               <span 
@@ -255,6 +270,7 @@ export default function UserProfileModal({ userId, onClose, accessToken, onOpenD
               {/* Quick Actions */}
               <div className="pt-2 flex items-center justify-end gap-2 border-t" style={{ borderColor: "var(--line)" }}>
                 <button
+                  type="button"
                   onClick={onClose}
                   className="px-4 py-2 rounded-xl text-sm font-medium border transition-colors hover:bg-[var(--surface-subtle)]"
                   style={{ borderColor: "var(--line)", color: "var(--text)" }}

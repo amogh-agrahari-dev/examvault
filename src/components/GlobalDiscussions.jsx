@@ -63,21 +63,22 @@ export default function GlobalDiscussions({ accessToken, showToast, initialDiscu
              <div className="w-10 h-10 rounded-full bg-[var(--info-soft)] flex items-center justify-center text-[var(--info)]">
                <Users size={20} />
              </div>
-             <h2 className="font-semibold text-[var(--text)]">Chats</h2>
+             <h2 className="font-semibold text-[var(--text)]">Group Discussions</h2>
           </div>
-          <button className="text-[var(--muted)] hover:text-[var(--text)]">
+          <button type="button" aria-label="Discussion options" className="text-[var(--muted)] hover:text-[var(--text)] p-1 rounded-lg">
              <MoreVertical size={20} />
           </button>
         </div>
 
         {/* Search */}
         <div className="p-2 border-b border-[var(--line)] bg-[var(--surface)] shrink-0">
-           <div className="bg-[var(--surface-subtle)] rounded-lg flex items-center px-3 py-1.5 gap-2">
-             <Search size={18} className="text-[var(--muted)]" />
+           <div className="bg-[var(--surface-subtle)] rounded-lg flex items-center px-3 py-1.5 gap-2 border border-[var(--line)] focus-within:border-[var(--accent)]">
+             <Search size={16} className="text-[var(--muted)] shrink-0" />
              <input 
                type="text" 
-               placeholder="Search or start new chat" 
-               className="bg-transparent border-none outline-none text-sm w-full h-8 text-[var(--text)]"
+               aria-label="Search discussions"
+               placeholder="Search study rooms..." 
+               className="bg-transparent border-none outline-none text-xs sm:text-sm w-full h-8 text-[var(--text)] placeholder-[var(--muted)]"
                value={searchQuery}
                onChange={e => setSearchQuery(e.target.value)}
              />
@@ -87,11 +88,11 @@ export default function GlobalDiscussions({ accessToken, showToast, initialDiscu
         {/* Chat List */}
         <div className="flex-1 overflow-y-auto sa-scroll bg-[var(--surface)] pb-20 md:pb-0">
           {loading ? (
-             <div className="text-center p-8 text-[var(--muted)] text-sm">Loading chats...</div>
+             <div className="text-center p-8 text-[var(--muted)] text-sm">Loading discussion rooms...</div>
           ) : filteredDiscussions.length === 0 ? (
-             <div className="p-8 text-center flex flex-col items-center opacity-50 mt-10">
-               <MessageCircle size={32} className="mb-3" />
-               <p className="text-sm font-medium">No chats found</p>
+             <div className="p-8 text-center flex flex-col items-center opacity-60 mt-10">
+               <MessageCircle size={32} className="mb-3 text-[var(--muted)]" />
+               <p className="text-sm font-medium text-[var(--text)]">No discussion rooms found</p>
              </div>
           ) : (
              <div className="flex flex-col">
@@ -100,8 +101,17 @@ export default function GlobalDiscussions({ accessToken, showToast, initialDiscu
                  return (
                    <div 
                      key={d.id} 
+                     role="button"
+                     tabIndex={0}
                      onClick={() => d.is_member ? setActiveDiscussion(d) : null}
-                     className={`flex items-center p-3 cursor-pointer hover:bg-[var(--surface-hover)] transition-colors border-b border-[var(--line-subtle)] ${isActive ? 'bg-[var(--surface-subtle)]' : ''}`}
+                     onKeyDown={(e) => {
+                       if ((e.key === "Enter" || e.key === " ") && d.is_member) {
+                         e.preventDefault();
+                         setActiveDiscussion(d);
+                       }
+                     }}
+                     className={`flex items-center p-3 cursor-pointer hover:bg-[var(--surface-hover)] transition-colors border-b border-[var(--line-subtle)] focus-visible:outline-2 focus-visible:outline-[var(--accent)] ${isActive ? 'bg-[var(--surface-subtle)]' : ''}`}
+                     aria-label={`Open discussion ${d.title}`}
                    >
                       <div className="w-12 h-12 rounded-full bg-[var(--info-soft)] flex flex-shrink-0 items-center justify-center text-[var(--info)] mr-3">
                         {d.visibility === "PRIVATE" ? <Lock size={18} /> : <Users size={18} />}
@@ -118,7 +128,11 @@ export default function GlobalDiscussions({ accessToken, showToast, initialDiscu
                              <FormattedText text={d.topic_name} inline /> • {d.member_count} members
                            </div>
                            {!d.is_member && (
-                             <button onClick={(e) => { e.stopPropagation(); handleJoin(d); }} className="text-xs font-semibold text-[var(--info)] bg-[var(--info-soft)] px-2 py-0.5 rounded-full hover:bg-[var(--info-soft)] dark:hover:bg-blue-900/50">
+                             <button 
+                               type="button"
+                               onClick={(e) => { e.stopPropagation(); handleJoin(d); }} 
+                               className="text-xs font-semibold text-[var(--info)] bg-[var(--info-soft)] px-2.5 py-1 rounded-full hover:opacity-85 shadow-xs"
+                             >
                                Join
                              </button>
                            )}

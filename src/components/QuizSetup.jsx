@@ -217,35 +217,37 @@ function QuizSetup({ go, config, setConfig, accessToken, showToast }) {
       {/* Header & Tabs */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="sa-serif text-3xl font-semibold">Quiz Dashboard</h2>
-          <p className="text-sm mt-1" style={{ color: "var(--muted)" }}>
-            Review, retake previous quizzes anytime, or generate new practice tests from your vault.
+          <h2 className="sa-serif text-2xl sm:text-3xl font-bold text-[var(--text)]">Practice Quizzes</h2>
+          <p className="text-xs sm:text-sm mt-1 text-[var(--muted)]">
+            Review past scores, retake generated quizzes, or assemble new tests from your study materials.
           </p>
         </div>
 
         <div className="flex items-center gap-2 self-start md:self-auto">
           <div className="p-1 rounded-xl border flex items-center gap-1" style={{ background: "var(--surface)", borderColor: "var(--line)" }}>
             <button
+              type="button"
               onClick={() => setTab("quizzes")}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 ${
                 tab === "quizzes"
-                  ? "bg-[var(--ink)] text-white dark:bg-amber-400 dark:text-black shadow-sm"
+                  ? "bg-[var(--ink)] text-white dark:bg-amber-400 dark:text-black shadow-xs"
                   : "text-[var(--muted)] hover:text-[var(--text)]"
               }`}
             >
               <Layers size={13} />
-              My Quizzes ({quizzes.length})
+              <span>My Quizzes ({quizzes.length})</span>
             </button>
             <button
+              type="button"
               onClick={() => setTab("generate")}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 ${
                 tab === "generate"
-                  ? "bg-[var(--ink)] text-white dark:bg-amber-400 dark:text-black shadow-sm"
+                  ? "bg-[var(--ink)] text-white dark:bg-amber-400 dark:text-black shadow-xs"
                   : "text-[var(--muted)] hover:text-[var(--text)]"
               }`}
             >
               <Plus size={13} />
-              Generate Quiz
+              <span>Generate Quiz</span>
             </button>
           </div>
         </div>

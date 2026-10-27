@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { Badge, ProgressBar, EmptyState } from "./UI";
 import { getDocuments, deleteDocument, reprocessDocument } from "../services/api";
+import { formatFileSize, formatDate } from "../utils/formatters";
 
 function Documents({ go, showToast, selectDoc, accessToken }) {
   const [search, setSearch] = useState("");
@@ -214,15 +215,17 @@ function Documents({ go, showToast, selectDoc, accessToken }) {
                           {d.filename || d.name}
                         </div>
                         <div className="text-[11px] text-[var(--muted)] mt-0.5">
-                          {(d.file_size / 1024 / 1024).toFixed(2)} MB
+                          {formatFileSize(d.file_size)}
                         </div>
                       </div>
                     </div>
 
                     <button 
+                      type="button"
                       onClick={() => setConfirmDelete(d.id)} 
                       className="p-1.5 rounded-lg text-[var(--muted)] hover:text-red-500 hover:bg-red-500/10 flex-shrink-0 transition-colors" 
                       title="Delete document"
+                      aria-label={`Delete ${d.filename || d.name}`}
                     >
                       <Trash2 size={15} />
                     </button>
@@ -235,7 +238,7 @@ function Documents({ go, showToast, selectDoc, accessToken }) {
                       {d.status}
                     </Badge>
                     <span className="text-[11px] text-[var(--muted)]">
-                      {new Date(d.created_at).toLocaleDateString()}
+                      {formatDate(d.created_at)}
                     </span>
                   </div>
                 </div>

@@ -135,15 +135,22 @@ function SettingsPage({ showToast }) {
   return (
     <div className="sa-fade-in grid md:grid-cols-[240px_1fr] gap-4 md:gap-6 max-w-6xl mx-auto pb-12">
       {/* Sidebar Navigation (Horizontal scroll on mobile, vertical sidebar on desktop) */}
-      <div className="sa-card p-2 md:p-3 h-fit flex md:flex-col gap-1 overflow-x-auto whitespace-nowrap sa-scroll shrink-0">
+      <div 
+        role="tablist"
+        aria-label="Settings Categories"
+        className="sa-card p-2 md:p-3 h-fit flex md:flex-col gap-1 overflow-x-auto whitespace-nowrap sa-scroll shrink-0"
+      >
         {tabs.map((t) => {
           const Icon = t.icon;
           const isSelected = tab === t.id;
           return (
             <button
               key={t.id}
+              type="button"
+              role="tab"
+              aria-selected={isSelected}
               onClick={() => setTab(t.id)}
-              className="shrink-0 md:w-full text-left px-3.5 py-2 md:py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all whitespace-nowrap"
+              className="shrink-0 md:w-full text-left px-3.5 py-2 md:py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
               style={{
                 background: isSelected ? "var(--surface-subtle)" : "transparent",
                 color: isSelected ? "var(--accent)" : "var(--text)",
@@ -158,7 +165,7 @@ function SettingsPage({ showToast }) {
       </div>
 
       {/* Main Settings Panel */}
-      <div className="sa-card sa-card-lg p-6 md:p-8">
+      <div className="sa-card sa-card-lg p-6 md:p-8" role="tabpanel">
         {/* TAB 1: PROFILE & ACADEMIC INFO */}
         {tab === "Profile" && (
           <div className="space-y-6 max-w-xl">
@@ -192,8 +199,9 @@ function SettingsPage({ showToast }) {
 
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)]">Full Name</label>
+                <label htmlFor="settings-name" className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)]">Full Name</label>
                 <input 
+                  id="settings-name"
                   value={profileData.name} 
                   onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
                   className="w-full mt-1.5 px-3.5 py-2 rounded-xl text-xs outline-none border transition-colors focus:border-[var(--accent)]" 
@@ -202,8 +210,9 @@ function SettingsPage({ showToast }) {
               </div>
 
               <div>
-                <label className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)]">Registered Email</label>
+                <label htmlFor="settings-email" className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)]">Registered Email</label>
                 <input 
+                  id="settings-email"
                   value={profileData.email} 
                   disabled
                   className="w-full mt-1.5 px-3.5 py-2 rounded-xl text-xs outline-none border opacity-70 cursor-not-allowed" 
@@ -212,8 +221,9 @@ function SettingsPage({ showToast }) {
               </div>
 
               <div>
-                <label className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)]">College / University</label>
+                <label htmlFor="settings-university" className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)]">College / University</label>
                 <input 
+                  id="settings-university"
                   value={profileData.university} 
                   onChange={(e) => setProfileData({ ...profileData, university: e.target.value })}
                   className="w-full mt-1.5 px-3.5 py-2 rounded-xl text-xs outline-none border transition-colors focus:border-[var(--accent)]" 
@@ -222,8 +232,9 @@ function SettingsPage({ showToast }) {
               </div>
 
               <div>
-                <label className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)]">Degree / Branch</label>
+                <label htmlFor="settings-course" className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)]">Degree / Branch</label>
                 <input 
+                  id="settings-course"
                   value={profileData.course} 
                   onChange={(e) => setProfileData({ ...profileData, course: e.target.value })}
                   className="w-full mt-1.5 px-3.5 py-2 rounded-xl text-xs outline-none border transition-colors focus:border-[var(--accent)]" 
@@ -232,8 +243,9 @@ function SettingsPage({ showToast }) {
               </div>
 
               <div>
-                <label className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)]">Academic Semester</label>
+                <label htmlFor="settings-semester" className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)]">Academic Semester</label>
                 <select 
+                  id="settings-semester"
                   value={profileData.semester}
                   onChange={(e) => setProfileData({ ...profileData, semester: e.target.value })}
                   className="w-full mt-1.5 px-3.5 py-2 rounded-xl text-xs outline-none border transition-colors focus:border-[var(--accent)]" 
@@ -246,8 +258,9 @@ function SettingsPage({ showToast }) {
               </div>
 
               <div>
-                <label className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)]">Scholar ID / Roll No</label>
+                <label htmlFor="settings-scholarId" className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)]">Scholar ID / Roll No</label>
                 <input 
+                  id="settings-scholarId"
                   value={profileData.scholarId} 
                   onChange={(e) => setProfileData({ ...profileData, scholarId: e.target.value })}
                   className="w-full mt-1.5 px-3.5 py-2 rounded-xl text-xs outline-none border transition-colors focus:border-[var(--accent)]" 
@@ -257,8 +270,9 @@ function SettingsPage({ showToast }) {
             </div>
 
             <div>
-              <label className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)]">Bio & Academic Interests</label>
+              <label htmlFor="settings-bio" className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)]">Bio & Academic Interests</label>
               <textarea 
+                id="settings-bio"
                 rows={3}
                 value={profileData.bio}
                 onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
@@ -268,6 +282,7 @@ function SettingsPage({ showToast }) {
             </div>
 
             <button 
+              type="button"
               onClick={() => showToast && showToast("Academic profile changes saved successfully!")} 
               className="sa-btn-primary px-5 py-2.5 text-xs font-semibold rounded-xl flex items-center gap-2"
             >
@@ -287,15 +302,24 @@ function SettingsPage({ showToast }) {
             </div>
 
             {/* Theme Cards */}
-            <div className="grid sm:grid-cols-3 gap-3">
+            <div className="grid sm:grid-cols-3 gap-3" role="radiogroup" aria-label="Aesthetic Themes">
               {themeCards.map((item) => {
                 const isSelected = theme === item.id;
                 const Icon = item.icon;
                 return (
                   <div
                     key={item.id}
+                    role="radio"
+                    aria-checked={isSelected}
+                    tabIndex={0}
                     onClick={() => handleThemeChange(item.id)}
-                    className="p-4 rounded-2xl border flex flex-col justify-between cursor-pointer transition-all hover:scale-[1.02] relative group select-none"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        handleThemeChange(item.id);
+                      }
+                    }}
+                    className="p-4 rounded-2xl border flex flex-col justify-between cursor-pointer transition-all hover:scale-[1.02] relative group select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
                     style={{
                       borderColor: isSelected ? "var(--accent)" : "var(--line)",
                       background: isSelected ? "var(--surface-subtle)" : "var(--surface)",
@@ -354,11 +378,14 @@ function SettingsPage({ showToast }) {
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs text-[var(--muted)] font-medium">Editor Font Size</label>
-                  <div className="grid grid-cols-3 gap-2 mt-1.5">
+                  <label htmlFor="settings-font-size-group" className="text-xs text-[var(--muted)] font-medium">Editor Font Size</label>
+                  <div id="settings-font-size-group" className="grid grid-cols-3 gap-2 mt-1.5" role="radiogroup" aria-label="Editor font size">
                     {["12px", "14px", "16px"].map((sz) => (
                       <button
                         key={sz}
+                        type="button"
+                        role="radio"
+                        aria-checked={editorFontSize === sz}
                         onClick={() => { setEditorFontSize(sz); showToast && showToast(`Code font set to ${sz}`); }}
                         className={`py-1.5 rounded-xl text-xs font-semibold border transition-all ${
                           editorFontSize === sz ? "bg-[var(--accent)] text-[var(--accent-ink)] border-[var(--accent)]" : "bg-[var(--surface)] text-[var(--text)] border-[var(--line)]"
@@ -371,8 +398,9 @@ function SettingsPage({ showToast }) {
                 </div>
 
                 <div>
-                  <label className="text-xs text-[var(--muted)] font-medium">Editor Color Scheme</label>
+                  <label htmlFor="settings-editor-theme" className="text-xs text-[var(--muted)] font-medium">Editor Color Scheme</label>
                   <select 
+                    id="settings-editor-theme"
                     value={editorTheme} 
                     onChange={(e) => { setEditorTheme(e.target.value); showToast && showToast(`Editor theme changed to ${e.target.value}`); }}
                     className="w-full mt-1.5 px-3 py-2 rounded-xl text-xs bg-[var(--surface)] border outline-none text-[var(--text)]"
@@ -390,10 +418,14 @@ function SettingsPage({ showToast }) {
               <div className="pt-2 border-t border-[var(--line)] space-y-3">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-xs font-semibold text-[var(--text)]">Compact Layout Mode</div>
+                    <label id="toggle-compact-label" className="text-xs font-semibold text-[var(--text)] block">Compact Layout Mode</label>
                     <div className="text-[11px] text-[var(--muted)]">Reduces margin spacing across document sidebars for high-density reading.</div>
                   </div>
                   <button
+                    type="button"
+                    role="switch"
+                    aria-checked={compactMode}
+                    aria-labelledby="toggle-compact-label"
                     onClick={() => { setCompactMode(!compactMode); showToast && showToast(`Compact mode ${!compactMode ? "enabled" : "disabled"}`); }}
                     className={`w-10 h-6 rounded-full relative transition-colors ${compactMode ? "bg-[var(--accent)]" : "bg-neutral-600/30"}`}
                   >
@@ -403,10 +435,14 @@ function SettingsPage({ showToast }) {
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-xs font-semibold text-[var(--text)]">Reduced Motion</div>
+                    <label id="toggle-reduce-motion-label" className="text-xs font-semibold text-[var(--text)] block">Reduced Motion</label>
                     <div className="text-[11px] text-[var(--muted)]">Disables intensive CSS zoom animations on modal and note transitions.</div>
                   </div>
                   <button
+                    type="button"
+                    role="switch"
+                    aria-checked={reduceMotion}
+                    aria-labelledby="toggle-reduce-motion-label"
                     onClick={() => { setReduceMotion(!reduceMotion); showToast && showToast(`Reduced motion ${!reduceMotion ? "enabled" : "disabled"}`); }}
                     className={`w-10 h-6 rounded-full relative transition-colors ${reduceMotion ? "bg-[var(--accent)]" : "bg-neutral-600/30"}`}
                   >
@@ -458,10 +494,13 @@ function SettingsPage({ showToast }) {
 
               <div>
                 <label className="text-xs text-[var(--muted)] font-medium">Code Sandbox Timeout</label>
-                <div className="grid grid-cols-4 gap-1.5 mt-1.5">
+                <div className="grid grid-cols-4 gap-1.5 mt-1.5" role="radiogroup" aria-label="Code Sandbox Timeout">
                   {["3s", "5s", "7s", "10s"].map((to) => (
                     <button
                       key={to}
+                      type="button"
+                      role="radio"
+                      aria-checked={sandboxTimeout === to}
                       onClick={() => setSandboxTimeout(to)}
                       className={`py-1.5 rounded-xl text-xs font-semibold border ${
                         sandboxTimeout === to ? "bg-[var(--accent)] text-[var(--accent-ink)] border-[var(--accent)]" : "bg-[var(--surface-subtle)] text-[var(--text)] border-[var(--line)]"
@@ -479,15 +518,24 @@ function SettingsPage({ showToast }) {
 
             <div>
               <label className="text-xs text-[var(--muted)] font-medium">AI Response Synthesis Depth</label>
-              <div className="grid sm:grid-cols-2 gap-3 mt-1.5">
+              <div className="grid sm:grid-cols-2 gap-3 mt-1.5" role="radiogroup" aria-label="AI Response Synthesis Depth">
                 {[
                   { id: "detailed", title: "Comprehensive Academic", desc: "Includes derivations, step-by-step logic proofs, and real-world engineering analogies." },
                   { id: "concise", title: "Concise Exam Prep", desc: "Focuses strictly on key definitions, marks-oriented points, and bulleted takeaways." }
                 ].map((mode) => (
                   <div
                     key={mode.id}
+                    role="radio"
+                    aria-checked={aiVerbosity === mode.id}
+                    tabIndex={0}
                     onClick={() => setAiVerbosity(mode.id)}
-                    className={`p-3.5 rounded-2xl border cursor-pointer transition-all ${
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setAiVerbosity(mode.id);
+                      }
+                    }}
+                    className={`p-3.5 rounded-2xl border cursor-pointer transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
                       aiVerbosity === mode.id ? "bg-[var(--surface-subtle)] border-[var(--accent)] shadow-xs" : "bg-[var(--surface)] border-[var(--line)]"
                     }`}
                   >
@@ -515,10 +563,13 @@ function SettingsPage({ showToast }) {
 
             <div>
               <label className="text-xs font-bold uppercase tracking-wider text-[var(--muted)]">Default Quiz Difficulty</label>
-              <div className="grid grid-cols-3 gap-2 mt-1.5">
+              <div className="grid grid-cols-3 gap-2 mt-1.5" role="radiogroup" aria-label="Default Quiz Difficulty">
                 {["Easy", "Medium", "Hard"].map((d) => (
                   <button
                     key={d}
+                    type="button"
+                    role="radio"
+                    aria-checked={difficulty === d}
                     onClick={() => { setDifficulty(d); showToast && showToast(`Default difficulty set to ${d}`); }}
                     className="sa-option-card py-2 text-xs font-semibold rounded-xl"
                     style={difficulty === d ? { borderColor: "var(--accent)", background: "var(--surface-subtle)", color: "var(--accent)" } : {}}
@@ -532,10 +583,13 @@ function SettingsPage({ showToast }) {
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
                 <label className="text-xs font-bold uppercase tracking-wider text-[var(--muted)]">Default Question Count</label>
-                <div className="grid grid-cols-4 gap-1.5 mt-1.5">
+                <div className="grid grid-cols-4 gap-1.5 mt-1.5" role="radiogroup" aria-label="Default Question Count">
                   {[5, 10, 15, 20].map((num) => (
                     <button
                       key={num}
+                      type="button"
+                      role="radio"
+                      aria-checked={quizCount === num}
                       onClick={() => setQuizCount(num)}
                       className={`py-2 rounded-xl text-xs font-semibold border ${
                         quizCount === num ? "bg-[var(--accent)] text-[var(--accent-ink)] border-[var(--accent)]" : "bg-[var(--surface-subtle)] text-[var(--text)] border-[var(--line)]"
@@ -549,10 +603,13 @@ function SettingsPage({ showToast }) {
 
               <div>
                 <label className="text-xs font-bold uppercase tracking-wider text-[var(--muted)]">Daily Study Target</label>
-                <div className="grid grid-cols-4 gap-1.5 mt-1.5">
+                <div className="grid grid-cols-4 gap-1.5 mt-1.5" role="radiogroup" aria-label="Daily Study Target">
                   {[30, 45, 60, 90].map((mins) => (
                     <button
                       key={mins}
+                      type="button"
+                      role="radio"
+                      aria-checked={dailyGoalMinutes === mins}
                       onClick={() => setDailyGoalMinutes(mins)}
                       className={`py-2 rounded-xl text-xs font-semibold border ${
                         dailyGoalMinutes === mins ? "bg-[var(--accent)] text-[var(--accent-ink)] border-[var(--accent)]" : "bg-[var(--surface-subtle)] text-[var(--text)] border-[var(--line)]"
@@ -567,10 +624,14 @@ function SettingsPage({ showToast }) {
 
             <div className="p-4 rounded-2xl border bg-[var(--surface-subtle)] flex items-center justify-between" style={{ borderColor: "var(--line)" }}>
               <div>
-                <div className="text-xs font-semibold text-[var(--text)]">Include Practical Coding Questions</div>
+                <label id="toggle-coding-questions-label" className="text-xs font-semibold text-[var(--text)] block">Include Practical Coding Questions</label>
                 <div className="text-[11px] text-[var(--muted)]">Includes interactive Monaco coding challenges for Computer Science subjects.</div>
               </div>
               <button
+                type="button"
+                role="switch"
+                aria-checked={includeCodingQuestions}
+                aria-labelledby="toggle-coding-questions-label"
                 onClick={() => setIncludeCodingQuestions(!includeCodingQuestions)}
                 className={`w-10 h-6 rounded-full relative transition-colors ${includeCodingQuestions ? "bg-[var(--accent)]" : "bg-neutral-600/30"}`}
               >
@@ -604,10 +665,14 @@ function SettingsPage({ showToast }) {
                   style={{ borderColor: "var(--line)" }}
                 >
                   <div>
-                    <div className="text-xs font-semibold text-[var(--text)]">{item.title}</div>
+                    <label id={`toggle-notif-${item.key}-label`} className="text-xs font-semibold text-[var(--text)] block">{item.title}</label>
                     <div className="text-[11px] text-[var(--muted)] mt-0.5">{item.desc}</div>
                   </div>
                   <button
+                    type="button"
+                    role="switch"
+                    aria-checked={notifs[item.key]}
+                    aria-labelledby={`toggle-notif-${item.key}-label`}
                     onClick={() => {
                       setNotifs({ ...notifs, [item.key]: !notifs[item.key] });
                       if (showToast) showToast(`${item.title} ${!notifs[item.key] ? "enabled" : "disabled"}`);
@@ -642,6 +707,7 @@ function SettingsPage({ showToast }) {
                   </p>
                 </div>
                 <button
+                  type="button"
                   onClick={handleClearCache}
                   disabled={clearingCache}
                   className="px-3 py-1.5 rounded-xl border text-xs font-semibold bg-[var(--surface)] text-[var(--text)] hover:border-[var(--accent)] transition-all flex items-center gap-1.5 shrink-0 shadow-xs"
@@ -663,6 +729,7 @@ function SettingsPage({ showToast }) {
                   </p>
                 </div>
                 <button
+                  type="button"
                   onClick={handleExportData}
                   className="px-3 py-1.5 rounded-xl border text-xs font-semibold bg-[var(--surface)] text-[var(--text)] hover:border-[var(--accent)] transition-all flex items-center gap-1.5 shrink-0 shadow-xs"
                   style={{ borderColor: "var(--line)" }}
@@ -692,6 +759,7 @@ function SettingsPage({ showToast }) {
                 Permanently delete your scholar account, uploaded textbook PDFs, notes, and credits from the ExamVault database.
               </p>
               <button 
+                type="button"
                 onClick={() => alert("To delete your account permanently, please contact the institutional administrator or submit a deletion request.")}
                 className="px-3.5 py-1.5 rounded-xl text-xs font-bold text-red-500 border border-red-500/40 hover:bg-red-500/10 transition-colors"
               >

@@ -83,6 +83,7 @@ export default function UserProfile({ userId, go, accessToken, currentUserId }) 
       {/* Back button */}
       {go && (
         <button
+          type="button"
           onClick={() => go("dashboard")}
           className="sa-btn-outline inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold"
         >
@@ -212,53 +213,94 @@ export default function UserProfile({ userId, go, accessToken, currentUserId }) 
                 </div>
               </div>
 
-              {/* Two Column Section */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Academic Performance */}
-                <div 
-                  className="p-6 rounded-2xl border"
-                  style={{ background: "var(--surface)", borderColor: "var(--line)" }}
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2.5">
+              {/* Academic Performance Overview - Full Width */}
+              <div 
+                className="p-5 sm:p-6 rounded-2xl border shadow-xs"
+                style={{ background: "var(--surface)", borderColor: "var(--line)" }}
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-[var(--line)]">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: "var(--accent-soft)", color: "var(--accent-ink)" }}>
                       <CheckCircle2 size={18} className="text-emerald-500" />
-                      <h3 className="font-bold text-base text-[var(--text)]">Academic Evaluation</h3>
                     </div>
-                    <span className="text-sm font-bold text-[var(--accent)]">
+                    <div>
+                      <h3 className="font-bold text-base text-[var(--text)]">Academic Evaluation & Progress</h3>
+                      <p className="text-xs text-[var(--muted)]">Calculated from submitted quizzes and formal assessments</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {profile.avg_quiz_score !== null && (
+                      <span className={`text-xs font-bold px-3 py-1 rounded-full border ${
+                        profile.avg_quiz_score >= 80 
+                          ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
+                          : profile.avg_quiz_score >= 50
+                          ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"
+                          : "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20"
+                      }`}>
+                        {profile.avg_quiz_score >= 80 ? "Exemplary Mastery" : profile.avg_quiz_score >= 50 ? "Passing Grade" : "Needs Review"}
+                      </span>
+                    )}
+                    <span className="text-base sm:text-lg font-bold text-[var(--accent)]">
                       {profile.avg_quiz_score !== null ? `${profile.avg_quiz_score}% Average` : "Pending"}
                     </span>
                   </div>
+                </div>
 
-                  {profile.avg_quiz_score !== null ? (
-                    <div className="space-y-3">
-                      <div className="w-full h-3 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
+                {profile.avg_quiz_score !== null ? (
+                  <div className="space-y-4">
+                    {/* Progress bar with markers */}
+                    <div>
+                      <div className="w-full h-3.5 rounded-full overflow-hidden bg-black/5 dark:bg-white/10 p-0.5 border border-[var(--line)]">
                         <div 
-                          className="h-full rounded-full transition-all duration-700"
+                          className="h-full rounded-full transition-all duration-700 shadow-xs"
                           style={{
                             width: `${Math.min(profile.avg_quiz_score, 100)}%`,
                             background: profile.avg_quiz_score >= 80 ? "var(--success)" : profile.avg_quiz_score >= 50 ? "var(--accent)" : "var(--danger)"
                           }}
                         />
                       </div>
-                      <div className="flex justify-between text-xs text-[var(--muted)]">
-                        <span>Calculated across {profile.quizzes_taken} graded exams</span>
-                        <span>Standard passmark: 50%</span>
+                      <div className="flex flex-col sm:flex-row justify-between sm:items-center text-xs text-[var(--muted)] mt-2 gap-1">
+                        <span>Evaluated across <strong className="text-[var(--text)] font-semibold">{profile.quizzes_taken}</strong> graded exam sessions</span>
+                        <span className="flex items-center gap-2">
+                          <span>Passmark: <strong className="text-[var(--text)] font-semibold">50%</strong></span>
+                          <span>•</span>
+                          <span>Distinction: <strong className="text-[var(--text)] font-semibold">80%</strong></span>
+                        </span>
                       </div>
                     </div>
-                  ) : (
-                    <p className="text-xs text-[var(--muted)]">
-                      No examination results recorded yet for this scholar.
-                    </p>
-                  )}
-                </div>
 
-                {/* Badges and Merits */}
-                <div 
-                  className="p-6 rounded-2xl border"
-                  style={{ background: "var(--surface)", borderColor: "var(--line)" }}
-                >
-                  <BadgesGrid profile={profile} />
-                </div>
+                    {/* 3 Quick Performance Highlights inside the card */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                      <div className="p-3.5 rounded-xl border bg-[var(--surface-subtle)] text-center sm:text-left" style={{ borderColor: "var(--line)" }}>
+                        <span className="text-[11px] font-medium text-[var(--muted)] block">Exams Attempted</span>
+                        <span className="text-base font-bold text-[var(--text)] mt-0.5 block">{profile.quizzes_taken} Completed</span>
+                      </div>
+                      <div className="p-3.5 rounded-xl border bg-[var(--surface-subtle)] text-center sm:text-left" style={{ borderColor: "var(--line)" }}>
+                        <span className="text-[11px] font-medium text-[var(--muted)] block">Curriculum Topics</span>
+                        <span className="text-base font-bold text-[var(--text)] mt-0.5 block">{profile.topics_count ?? 0} Mastered</span>
+                      </div>
+                      <div className="p-3.5 rounded-xl border bg-[var(--surface-subtle)] text-center sm:text-left" style={{ borderColor: "var(--line)" }}>
+                        <span className="text-[11px] font-medium text-[var(--muted)] block">Evaluation Status</span>
+                        <span className="text-base font-bold text-[var(--text)] mt-0.5 block">
+                          {profile.avg_quiz_score >= 50 ? "Satisfactory" : profile.avg_quiz_score !== null ? "Academic Probation" : "Pending Evaluation"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="py-6 text-center text-xs text-[var(--muted)]">
+                    <p>No examination results recorded yet for this scholar. Complete practice quizzes to establish an evaluation benchmark.</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Scholar Recognitions & Badges - Full Width Showcase */}
+              <div 
+                className="p-5 sm:p-6 rounded-2xl border shadow-xs"
+                style={{ background: "var(--surface)", borderColor: "var(--line)" }}
+              >
+                <BadgesGrid profile={profile} />
               </div>
             </div>
           ) : null}

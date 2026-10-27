@@ -340,8 +340,15 @@ export default function NotesDashboard({ go, showToast, accessToken, onOpenNote 
 
         <div className="flex items-center gap-2.5 self-stretch sm:self-auto justify-between sm:justify-start">
           {/* Segmented View Switcher (Mac-inspired clean pill, ExamVault themed) */}
-          <div className="flex items-center p-1 rounded-lg border border-[var(--line)] bg-[var(--surface)] shadow-2xs">
+          <div 
+            role="tablist"
+            aria-label="Notes view mode"
+            className="flex items-center p-1 rounded-lg border border-[var(--line)] bg-[var(--surface)] shadow-2xs"
+          >
             <button
+              type="button"
+              role="tab"
+              aria-selected={viewMode === "grid"}
               onClick={() => setViewMode("grid")}
               className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition-all ${
                 viewMode === "grid"
@@ -354,6 +361,9 @@ export default function NotesDashboard({ go, showToast, accessToken, onOpenNote 
               <span className="hidden md:inline">Gallery</span>
             </button>
             <button
+              type="button"
+              role="tab"
+              aria-selected={viewMode === "list"}
               onClick={() => setViewMode("list")}
               className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition-all ${
                 viewMode === "list"
@@ -902,14 +912,19 @@ export default function NotesDashboard({ go, showToast, accessToken, onOpenNote 
           Rename Note Modal (Clean ExamVault Dialog)
           ========================================================================= */}
       {renameTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fade-in">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fade-in"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="rename-note-title"
+        >
           <div className="sa-card max-w-sm w-full p-5 space-y-4 animate-scale-up border-[var(--line)] shadow-2xl">
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 rounded-xl bg-[var(--accent-soft)] text-[var(--accent)] flex items-center justify-center flex-shrink-0">
                 <Edit2 size={20} />
               </div>
               <div className="min-w-0">
-                <h3 className="font-bold text-sm text-[var(--text)]">Rename Note</h3>
+                <h3 id="rename-note-title" className="font-bold text-sm text-[var(--text)]">Rename Note</h3>
                 <p className="text-xs text-[var(--muted)]">
                   Enter a new title for this revision note.
                 </p>
@@ -920,6 +935,7 @@ export default function NotesDashboard({ go, showToast, accessToken, onOpenNote 
               <input
                 type="text"
                 value={newTitle}
+                aria-label="Note title"
                 onChange={(e) => setNewTitle(e.target.value)}
                 placeholder="Note title..."
                 autoFocus
@@ -951,14 +967,19 @@ export default function NotesDashboard({ go, showToast, accessToken, onOpenNote 
           Delete Note Modal (Caution Dialog)
           ========================================================================= */}
       {deleteTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fade-in">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fade-in"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="delete-note-title"
+        >
           <div className="sa-card max-w-sm w-full p-5 space-y-4 animate-scale-up border-[var(--line)] shadow-2xl">
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 rounded-xl bg-red-500/15 text-red-600 dark:text-red-400 flex items-center justify-center flex-shrink-0">
                 <Trash2 size={20} />
               </div>
               <div className="min-w-0">
-                <h3 className="font-bold text-sm text-[var(--text)]">Delete Note?</h3>
+                <h3 id="delete-note-title" className="font-bold text-sm text-[var(--text)]">Delete Note?</h3>
                 <p className="text-xs text-[var(--muted)]">
                   Are you sure you want to delete <span className="font-semibold text-[var(--text)]">"{deleteTarget.title}"</span>? This will permanently remove its diagrams and revision content.
                 </p>
